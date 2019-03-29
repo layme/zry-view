@@ -13,6 +13,18 @@ npm install
 ```bush
 npm run dev
 ```
+### Develop(Build)
+```bush
+npm run develop
+```
+### Test(Build)
+```bush
+npm run test
+```
+### Prepare(Build)
+```bush
+npm run prepare
+```
 ### Production(Build)
 ```bush
 npm run build
