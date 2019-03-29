@@ -108,13 +108,13 @@ export const showTitle = (item, vm) => {
  * @description 本地存储和获取标签导航列表
  */
 export const setTagNavListInLocalstorage = list => {
-  localStorage.tagNaveList = JSON.stringify(list)
+  sessionStorage.tagNaveList = JSON.stringify(list)
 }
 /**
  * @returns {Array} 其中的每个元素只包含路由原信息中的name, path, meta三项
  */
 export const getTagNavListFromLocalstorage = () => {
-  const list = localStorage.tagNaveList
+  const list = sessionStorage.tagNaveList
   return list ? JSON.parse(list) : []
 }
 
@@ -394,6 +394,6 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
 export const setTitle = (routeItem, vm) => {
   const handledRoute = getRouteTitleHandled(routeItem)
   const pageTitle = showTitle(handledRoute, vm)
-  const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
+  const resTitle = pageTitle ? `${pageTitle} - ${title}` : title
   window.document.title = resTitle
 }

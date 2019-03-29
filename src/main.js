@@ -9,7 +9,7 @@ import i18n from '@/locale'
 import config from '@/config'
 import importDirective from '@/directive'
 import { directive as clickOutside } from 'v-click-outside-x'
-import installPlugin from '@/plugin'
+// import installPlugin from '@/plugin'
 import './index.less'
 import '@/assets/icons/iconfont.css'
 import TreeTable from 'tree-table-vue'
@@ -27,7 +27,7 @@ Vue.use(VOrgTree)
 /**
  * @description 注册admin内置插件
  */
-installPlugin(Vue)
+// installPlugin(Vue)
 /**
  * @description 生产环境关掉提示
  */
