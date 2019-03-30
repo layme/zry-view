@@ -9,8 +9,34 @@
 @layout-sider-background: #1ABC9C;
 @link-color: #38BA9B;
 @primary-color: #38BA9B;
-//@{menu-prefix-cls}-item-active:hover {
-//  border-right: none;
-//  color: #F1C40F;
-//  //background: @primary-color !important;
-//}
+
+@menu-prefix-cls: ~"@{css-prefix}menu";
+.@{menu-prefix-cls} {
+  &-dark&-vertical &-item, &-dark&-vertical &-submenu-title{
+    color: @menu-dark-subsidiary-color;
+    &-active:not(.@{menu-prefix-cls}-submenu),
+    &-active:not(.@{menu-prefix-cls}-submenu):hover
+    {
+      background: transparent;
+    }
+    &:hover{
+      color: #fff;
+      background: @menu-dark-title;
+    }
+    &-active:not(.@{menu-prefix-cls}-submenu){
+      color: #F1C40F;
+      //border-right: 2px solid @primary-color;
+    }
+  }
+  &-dark&-vertical &-submenu &-item{
+    &:hover{
+      color: #F1C40F;
+      background: transparent !important;
+    }
+    &-active,&-active:hover{
+      border-right: none;
+      color: #F1C40F;
+      background: transparent !important;
+    }
+  }
+}
