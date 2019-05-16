@@ -469,7 +469,7 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/discard/error-page/401.vue')
+    component: () => import('@/view/error-page/401.vue')
   },
   {
     path: '/500',
@@ -477,7 +477,7 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/discard/error-page/500.vue')
+    component: () => import('@/view/error-page/500.vue')
   },
   {
     path: '*',
@@ -485,6 +485,6 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/discard/error-page/404.vue')
+    component: () => import('@/view/error-page/404.vue')
   }
 ]
