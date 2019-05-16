@@ -1,18 +1,10 @@
 <template>
   <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
     <FormItem prop="userName">
-      <Input v-model="form.userName" size="large" placeholder="请输入用户名">
-        <span slot="prepend">
-          <Icon :size="16" type="ios-person"></Icon>
-        </span>
-      </Input>
+      <Input prefix="ios-person" v-model="form.userName" size="large" placeholder="请输入用户名"></Input>
     </FormItem>
     <FormItem prop="password">
-      <Input type="password" v-model="form.password" size="large" placeholder="请输入密码">
-        <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span>
-      </Input>
+      <Input prefix="md-lock" type="password" v-model="form.password" size="large" placeholder="请输入密码"></Input>
     </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" size="large" long>登录</Button>

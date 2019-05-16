@@ -4,11 +4,17 @@
 //@menu-dark-active-bg: #000c17;
 //@layout-sider-background: #001529;
 
-@menu-dark-title: #1ABC9C;
-@menu-dark-active-bg: #16A085;
-@layout-sider-background: #1ABC9C;
-@link-color: #38BA9B;
-@primary-color: #38BA9B;
+//@menu-dark-title: #1ABC9C;
+//@menu-dark-active-bg: #16A085;
+//@layout-sider-background: #1ABC9C;
+
+@menu-dark-title: #304156;
+@menu-dark-active-bg: #1f2d3d;
+@layout-sider-background: #304156;
+
+
+//@link-color: #38BA9B;
+//@primary-color: #2d8cf0;
 
 @menu-prefix-cls: ~"@{css-prefix}menu";
 .@{menu-prefix-cls} {
@@ -20,22 +26,23 @@
       background: transparent;
     }
     &:hover{
-      color: #fff;
-      background: @menu-dark-title;
+      //color: #fff;
+      background: #263445;
     }
     &-active:not(.@{menu-prefix-cls}-submenu){
-      color: #F1C40F;
+      color: @primary-color;
       //border-right: 2px solid @primary-color;
     }
   }
   &-dark&-vertical &-submenu &-item{
     &:hover{
-      color: #fff;
-      background: transparent !important;
+      //color: #fff;
+      //background: transparent !important;
+      background: #001528 !important;
     }
     &-active,&-active:hover{
       border-right: none;
-      color: #F1C40F;
+      color: @primary-color;
       background: transparent !important;
     }
   }
