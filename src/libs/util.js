@@ -72,9 +72,10 @@ export const getBreadCrumbList = (route, homeRoute) => {
     }
     return obj
   })
-  res = res.filter(item => {
-    return !item.meta.hideInMenu
-  })
+  // 在菜单不展示，默认在面包屑也不展示
+  // res = res.filter(item => {
+  //   return !item.meta.hideInMenu
+  // })
   return [{ ...homeItem, to: homeRoute.path }, ...res]
 }
 
