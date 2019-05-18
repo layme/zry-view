@@ -51,6 +51,36 @@ export default [
     ]
   },
   {
+    path: '/order',
+    name: 'order',
+    meta: {
+      icon: 'ios-book',
+      title: '订单'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'list',
+        name: 'list',
+        meta: {
+          icon: '_qq',
+          title: '订单列表'
+        },
+        component: () => import('@/view/order/list/orderList.vue')
+      },
+      {
+        path: ':orderNumber',
+        name: 'detail',
+        meta: {
+          icon: '_qq',
+          title: '订单详情',
+          hideInMenu: true
+        },
+        component: () => import('@/view/order/detail/orderDetail.vue')
+      }
+    ]
+  },
+  {
     path: '',
     name: 'doc',
     meta: {

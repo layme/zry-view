@@ -35,6 +35,7 @@
   </Layout>
 </template>
 <script>
+import watermark from '@/libs/watermark'
 import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
 import TagsNav from './components/tags-nav'
@@ -182,6 +183,8 @@ export default {
     }
     // 获取未读消息条数
     this.getUnreadMessageCount()
+    // 设置水印
+    watermark.set(this.$store.state.userName)
   },
   created () {
     console.log(process.env.NODE_ENV)
