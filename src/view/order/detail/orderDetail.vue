@@ -1,12 +1,12 @@
 <template>
-  <div class="con demo-tabs-style1">
+  <div class="con">
     <div class="subscript">
       {{ orderInfo.status | orderStatusFilter }}
     </div>
     <Row>
       <Col :span="12">
-        <span class="order order-number">订单号：{{ orderNumber }}</span>
-        <span class="order order-price">¥ {{ orderInfo.amount }}</span>
+        <strong class="order order-number">订单号：{{ orderNumber }}</strong>
+        <strong class="order order-price">¥ {{ orderInfo.amount }}</strong>
       </Col>
       <Col :span="12" style="text-align: right">
         <ButtonGroup>
@@ -17,33 +17,23 @@
         </ButtonGroup>
       </Col>
     </Row>
-
-    <Tabs type="card" v-model="activeName" class="card-cls">
-      <TabPane label="基础信息" name="baseInfo">
-        <base-info-card v-if="activeName === 'baseInfo'" :data="orderInfo" class="card-cls"></base-info-card>
-      </TabPane>
-      <TabPane label="入住人信息" name="stayPerson">
-        <stay-person-card v-if="activeName === 'stayPerson'" class="card-cls"></stay-person-card>
-      </TabPane>
-      <TabPane label="床位信息" name="bedInfo">
-        <stay-person-card v-if="activeName === 'bedInfo'" class="card-cls"></stay-person-card>
-      </TabPane>
-    </Tabs>
+    <base-info-card :data="orderInfo" class="card-cls"></base-info-card>
     <Row :gutter="20">
       <Col :span="18">
-        <order-action-card class="card-cls"></order-action-card>
+        <stay-person-card class="card-cls"></stay-person-card>
       </Col>
       <Col :span="6">
         <order-remark-card class="card-cls"></order-remark-card>
       </Col>
     </Row>
+    <order-action-card class="card-cls"></order-action-card>
   </div>
 </template>
 <script>
-import baseInfoCard from './baseInfoCard'
-import stayPersonCard from './stayPersonCard'
-import orderRemarkCard from './orderRemarkCard'
-import orderActionCard from './orderActionCard'
+import baseInfoCard from './component/baseInfoCard'
+import stayPersonCard from './component/stayPersonCard'
+import orderRemarkCard from './component/orderRemarkCard'
+import orderActionCard from './component/orderActionCard'
 
 export default {
   name: 'orderDetail',
@@ -80,15 +70,27 @@ export default {
     orderStatusFilter (val) {
       switch (val) {
         case 1:
-          return '待支付'
-        case 2:
           return '已支付'
-        case 3:
+        case 2:
           return '已入住'
+        case 3:
+          return '退款申请中'
         case 4:
-          return '已退房'
+          return '已退款'
         case 5:
+          return '待支付'
+        case 6:
+          return '已退房'
+        case 7:
           return '已取消'
+        case 8:
+          return '已支付取消'
+        case 9:
+          return '未入住取消'
+        case 10:
+          return '未入住退房'
+        case 11:
+          return '已退订'
       }
     }
   }
@@ -130,15 +132,5 @@ export default {
     -o-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
-  }
-
-  .demo-tabs-style1 > .ivu-tabs-card > .ivu-tabs-content > .ivu-tabs-tabpane {
-    padding: 15px;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-left: #dcdee2 1px solid;
-    border-bottom: #dcdee2 1px solid;
-    border-right: #dcdee2 1px solid;
-    margin-top: -16px;
   }
 </style>

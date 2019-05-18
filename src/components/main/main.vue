@@ -187,9 +187,9 @@ export default {
     watermark.set(this.$store.state.userName)
   },
   created () {
-    console.log(process.env.NODE_ENV)
-    console.log(process.env.VUE_APP_CURRENTMODE)
-    console.log(process.env.VUE_APP_BASEURL)
+    // console.log(process.env.NODE_ENV)
+    // console.log(process.env.VUE_APP_CURRENTMODE)
+    // console.log(process.env.VUE_APP_BASEURL)
   }
 }
 </script>
