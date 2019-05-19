@@ -1,5 +1,5 @@
 <template>
-  <Card dis-hover>
+  <Card>
     <p slot="title">
       基础信息
     </p>

@@ -1,5 +1,5 @@
 <template>
-  <Card dis-hover>
+  <Card>
     <p slot="title">订单操作</p>
     <Row :gutter="20">
       <Col :span="16">

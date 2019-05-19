@@ -1,5 +1,5 @@
 <template>
-  <Card dis-hover>
+  <Card>
     <p slot="title">
       入住人信息
     </p>

@@ -109,6 +109,9 @@ export default {
 
   .card-cls {
     margin-top: 20px;
+    -webkit-box-shadow: #dcdee2 0 0 10px;
+    -moz-box-shadow: #dcdee2 0 0 10px;
+    box-shadow: #dcdee2 0 0 10px;
   }
 
   .con {
@@ -123,7 +126,7 @@ export default {
     left: -90px;
     top: -10px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 40px;
     background-color: #2d8cf0;
     -moz-transform: rotate(-45deg);
