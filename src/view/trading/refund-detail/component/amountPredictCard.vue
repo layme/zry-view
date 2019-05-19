@@ -4,6 +4,7 @@
       金额预估
     </p>
     <a href="#" slot="extra" @click.prevent="refreshPredict">
+      <Icon type="ios-refresh" />
       刷新
     </a>
     <div>

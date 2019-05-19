@@ -15,20 +15,6 @@
     </div>
     <Row :gutter="20">
       <Col :span="12">
-        <!--<Row v-for="(person, index) in refundData.personVoList" :key="index" class="person">-->
-          <!--<Col :span="6">-->
-            <!--<span>姓名：{{ person.name }}</span>-->
-          <!--</Col>-->
-          <!--<Col :span="6">-->
-            <!--<span>房型：{{ person.houseTypeShowName }}</span>-->
-          <!--</Col>-->
-          <!--<Col :span="6">-->
-            <!--<span>床位号：{{ person.bedCode }}</span>-->
-          <!--</Col>-->
-          <!--<Col :span="6">-->
-            <!--<span>床位状态：{{ person.status }}</span>-->
-          <!--</Col>-->
-        <!--</Row>-->
         <Table size="small" :columns="personColumns" :data="refundData.personVoList">
           <template slot-scope="{ row }" slot="status">
             <div>{{ row.status }}</div>
@@ -117,15 +103,4 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .person {
-    /*border: 1px #dcdee2 solid;*/
-    /*border-radius: 4px;*/
-    /*margin-bottom: 20px;*/
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-
-  .my-table {
-    margin-top: 10px;
-  }
 </style>
