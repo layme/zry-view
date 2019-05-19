@@ -1,0 +1,141 @@
+<template>
+  <Form :model="paramDto" :label-width="70">
+    <Row :gutter="20">
+      <Col span="8">
+        <FormItem label="订单号">
+          <Input v-model="paramDto.orderNumber" placeholder="App/OTA" clearable></Input>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="订单状态">
+          <Select v-model="paramDto.orderStatus" placeholder="请选择" clearable>
+            <Option v-for="x in orderStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="入住日期">
+          <DatePicker v-model="paramDto.checkInTime" type="daterange" split-panels placeholder=""
+                      class="my-date-picker"></DatePicker>
+        </FormItem>
+      </Col>
+    </Row>
+    <Row :gutter="20">
+      <Col span="8">
+        <FormItem label="预订人">
+          <Input v-model="paramDto.customer" placeholder="姓名/手机号/身份证号" clearable></Input>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="入住人">
+          <Input v-model="paramDto.stayPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="退房日期">
+          <DatePicker v-model="paramDto.checkOutTime" type="daterange" split-panels placeholder=""
+                      class="my-date-picker"></DatePicker>
+        </FormItem>
+      </Col>
+    </Row>
+    <Row :gutter="20">
+      <Col span="12">
+        <FormItem>
+          <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
+        </FormItem>
+      </Col>
+      <Col span="12" style="text-align: right">
+        <FormItem>
+          <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
+        </FormItem>
+      </Col>
+    </Row>
+  </Form>
+</template>
+<script>
+export default {
+  name: 'orderForm',
+  data () {
+    return {
+      paramDto: {
+        orderNumber: '',
+        orderStatus: '',
+        checkInTime: [],
+        checkInStartTime: '',
+        checkInEndTime: '',
+        customer: '',
+        stayPerson: '',
+        checkOutTime: [],
+        checkOutStartTime: '',
+        checkOutEndTime: ''
+      },
+      orderStatusOptions: [
+        {
+          label: '已支付',
+          value: 1
+        },
+        {
+          label: '已入住',
+          value: 2
+        },
+        {
+          label: '退款申请中',
+          value: 3
+        },
+        {
+          label: '已退款',
+          value: 4
+        },
+        {
+          label: '待支付',
+          value: 5
+        },
+        {
+          label: '已退房',
+          value: 6
+        },
+        {
+          label: '已取消',
+          value: 7
+        },
+        {
+          label: '已支付取消',
+          value: 8
+        },
+        {
+          label: '未入住取消',
+          value: 9
+        },
+        {
+          label: '未入住退房',
+          value: 10
+        },
+        {
+          label: '已退订',
+          value: 11
+        }
+      ]
+    }
+  },
+  methods: {
+    submit () {
+      this.$emit('search', this.paramDto)
+    }
+  },
+  watch: {
+    'paramDto.checkInTime': function (val) {
+      this.paramDto.checkInStartTime = val[0]
+      this.paramDto.checkInEndTime = val[1]
+    },
+    'paramDto.checkOutTime': function (val) {
+      this.paramDto.checkOutStartTime = val[0]
+      this.paramDto.checkOutEndTime = val[1]
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+  .my-date-picker {
+    width: 100%;
+  }
+</style>

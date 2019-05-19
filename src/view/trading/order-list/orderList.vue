@@ -1,16 +1,18 @@
 <template>
   <div>
-    <order-form></order-form>
+    <order-form @search="listOrder"></order-form>
     <Table stripe :columns="columns" :data="data" :loading="loading">
       <template slot-scope="{ row }" slot="orderNumber">
-        <Button type="text" @click="toOrderDetail(row)">{{ row.orderNumber }}</Button>
+        <a href="#" @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
     </Table>
-    <Page style="text-align: right; margin-top: 20px" :total="total" show-total />
+    <Page style="text-align: right; margin-top: 20px" :total="total" show-total :current.sync="paramDto.page"
+          :page-size="paramDto.limit" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
 import orderForm from './orderForm'
+
 export default {
   name: 'orderList',
   components: {
@@ -19,6 +21,10 @@ export default {
   data () {
     return {
       loading: false,
+      paramDto: {
+        page: 1,
+        limit: 10
+      },
       columns: [
         {
           title: '订单号',
@@ -126,16 +132,24 @@ export default {
           nightCount: 5
         }
       ],
-      total: 0
+      total: 30
     }
   },
   methods: {
-    listOrder () {},
+    listOrder (dto) {
+      Object.assign(this.paramDto, dto)
+      this.paramDto.page = 1
+      this.handlePageChange()
+    },
+    handlePageChange () {
+      console.info('paramDto', this.paramDto)
+    },
     toOrderDetail (row) {
       const orderNumber = row.orderNumber
       const route = {
-        name: 'detail',
-        params: {
+        name: 'orderDetail',
+        path: 'orderDetail',
+        query: {
           orderNumber
         }
       }

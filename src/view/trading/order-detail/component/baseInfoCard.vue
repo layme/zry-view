@@ -34,7 +34,7 @@
         </Col>
         <Col :span="6">
           <FormItem label="预定床位数：">
-            <span>{{ data.bedCount }}</span>
+            <Tag color="blue">{{ data.bedCount }}</Tag>
           </FormItem>
         </Col>
         <Col :span="6">

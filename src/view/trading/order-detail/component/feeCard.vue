@@ -1,24 +1,26 @@
 <template>
-  <Card dis-hover :bordered="false">
-    <p slot="title">
-      费用项目
-    </p>
-    <a href="#" slot="extra" @click.prevent="visible = true">
-      <Icon type="ios-add-circle-outline"/>
-      添加
-    </a>
-    <Row :gutter="10" class="fee-row" v-for="(item, index) in feeList" :key="index" :class="feeRow(index)">
-      <Col :span="8">
-        <Tag color="blue">{{ item.type | feeTypeFilter }}</Tag>
-      </Col>
-      <Col :span="8">
-        <strong>¥ {{ item.money }}</strong>
-      </Col>
-      <Col :span="8">
-        <Button v-if="item.needBack === 1" type="text" size="small" :style="{ color: '#2d8cf0' }">退还</Button>
-        <span v-if="item.needBack === 2">已退还</span>
-      </Col>
-    </Row>
+  <div>
+    <Card dis-hover :bordered="false">
+      <p slot="title">
+        费用项目
+      </p>
+      <a href="#" slot="extra" @click.prevent="visible = true">
+        <Icon type="ios-add-circle-outline"/>
+        添加
+      </a>
+      <Row :gutter="10" class="fee-row" v-for="(item, index) in feeList" :key="index" :class="feeRow(index)">
+        <Col :span="8">
+          <Tag color="blue">{{ item.type | feeTypeFilter }}</Tag>
+        </Col>
+        <Col :span="8">
+          <strong>¥ {{ item.money }}</strong>
+        </Col>
+        <Col :span="8">
+          <Button v-if="item.needBack === 1" type="text" size="small" :style="{ color: '#2d8cf0' }">退还</Button>
+          <span v-if="item.needBack === 2">已退还</span>
+        </Col>
+      </Row>
+    </Card>
     <Modal
       v-model="visible"
       title="添加费用项目"
@@ -34,7 +36,7 @@
         </FormItem>
       </Form>
     </Modal>
-  </Card>
+  </div>
 </template>
 <script>
 export default {
@@ -46,13 +48,7 @@ export default {
           bid: '',
           type: 1,
           money: 100,
-          needBack: 2
-        },
-        {
-          bid: '',
-          type: 1,
-          money: 100,
-          needBack: 0
+          needBack: 1
         }
       ],
       feeDto: {
@@ -101,6 +97,7 @@ export default {
     border: 1px #dcdee2 solid;
     border-radius: 4px;
     padding: 20px 20px 15px 20px;
+    margin: 0 -16px !important;
     &-not-first {
       margin-top: 15px;
     }

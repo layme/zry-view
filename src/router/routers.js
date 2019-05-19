@@ -51,32 +51,51 @@ export default [
     ]
   },
   {
-    path: '/order',
-    name: 'order',
+    path: '/trading',
+    name: 'trading',
     meta: {
       icon: 'ios-book',
-      title: '订单'
+      title: '交易'
     },
     component: Main,
     children: [
       {
-        path: 'list',
-        name: 'list',
+        path: 'order',
+        name: 'order',
         meta: {
           icon: '_qq',
           title: '订单列表'
         },
-        component: () => import('@/view/order/list/orderList.vue')
+        component: () => import('@/view/trading/order-list/orderList.vue')
       },
       {
-        path: ':orderNumber',
-        name: 'detail',
+        path: 'orderDetail',
+        name: 'orderDetail',
         meta: {
           icon: '_qq',
           title: '订单详情',
           hideInMenu: true
         },
-        component: () => import('@/view/order/detail/orderDetail.vue')
+        component: () => import('@/view/trading/order-detail/orderDetail.vue')
+      },
+      {
+        path: 'refund',
+        name: 'refund',
+        meta: {
+          icon: '_qq',
+          title: '退款列表'
+        },
+        component: () => import('@/view/trading/refund-list/refundList.vue')
+      },
+      {
+        path: 'refundDetail',
+        name: 'refundDetail',
+        meta: {
+          icon: '_qq',
+          title: '退款详情',
+          hideInMenu: true
+        },
+        component: () => import('@/view/trading/refund-detail/refundDetail.vue')
       }
     ]
   },

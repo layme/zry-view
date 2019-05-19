@@ -40,6 +40,9 @@ export default {
         beds: [
           {
             isSelect: false
+          },
+          {
+            isSelect: false
           }
         ]
       }
@@ -59,6 +62,7 @@ export default {
     border: 1px #dcdee2 solid;
     border-radius: 4px;
     padding: 20px 20px 15px 20px;
+    margin: 0 -16px;
     &-not-first {
       margin-top: 15px;
     }

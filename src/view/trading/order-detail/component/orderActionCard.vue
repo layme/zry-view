@@ -40,10 +40,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .select {
-    width: 150px
-  }
-
   .my-btn {
     margin-right: 20px;
   }

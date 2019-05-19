@@ -45,8 +45,7 @@ export default {
   },
   data () {
     return {
-      activeName: 'baseInfo',
-      orderNumber: this.$route.params.orderNumber,
+      orderNumber: this.$route.query.orderNumber,
       orderInfo: {
         customer: '易贤超',
         phone: '15659971836',

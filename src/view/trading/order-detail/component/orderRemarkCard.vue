@@ -1,18 +1,20 @@
 <template>
-  <Card dis-hover>
-    <p slot="title">订单备注</p>
-    <Input type="text" v-model.trim="orderRemark.remark" class="remark-cls" :maxlength="50" clearable></Input>
-    <Button type="primary" style="margin-left: 20px">保 存</Button>
-    <Divider dashed/>
-    <Timeline :pending="isPending">
-      <TimelineItem v-for="(item, index) in remarks" :key="index" v-if="index < 2">
-        <p class="time">{{ item.remark }}</p>
-        <p class="content">{{ item.createBy }} · {{ item.createTime }}</p>
-      </TimelineItem>
-      <TimelineItem v-if="isPending">
-        <a href="#" @click="visible = true">查看更多</a>
-      </TimelineItem>
-    </Timeline>
+  <div>
+    <Card dis-hover>
+      <p slot="title">订单备注</p>
+      <Input type="text" v-model.trim="orderRemark.remark" class="remark-cls" :maxlength="50" clearable></Input>
+      <Button type="primary" style="margin-left: 20px">保 存</Button>
+      <Divider dashed/>
+      <Timeline :pending="isPending">
+        <TimelineItem v-for="(item, index) in remarks" :key="index" v-if="index < 2">
+          <p class="time">{{ item.remark }}</p>
+          <p class="content">{{ item.createBy }} · {{ item.createTime }}</p>
+        </TimelineItem>
+        <TimelineItem v-if="isPending">
+          <a href="#" @click="visible = true">查看更多</a>
+        </TimelineItem>
+      </Timeline>
+    </Card>
     <Modal
       v-model="visible"
       title="订单备注"
@@ -26,7 +28,7 @@
         </Timeline>
       </div>
     </Modal>
-  </Card>
+  </div>
 </template>
 <script>
 export default {
@@ -62,11 +64,12 @@ export default {
     width: ~"calc(100% - 100px)"
   }
 
-  .time{
+  .time {
     font-size: 14px;
     font-weight: bold;
   }
-  .content{
+
+  .content {
     padding-left: 5px;
   }
 </style>
