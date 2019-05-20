@@ -23,7 +23,7 @@ export default {
   },
   data () {
     return {
-      orderBid: this.$route.query.orderBid,
+      orderBid: '',
       refundInfo: {
         bid: '',
         orderNumber: 'BJ201905170001',
@@ -194,7 +194,11 @@ export default {
       ]
     }
   },
-  methods: {},
+  methods: {
+    getRefundDetail () {
+      this.orderBid = this.$route.query.orderBid
+    }
+  },
   filters: {
     refundStatusFilter (val) {
       switch (val) {
@@ -208,6 +212,14 @@ export default {
           return '打款异常'
       }
     }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.getRefundDetail()
+    }
+  },
+  created () {
+    this.getRefundDetail()
   }
 }
 </script>

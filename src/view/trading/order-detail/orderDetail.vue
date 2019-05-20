@@ -45,7 +45,7 @@ export default {
   },
   data () {
     return {
-      orderNumber: this.$route.query.orderNumber,
+      orderNumber: '',
       orderInfo: {
         customer: '易贤超',
         phone: '15659971836',
@@ -63,6 +63,8 @@ export default {
   },
   methods: {
     getOrderDetail () {
+      // do something
+      this.orderNumber = this.$route.query.orderNumber
     }
   },
   filters: {
@@ -92,6 +94,14 @@ export default {
           return '已退订'
       }
     }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.getOrderDetail()
+    }
+  },
+  created () {
+    this.getOrderDetail()
   }
 }
 </script>
