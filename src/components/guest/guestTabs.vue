@@ -9,13 +9,16 @@
     <TabPane label="客人喜好">
       <guest-tag></guest-tag>
     </TabPane>
-    <TabPane label="事件记录"></TabPane>
+    <TabPane label="事件记录">
+      <guest-event></guest-event>
+    </TabPane>
   </Tabs>
 </template>
 <script>
 import guestInfo from './components/guestInfo'
 import checkInRecord from './components/checkInRecord'
 import guestTag from './components/guestHobbyTag'
+import guestEvent from './components/guestEvent'
 export default {
   name: 'guestTabs',
   props: {
@@ -25,7 +28,8 @@ export default {
   components: {
     guestInfo,
     checkInRecord,
-    guestTag
+    guestTag,
+    guestEvent
   },
   data () {
     return {

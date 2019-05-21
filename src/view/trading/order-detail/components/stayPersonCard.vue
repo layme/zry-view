@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card>
+    <Card dis-hover>
       <p slot="title">
         入住人信息
       </p>

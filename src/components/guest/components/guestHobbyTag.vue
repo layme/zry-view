@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Row style="height: 75%">
+  <div class="top-div">
+    <Row>
       <Tag class="my-tag"
            :key="index"
            v-for="(tag,index) in hobbyTags"
@@ -23,7 +23,7 @@
               @click="showInput" icon="ios-add"> 新增
       </Button>
     </Row>
-    <Row style="height: 25%; text-align: right">
+    <Row class="special-row">
       <Button v-if="isChange" type="primary" @click="saveTags"> 保 存</Button>
     </Row>
   </div>
@@ -80,11 +80,21 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .top-div {
+    height: 100%;
+  }
   .my-tag {
     margin: 0 20px 20px 0;
   }
 
   .input-new-tag {
     width: 90px;
+  }
+  .special-row {
+    position: absolute;
+    width: 100%;
+    text-align: right;
+    bottom: 20px;
+    padding-right: 20px;
   }
 </style>

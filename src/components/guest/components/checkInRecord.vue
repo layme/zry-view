@@ -11,7 +11,7 @@
         <div>{{ row.checkInDate | dateFilter }}</div>
       </template>
     </Table>
-    <Page style="text-align: right; margin-top: 20px" :total="total" show-total :current.sync="paramDto.page"
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
   </div>
 </template>
@@ -42,6 +42,118 @@ export default {
           'checkInDate': 1501603200000,
           'checkOutDate': 1501689600000,
           'bookDate': 1501423554000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
+          'purpose': null,
+          'channel': null,
+          'impress': null,
+          'suggestion': null
+        }, {
+          'projectName': '北京CBD自如驿',
+          'houseName': '8人间',
+          'orderNumber': 'BJ101170721016',
+          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
+          'room': 'H房间',
+          'bed': '06',
+          'checkInDate': 1501084800000,
+          'checkOutDate': 1501603200000,
+          'bookDate': 1500600193000,
           'purpose': null,
           'channel': null,
           'impress': null,
@@ -125,4 +237,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .my-page {
+    text-align: right;
+    margin-top: 20px
+  }
 </style>

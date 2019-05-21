@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card>
+    <Card dis-hover>
       <p slot="title">订单备注</p>
       <Input type="text" v-model.trim="orderRemark.remark" class="remark-cls" :maxlength="50" clearable></Input>
       <Button type="primary" style="margin-left: 20px">保 存</Button>

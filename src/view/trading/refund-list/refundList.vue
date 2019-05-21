@@ -12,7 +12,7 @@
         <div>{{ row.refundStatus | refundStatusFilter }}</div>
       </template>
     </Table>
-    <Page style="text-align: right; margin-top: 20px" :total="total" show-total :current.sync="paramDto.page"
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
   </div>
 </template>
@@ -193,3 +193,9 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+  .my-page {
+    text-align: right;
+    margin-top: 20px
+  }
+</style>
