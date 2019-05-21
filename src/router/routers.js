@@ -74,7 +74,8 @@ export default [
         meta: {
           icon: '_qq',
           title: '订单详情',
-          hideInMenu: true
+          hideInMenu: true,
+          notCache: true
         },
         component: () => import('@/view/trading/order-detail/orderDetail.vue')
       },
@@ -93,7 +94,8 @@ export default [
         meta: {
           icon: '_qq',
           title: '退款详情',
-          hideInMenu: true
+          hideInMenu: true,
+          notCache: true
         },
         component: () => import('@/view/trading/refund-detail/refundDetail.vue')
       }

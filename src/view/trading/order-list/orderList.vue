@@ -3,7 +3,7 @@
     <order-form @search="listOrder"></order-form>
     <Table stripe :columns="columns" :data="data" :loading="loading">
       <template slot-scope="{ row }" slot="orderNumber">
-        <a href="#" @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
+        <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
     </Table>
     <Page style="text-align: right; margin-top: 20px" :total="total" show-total :current.sync="paramDto.page"

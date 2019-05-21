@@ -95,11 +95,11 @@ export default {
     }
   },
   watch: {
-    'paramDto.checkInTime': function (val) {
+    'paramDto.checkInTime' (val) {
       this.paramDto.checkInStartTime = val[0]
       this.paramDto.checkInEndTime = val[1]
     },
-    'paramDto.refundTime': function (val) {
+    'paramDto.refundTime' (val) {
       this.paramDto.refundStartTime = val[0]
       this.paramDto.refundEndTime = val[1]
     }

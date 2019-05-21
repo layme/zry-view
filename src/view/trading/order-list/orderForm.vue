@@ -123,11 +123,11 @@ export default {
     }
   },
   watch: {
-    'paramDto.checkInTime': function (val) {
+    'paramDto.checkInTime' (val) {
       this.paramDto.checkInStartTime = val[0]
       this.paramDto.checkInEndTime = val[1]
     },
-    'paramDto.checkOutTime': function (val) {
+    'paramDto.checkOutTime' (val) {
       this.paramDto.checkOutStartTime = val[0]
       this.paramDto.checkOutEndTime = val[1]
     }

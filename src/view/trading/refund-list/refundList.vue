@@ -3,7 +3,7 @@
     <refund-form @search="listRefund"></refund-form>
     <Table stripe :columns="columns" :data="data" :loading="loading">
       <template slot-scope="{ row }" slot="orderNumber">
-        <a href="#" @click="toRefundDetail(row)">{{ row.orderNumber }}</a>
+        <a @click="toRefundDetail(row)">{{ row.orderNumber }}</a>
       </template>
       <template slot-scope="{ row }" slot="orderStatus">
         <div>{{ row.orderStatus | orderStatusFilter }}</div>
@@ -99,8 +99,8 @@ export default {
           refund: 30
         },
         {
-          bid: 'as70a7s9d0786',
-          orderNumber: 'BJ201905170001',
+          bid: 'as70a7s9d0787',
+          orderNumber: 'BJ201905170008',
           orderStatus: 6,
           refundStatus: 2,
           projectName: 'CBD自如驿',
@@ -113,8 +113,8 @@ export default {
           refund: 30
         },
         {
-          bid: 'as70a7s9d0786',
-          orderNumber: 'BJ201905170001',
+          bid: 'as70a7s9d0789',
+          orderNumber: 'BJ201905170009',
           orderStatus: 6,
           refundStatus: 2,
           projectName: 'CBD自如驿',
