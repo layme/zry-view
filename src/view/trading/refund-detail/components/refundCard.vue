@@ -4,7 +4,7 @@
       退款金额操作 - {{ index }}
     </p>
     <div slot="extra">
-      <span>编辑退订方式：
+      <span>编辑退款：
         <i-switch size="large" v-model="refundData.cancelExitWay" :true-value="1" :false-value="0"
                   :disabled="refundStatus !== 1" @on-change="handleSwitchChange">
           <span slot="open">开启</span>
@@ -94,7 +94,7 @@ export default {
   },
   filters: {
     dateFilter (val) {
-      return getDate(val / 1000, 'year')
+      return getDate(val, 'all')
     },
     bedStatusFilter (val) {
     },

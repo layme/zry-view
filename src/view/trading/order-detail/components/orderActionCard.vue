@@ -4,6 +4,7 @@
     <Row :gutter="20">
       <Col :span="16">
         <bed-card></bed-card>
+        <Button type="primary" class="my-btn">退 订</Button>
         <Button type="primary" class="my-btn">换 租</Button>
         <Button type="primary" class="my-btn">办理入住</Button>
         <Button type="primary" class="my-btn">退 租</Button>

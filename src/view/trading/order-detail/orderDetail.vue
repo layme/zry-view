@@ -30,10 +30,10 @@
   </div>
 </template>
 <script>
-import baseInfoCard from './component/baseInfoCard'
-import stayPersonCard from './component/stayPersonCard'
-import orderRemarkCard from './component/orderRemarkCard'
-import orderActionCard from './component/orderActionCard'
+import baseInfoCard from './components/baseInfoCard'
+import stayPersonCard from './components/stayPersonCard'
+import orderRemarkCard from './components/orderRemarkCard'
+import orderActionCard from './components/orderActionCard'
 
 export default {
   name: 'orderDetail',

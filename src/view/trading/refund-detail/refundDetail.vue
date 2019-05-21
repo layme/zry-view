@@ -8,18 +8,18 @@
     </Row>
     <refund-card v-for="(refund, index) in refundList" :key="index" :index="index + 1" :refundStatus="refundInfo.refundStatus"
                  :refund="refund" class="card-cls"></refund-card>
-    <amount-predict-card class="card-cls"></amount-predict-card>
+    <refund-verify-card class="card-cls"></refund-verify-card>
   </div>
 </template>
 <script>
-import refundCard from './component/refundCard'
-import amountPredictCard from './component/amountPredictCard'
+import refundCard from './components/refundCard'
+import refundVerifyCard from './components/refundVerifyCard'
 
 export default {
   name: 'refundDetail',
   components: {
     refundCard,
-    amountPredictCard
+    refundVerifyCard
   },
   data () {
     return {
