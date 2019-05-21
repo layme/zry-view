@@ -19,3 +19,11 @@ export const addORemoveBlack = data => {
     data: data
   })
 }
+
+export const removeEvent = data => {
+  return axios.request({
+    url: '',
+    method: 'post',
+    data: data
+  })
+}

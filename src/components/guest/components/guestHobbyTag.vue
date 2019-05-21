@@ -16,7 +16,7 @@
              v-model="inputValue"
              ref="saveTagInput"
              :maxlength="15"
-             @on-keyup.enter.native="handleInputConfirm"
+             @keyup.enter.native="handleInputConfirm"
              @on-blur="handleInputConfirm">
       </Input>
       <Button v-else-if="hobbyTags && hobbyTags.length < 30" class="my-tag"
@@ -75,6 +75,8 @@ export default {
 
     // 向后台提交标签
     saveTags () {
+      this.$Message.success('save success')
+      this.isChange = false
     }
   }
 }

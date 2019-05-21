@@ -18,10 +18,12 @@
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
-      :title="title">
-      <Form :model="eventDto" :rules="eventRules" ref="eventForm" :label-width="60">
+      :title="title"
+      :loading="loading"
+      @on-ok="validForm">
+      <Form :model="eventDto" :rules="eventRules" ref="eventForm" :label-width="60" v-if="visible">
         <FormItem label="类型" prop="eventType">
-          <Select v-model="eventDto.eventType">
+          <Select v-model="eventDto.eventType" class="my-form">
             <Option
               v-for="item in eventTypeOptions"
               :key="item.value"
@@ -31,7 +33,7 @@
           </Select>
         </FormItem>
         <FormItem label="时间" prop="eventDate">
-          <DatePicker type="datetime" :value="eventDto.eventDate" placeholder="选择日期时间"
+          <DatePicker type="datetime" class="my-form" v-model="eventDto.eventDate" placeholder="选择日期时间"
                       :options="dateOptions"></DatePicker>
         </FormItem>
         <FormItem label="内容" prop="eventContent">
@@ -111,33 +113,30 @@ export default {
       ],
       total: 0,
       visible: false,
+      loading: true,
       title: '',
-      eventDto: {
-        guestFid: '',
-        eventFid: '',
-        eventContent: '',
-        eventType: '',
-        eventDate: ''
-      },
+      eventDto: {},
       eventRules: {
         eventType: [
-          { required: true, message: '请选择类型', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择类型', trigger: 'change' }
         ],
         eventDate: [
-          { required: true, message: '请选择时间', trigger: 'change' }
+          { required: true, type: 'date', message: '请选择时间', trigger: 'change' }
         ],
         eventContent: [
           { required: true, message: '请输入内容', trigger: 'blur' },
           { max: 200, message: '长度在200个字符以内', trigger: 'blur' }
         ]
       },
-      eventTypeOptions: [{
-        label: '好评',
-        value: 1
-      }, {
-        label: '投诉',
-        value: 2
-      }],
+      eventTypeOptions: [
+        {
+          label: '好评',
+          value: 1
+        }, {
+          label: '投诉',
+          value: 2
+        }
+      ],
       dateOptions: {
         shortcuts: [
           {
@@ -158,28 +157,61 @@ export default {
       console.info('paramDto', this.paramDto)
     },
     addEvent () {
+      this.title = '添加事件'
+      this.visible = true
+      this.eventDto = {
+        guestFid: '',
+        eventFid: '',
+        eventContent: '',
+        eventType: 1,
+        eventDate: ''
+      }
+    },
+    validForm () {
+      this.loading = true
+      this.$refs['eventForm'].validate((valid) => {
+        if (valid) {
+          this.save()
+        } else {
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 500)
+        }
+      })
+    },
+    save () {
+      this.$Message.success('save success')
+      this.getEventList()
+      this.visible = false
     },
     updateEvent () {
     },
     removeEvent () {
-    },
-    openModal () {
-      this.visible = true
-      this.eventDto.guestFid = this.event.fid
-      this.eventDto.eventFid = this.event.eventFid
-      this.eventDto.eventContent = this.event.eventContent
-      this.eventDto.eventType = this.event.eventType
-      this.eventDto.eventDate = this.event.eventDate
+      this.$Message.success('remove success')
+      this.visible = false
     },
     handleUpdate (index) {
+      this.title = '修改事件'
       this.visible = true
       this.eventDto.guestFid = this.eventList[index].fid
       this.eventDto.eventFid = this.eventList[index].eventFid
       this.eventDto.eventContent = this.eventList[index].eventContent
       this.eventDto.eventType = this.eventList[index].eventType
-      this.eventDto.eventDate = this.eventList[index].eventDate
+      this.eventDto.eventDate = new Date(this.eventList[index].eventDate)
     },
-    handleRemove () {
+    handleRemove (index) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>确定删除该事件吗？</p>',
+        onOk: () => {
+          this.removeEvent(index)
+        },
+        onCancel: () => {
+        }
+      })
     }
   },
   created () {
@@ -207,7 +239,6 @@ export default {
     min-height: 70%;
     overflow-y: auto;
     padding: 5px;
-    /*border: 1px #000 solid;*/
   }
 
   .my-page {
@@ -222,6 +253,9 @@ export default {
 
   .card-cls {
     margin: 10px 0;
-    /*margin-bottom: 10px;*/
+  }
+
+  .my-form {
+    width: 50%;
   }
 </style>
