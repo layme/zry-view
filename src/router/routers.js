@@ -102,6 +102,54 @@ export default [
     ]
   },
   {
+    path: '/smartLock',
+    name: 'lock',
+    meta: {
+      icon: 'ios-book',
+      title: '智能锁'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'temporaryPassword',
+        name: 'temporaryPassword',
+        meta: {
+          icon: '_qq',
+          title: '临时密码',
+          notCache: true
+        },
+        component: () => import('@/view/smart-lock/temporary-password/temporaryPassword.vue')
+      },
+      {
+        path: 'passwordRemake',
+        name: 'passwordRemake',
+        meta: {
+          icon: '_qq',
+          title: '密码重制'
+        },
+        component: () => import('@/view/smart-lock/password-remake/passwordRemake.vue')
+      },
+      {
+        path: 'workPassword',
+        name: 'workPassword',
+        meta: {
+          icon: '_qq',
+          title: '内务密码'
+        },
+        component: () => import('@/view/smart-lock/work-password/workPassword.vue')
+      },
+      {
+        path: 'batteryMonitor',
+        name: 'batteryMonitor',
+        meta: {
+          icon: '_qq',
+          title: '电量查询'
+        },
+        component: () => import('@/view/smart-lock/battery-monitor/batteryMonitor.vue')
+      }
+    ]
+  },
+  {
     path: '',
     name: 'doc',
     meta: {

@@ -168,7 +168,6 @@ export default {
       }
     },
     validForm () {
-      this.loading = true
       this.$refs['eventForm'].validate((valid) => {
         if (valid) {
           this.save()

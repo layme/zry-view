@@ -10,10 +10,10 @@
       </Col>
       <Col :span="12" style="text-align: right">
         <ButtonGroup>
-          <Button type="primary" icon="ios-time-outline" ghost>订单日志</Button>
-          <Button type="primary" icon="ios-card" ghost>支付明细</Button>
+          <Button type="primary" icon="ios-time-outline" ghost @click="logVisible = true">订单日志</Button>
+          <Button type="primary" icon="ios-card" ghost @click="paymentVisible = true">支付明细</Button>
           <Button type="primary" icon="ios-print-outline" ghost>打印</Button>
-          <Button type="primary" icon="ios-mail-outline" ghost>发送邮件</Button>
+          <Button type="primary" icon="ios-mail-outline" ghost @click="emailRender">发送邮件</Button>
         </ButtonGroup>
       </Col>
     </Row>
@@ -27,6 +27,23 @@
       </Col>
     </Row>
     <order-action-card class="card-cls"></order-action-card>
+    <Modal
+      v-model="logVisible"
+      title="订单日志"
+      footer-hide>
+      <div :style="{ paddingLeft: '20px' }">
+        <order-log v-if="logVisible" :order-bid="orderInfo.bid"></order-log>
+      </div>
+    </Modal>
+    <Modal
+      v-model="paymentVisible"
+      title="支付明细"
+      width="60"
+      footer-hide>
+      <div :style="{ paddingLeft: '20px' }">
+        <payment-detail v-if="paymentVisible" :order-bid="orderInfo.bid"></payment-detail>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -34,6 +51,8 @@ import baseInfoCard from './components/baseInfoCard'
 import stayPersonCard from './components/stayPersonCard'
 import orderRemarkCard from './components/orderRemarkCard'
 import orderActionCard from './components/orderActionCard'
+import orderLog from './components/orderLog'
+import paymentDetail from './components/paymentDetail'
 
 export default {
   name: 'orderDetail',
@@ -41,12 +60,15 @@ export default {
     baseInfoCard,
     stayPersonCard,
     orderRemarkCard,
-    orderActionCard
+    orderActionCard,
+    orderLog,
+    paymentDetail
   },
   data () {
     return {
       orderNumber: '',
       orderInfo: {
+        bid: '561972384',
         customer: '易贤超',
         phone: '15659971836',
         email: '',
@@ -58,13 +80,34 @@ export default {
         can: '2019-05-21',
         amount: 300.00,
         status: 2
-      }
+      },
+      logVisible: false,
+      paymentVisible: false,
+      email: ''
     }
   },
   methods: {
     getOrderDetail () {
       // do something
       this.orderNumber = this.$route.query.orderNumber
+    },
+    emailRender () {
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              value: this.email,
+              autofocus: true,
+              placeholder: '请输入邮箱'
+            },
+            on: {
+              input: (val) => {
+                this.email = val
+              }
+            }
+          })
+        }
+      })
     }
   },
   filters: {
