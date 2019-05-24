@@ -15,7 +15,7 @@
       @on-ok="validForm">
       <Form :model="applyDto" :rules="applyRules" ref="applyForm" :label-width="60" v-if="visible">
         <FormItem label="订单号" prop="orderNumber">
-          <Input type="text" v-model="applyDto.orderNumber" clearable></Input>
+          <Input type="text" v-model.trim="applyDto.orderNumber" clearable></Input>
         </FormItem>
         <FormItem label="项目" prop="projectName">
           <Input type="text" v-model="applyDto.projectName" disabled></Input>
@@ -31,7 +31,7 @@
           </Select>
         </FormItem>
         <FormItem label="备注" prop="remark">
-          <Input :rows="4" type="textarea" v-model="applyDto.remark"
+          <Input :rows="4" type="textarea" v-model.trim="applyDto.remark"
                  :maxlength="200" placeholder="此处最多输入200个字符"></Input>
         </FormItem>
       </Form>

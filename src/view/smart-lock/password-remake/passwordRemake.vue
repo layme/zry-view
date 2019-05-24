@@ -2,7 +2,7 @@
   <div>
     <Form :model="paramDto" :label-width="60" inline>
       <FormItem label="订单号" prop="orderNumber">
-        <Input type="text" v-model="paramDto.orderNumber" clearable :style="{ width: '200px' }"></Input>
+        <Input type="text" v-model.trim="paramDto.orderNumber" clearable :style="{ width: '200px' }"></Input>
       </FormItem>
       <FormItem>
         <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>

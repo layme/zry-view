@@ -143,7 +143,6 @@ export default {
       const orderBid = row.bid
       const route = {
         name: 'refundDetail',
-        path: 'refundDetail',
         query: {
           orderBid
         }

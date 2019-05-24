@@ -13,7 +13,7 @@
       </Tag>
       <Input class="my-tag input-new-tag"
              v-if="inputVisible"
-             v-model="inputValue"
+             v-model.trim="inputValue"
              ref="saveTagInput"
              :maxlength="15"
              @keyup.enter.native="handleInputConfirm"

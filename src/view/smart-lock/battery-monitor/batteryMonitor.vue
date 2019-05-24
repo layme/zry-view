@@ -4,10 +4,10 @@
       <FormItem label="项目名称">
         <Select v-model="paramDto.projectBid" :style="{ width: '200px' }">
           <Option
-            v-for="item in projectOptions"
-            :key="item.projectBid"
+            v-for="item in $store.state.user.projectList"
+            :key="item.bid"
             :label="item.projectName"
-            :value="item.projectBid">
+            :value="item.bid">
           </Option>
         </Select>
       </FormItem>

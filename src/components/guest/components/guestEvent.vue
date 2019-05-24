@@ -37,7 +37,7 @@
                       :options="dateOptions"></DatePicker>
         </FormItem>
         <FormItem label="内容" prop="eventContent">
-          <Input :rows="4" type="textarea" v-model="eventDto.eventContent"
+          <Input :rows="4" type="textarea" v-model.trim="eventDto.eventContent"
                  :maxlength="200" placeholder="此处最多输入200个字符"></Input>
         </FormItem>
       </Form>

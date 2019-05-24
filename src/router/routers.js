@@ -150,6 +150,36 @@ export default [
     ]
   },
   {
+    path: '/preferential',
+    name: 'preferential',
+    meta: {
+      icon: 'ios-book',
+      title: '优惠'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'activity',
+        name: 'activity',
+        meta: {
+          icon: '_qq',
+          title: '优惠活动'
+        },
+        component: () => import('@/view/preferential/activity-list/activityList.vue')
+      },
+      {
+        path: 'activityCreate',
+        name: 'activityCreate',
+        meta: {
+          icon: '_qq',
+          title: '新增优惠活动',
+          hideInMenu: true
+        },
+        component: () => import('@/view/preferential/activity-create/activityCreate.vue')
+      }
+    ]
+  },
+  {
     path: '',
     name: 'doc',
     meta: {

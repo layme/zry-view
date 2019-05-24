@@ -1,7 +1,7 @@
 <template>
   <div>
     <order-form @search="listOrder"></order-form>
-    <Table stripe :columns="columns" :data="data" :loading="loading">
+    <Table stripe :columns="columns" :data="orderList" :loading="loading">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
@@ -79,7 +79,7 @@ export default {
           key: 'amount'
         }
       ],
-      data: [
+      orderList: [
         {
           bid: 'as70a7s9d0786',
           orderNumber: 'BJ201905170001',
@@ -148,7 +148,6 @@ export default {
       const orderNumber = row.orderNumber
       const route = {
         name: 'orderDetail',
-        path: 'orderDetail',
         query: {
           orderNumber
         }
