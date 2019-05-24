@@ -11,7 +11,7 @@
           <Col :span="12">
             <FormItem label="活动时间" prop="dateRange">
               <DatePicker v-model="activityDto.dateRange" type="daterange" split-panels placeholder=""
-                          :editable="false" class="my-date-picker"></DatePicker>
+                          :editable="false" class="my-date-picker" :options="datePickerOptions"></DatePicker>
             </FormItem>
           </Col>
         </Row>
@@ -85,7 +85,7 @@
                 <a @click="deleteTicket(index)">删除</a>
               </template>
             </Table>
-            <a v-if="activityDto.ticketInfo.length < 99" class="my-btn" @click="visible = true">新增优惠券</a>
+            <a v-if="activityDto.ticketInfo.length < 99" @click="visible = true">新增优惠券</a>
           </FormItem>
         </Row>
         <Row>
@@ -108,8 +108,9 @@
   </Row>
 </template>
 <script>
-import ticketForm from './ticketForm.vue'
+import ticketForm from '../components/ticketForm.vue'
 import { getDate } from '@/libs/tools'
+import { mapMutations } from 'vuex'
 export default {
   name: 'activityCreate',
   components: {
@@ -186,10 +187,18 @@ export default {
         }
       ],
       visible: false,
-      loading: true
+      loading: true,
+      datePickerOptions: {
+        disabledDate (date) {
+          return date && date.valueOf() < Date.now() - 86400000
+        }
+      }
     }
   },
   methods: {
+    ...mapMutations([
+      'closeTag'
+    ]),
     handleIsLimitMoneyChange (val) {
       if (!val) {
         this.activityDto.limitMoney = ''
@@ -245,6 +254,9 @@ export default {
     saveActivity () {
       this.$Message.success('save activity')
       console.info('activityDto', this.activityDto)
+      this.closeTag({
+        name: 'activityCreate'
+      })
     }
   },
   watch: {

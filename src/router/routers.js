@@ -176,6 +176,17 @@ export default [
           hideInMenu: true
         },
         component: () => import('@/view/preferential/activity-create/activityCreate.vue')
+      },
+      {
+        path: 'activityDetail',
+        name: 'activityDetail',
+        meta: {
+          icon: '_qq',
+          title: '优惠活动详情',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/preferential/activity-detail/activityDetail.vue')
       }
     ]
   },

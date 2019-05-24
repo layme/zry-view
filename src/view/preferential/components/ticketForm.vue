@@ -14,7 +14,7 @@
                 :rules="dateRangeRules">
         <Radio v-model="dateRange"></Radio>
         <DatePicker v-model="ticketDto.dateRange" type="daterange" split-panels placeholder="" :editable="false"
-                    :disabled="!dateRange" class="my-date-range" :options="DatePickerOptions"></DatePicker>
+                    :disabled="!dateRange" class="my-date-range" :options="datePickerOptions"></DatePicker>
       </FormItem>
       <FormItem prop="limitDate" :label-width="0" class="my-bottom"
                 :rules="limitDateRules">
@@ -59,7 +59,7 @@ export default {
           { pattern: /^(?!00)(?:[0-9]{1,4}|10000)$/, message: '请输入 0～10000 的整数', trigger: 'blur' }
         ]
       },
-      DatePickerOptions: {
+      datePickerOptions: {
         disabledDate (date) {
           return date && date.valueOf() < Date.now() - 86400000
         }

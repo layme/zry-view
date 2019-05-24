@@ -137,7 +137,16 @@ export default {
       }
       this.$router.push(route)
     },
-    toActivityDetail (row) {},
+    toActivityDetail (row) {
+      const activityBid = row.activityBid
+      const route = {
+        name: 'activityDetail',
+        query: {
+          activityBid
+        }
+      }
+      this.$router.push(route)
+    },
     statusColor (val) {
       switch (val) {
         case 0:
