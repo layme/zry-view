@@ -11,7 +11,7 @@
           <Col :span="12">
             <FormItem label="活动时间" prop="dateRange">
               <DatePicker v-model="activityDto.dateRange" type="daterange" split-panels placeholder=""
-                          class="my-date-picker"></DatePicker>
+                          :editable="false" class="my-date-picker"></DatePicker>
             </FormItem>
           </Col>
         </Row>
@@ -28,19 +28,28 @@
             <FormItem label="使用条件" required>
               <Row class="my-row">
                 <FormItem prop="" :label-width="0">
-                  <Checkbox v-model="limitMoney" @on-change="handleLimitMoneyChange"></Checkbox>
+                  <Checkbox v-model="isLimitMoney" @on-change="handleIsLimitMoneyChange"></Checkbox>
                   满
-                  <Input v-model.trim="activityDto.activityCondition" placeholder="" clearable
-                         :disabled="!limitMoney" class="condition"></Input>
+                  <Input v-model.trim="activityDto.limitMoney" placeholder="" clearable
+                         :disabled="!isLimitMoney" class="condition"></Input>
                   可用
                 </FormItem>
               </Row>
-              <Row v-for="(item, index) in activityDto.limitProjectInfo" :key="index" class="my-row"
+              <Row v-if="!isLimitProject" class="my-row">
+                <FormItem :label-width="0">
+                  <Checkbox v-model="isLimitProject" @on-change="handleIsLimitProjectChange"></Checkbox>
+                  限
+                  <Select class="my-select" :disabled="!isLimitProject"></Select>
+                  <Select class="my-select" :disabled="!isLimitProject"></Select>
+                  可用
+                </FormItem>
+              </Row>
+              <Row v-else v-for="(item, index) in activityDto.limitProjectInfo" :key="index" class="my-row"
                    :style="index > 0 ? { paddingLeft: '26px' } : ''">
                 <FormItem :prop="'limitProjectInfo.' + index + '.projectBid'" :label-width="0">
-                  <Checkbox v-model="condition" @on-change="handleConditionChange" v-show="index === 0"></Checkbox>
+                  <Checkbox v-model="isLimitProject" @on-change="handleIsLimitProjectChange" v-if="index === 0"></Checkbox>
                   限
-                  <Select v-model="item.projectBid" class="my-select" :disabled="!condition">
+                  <Select v-model="item.projectBid" class="my-select" :disabled="!isLimitProject">
                     <Option
                       v-for="item in $store.state.user.projectList"
                       :key="item.bid"
@@ -48,7 +57,7 @@
                       :value="item.bid">
                     </Option>
                   </Select>
-                  <Select v-model="item.houseTypeBid" class="my-select" :disabled="!condition">
+                  <Select v-model="item.houseTypeBid" class="my-select" :disabled="!isLimitProject">
                     <Option
                       v-for="item in $store.state.user.projectList"
                       :key="item.bid"
@@ -57,10 +66,10 @@
                     </Option>
                   </Select>
                   可用
-                  <a v-if="index === activityDto.limitProjectInfo.length - 1 && condition" class="my-btn"
-                     @click="addCondition">增加</a>
-                  <a v-else-if="index < activityDto.limitProjectInfo.length - 1 && condition" class="my-btn"
-                     @click="removeCondition(index)">删除</a>
+                  <a v-if="index === activityDto.limitProjectInfo.length - 1 && isLimitProject" class="my-btn"
+                     @click="addLimitProject">增加</a>
+                  <a v-else-if="index < activityDto.limitProjectInfo.length - 1 && isLimitProject" class="my-btn"
+                     @click="removeLimitProject(index)">删除</a>
                 </FormItem>
               </Row>
             </FormItem>
@@ -76,7 +85,7 @@
                 <a @click="deleteTicket(index)">删除</a>
               </template>
             </Table>
-            <a class="my-btn" @click="visible = true">新增优惠券</a>
+            <a v-if="activityDto.ticketInfo.length < 99" class="my-btn" @click="visible = true">新增优惠券</a>
           </FormItem>
         </Row>
         <Row>
@@ -114,7 +123,7 @@ export default {
         startDate: '',
         endDate: '',
         activityContent: '',
-        activityCondition: '',
+        limitMoney: '',
         limitProjectInfo: [
           {
             projectBid: '',
@@ -142,8 +151,8 @@ export default {
           { type: 'string', max: 200, message: '最多输入200字', trigger: 'blur' }
         ]
       },
-      limitMoney: false,
-      condition: false,
+      isLimitMoney: false,
+      isLimitProject: false,
       columns: [
         {
           title: '批次号',
@@ -181,12 +190,12 @@ export default {
     }
   },
   methods: {
-    handleLimitMoneyChange (val) {
+    handleIsLimitMoneyChange (val) {
       if (!val) {
-        this.activityDto.activityCondition = ''
+        this.activityDto.limitMoney = ''
       }
     },
-    handleConditionChange (val) {
+    handleIsLimitProjectChange (val) {
       if (!val) {
         this.activityDto.limitProjectInfo = [
           {
@@ -196,7 +205,7 @@ export default {
         ]
       }
     },
-    addCondition () {
+    addLimitProject () {
       this.activityDto.limitProjectInfo.push(
         {
           projectBid: '',
@@ -204,7 +213,7 @@ export default {
         }
       )
     },
-    removeCondition (index) {
+    removeLimitProject (index) {
       this.activityDto.limitProjectInfo.splice(index, 1)
     },
     handlePush (val) {
@@ -235,6 +244,7 @@ export default {
     },
     saveActivity () {
       this.$Message.success('save activity')
+      console.info('activityDto', this.activityDto)
     }
   },
   watch: {

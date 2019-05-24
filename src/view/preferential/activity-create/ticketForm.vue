@@ -13,7 +13,7 @@
       <FormItem prop="dateRange" :label-width="0"
                 :rules="dateRangeRules">
         <Radio v-model="dateRange"></Radio>
-        <DatePicker v-model="ticketDto.dateRange" type="daterange" split-panels placeholder=""
+        <DatePicker v-model="ticketDto.dateRange" type="daterange" split-panels placeholder="" :editable="false"
                     :disabled="!dateRange" class="my-date-range" :options="DatePickerOptions"></DatePicker>
       </FormItem>
       <FormItem prop="limitDate" :label-width="0" class="my-bottom"
@@ -94,8 +94,8 @@ export default {
       this.resetFormItem('limitDate')
     },
     'ticketDto.dateRange' (val) {
-      this.ticketDto.startDate = getDate(val[0], 'date')
-      this.ticketDto.endDate = getDate(val[1], 'date')
+      this.ticketDto.startDate = val[0] ? getDate(val[0], 'date') : ''
+      this.ticketDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     }
   },
   computed: {

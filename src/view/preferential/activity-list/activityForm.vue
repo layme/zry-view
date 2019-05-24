@@ -54,7 +54,7 @@
       </Col>
       <Col span="12" style="text-align: right">
         <FormItem>
-          <Button type="warning" @click="addActivity">新建优惠活动</Button>
+          <Button type="primary" @click="addActivity">新建优惠活动</Button>
         </FormItem>
       </Col>
     </Row>
