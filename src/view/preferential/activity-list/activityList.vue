@@ -1,7 +1,7 @@
 <template>
   <div>
     <activity-form @search="listActivity" @create="createActivity"></activity-form>
-    <Table stripe :columns="columns" :data="activityList" :loading="loading">
+    <Table stripe :columns="columns" :data="activityList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="activityNumber">
         <a @click="toActivityDetail(row)">{{ row.activityNumber }}</a>
       </template>
@@ -9,8 +9,14 @@
         <Tag :color="statusColor(row.status)">{{ row.status | statusFilter }}</Tag>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a class="my-btn">开启</a>
-        <a>关闭</a>
+        <div v-if="row.status === 0">
+          <a class="my-btn" @click="updateActivity(row.activityBid, 1)">开启</a>
+          <a @click="updateActivity(row.activityBid, 2)">关闭</a>
+        </div>
+        <div v-else-if="row.status === 1">
+          <a @click="updateActivity(row.activityBid, 2)">关闭</a>
+        </div>
+        <div v-else>-</div>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
@@ -115,7 +121,8 @@ export default {
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          width: 100
         }
       ]
     }
@@ -133,7 +140,7 @@ export default {
     },
     createActivity () {
       const route = {
-        name: 'activityCreate'
+        name: 'createActivity'
       }
       this.$router.push(route)
     },
@@ -158,7 +165,11 @@ export default {
         case 3:
           return 'orange'
       }
-    }
+    },
+    updateActivity (activityBid, activityStatus) {}
+  },
+  created () {
+    this.listActivity()
   },
   filters: {
     statusFilter (val) {
@@ -177,6 +188,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .my-table {
+    margin-top: 20px;
+  }
   .my-btn {
     margin-right: 10px;
   }

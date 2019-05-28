@@ -18,7 +18,7 @@
         <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>
       </FormItem>
     </Form>
-    <Table stripe :columns="columns" :data="batteryList" :loading="loading" class="my-table">
+    <Table stripe :columns="columns" :data="batteryList" :loading="loading">
       <template slot-scope="{ row }" slot="power">
         <Tag :color="powerColor(row.power)">{{ row.power }}</Tag>
       </template>

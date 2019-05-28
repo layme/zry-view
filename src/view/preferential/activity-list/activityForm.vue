@@ -48,19 +48,17 @@
     </Row>
     <Row :gutter="20">
       <Col span="12">
-        <FormItem>
-          <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
-        </FormItem>
+        <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <FormItem>
-          <Button type="primary" @click="addActivity">新建优惠活动</Button>
-        </FormItem>
+        <Button type="primary" @click="addActivity">新增优惠活动</Button>
       </Col>
     </Row>
   </Form>
 </template>
 <script>
+import { getDate } from '@/libs/tools'
+
 export default {
   name: 'activityForm',
   data () {
@@ -105,8 +103,8 @@ export default {
   },
   watch: {
     'paramDto.dateRange' (val) {
-      this.paramDto.startDate = val[0]
-      this.paramDto.endDate = val[1]
+      this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
+      this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     }
   }
 }

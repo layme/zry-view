@@ -1,7 +1,7 @@
 <template>
   <div>
     <order-form @search="listOrder"></order-form>
-    <Table stripe :columns="columns" :data="orderList" :loading="loading">
+    <Table stripe :columns="columns" :data="orderList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
@@ -158,6 +158,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .my-table {
+    margin-top: 20px
+  }
   .my-page {
     text-align: right;
     margin-top: 20px

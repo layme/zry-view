@@ -40,14 +40,10 @@
     </Row>
     <Row :gutter="20">
       <Col span="12">
-        <FormItem>
-          <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
-        </FormItem>
+        <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <FormItem>
-          <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
-        </FormItem>
+        <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
       </Col>
     </Row>
   </Form>

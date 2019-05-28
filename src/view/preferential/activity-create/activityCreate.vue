@@ -255,14 +255,14 @@ export default {
       this.$Message.success('save activity')
       console.info('activityDto', this.activityDto)
       this.closeTag({
-        name: 'activityCreate'
+        name: 'createActivity'
       })
     }
   },
   watch: {
     'activityDto.dateRange' (val) {
-      this.activityDto.startDate = getDate(val[0], 'date')
-      this.activityDto.endDate = getDate(val[1], 'date')
+      this.activityDto.startDate = val[0] ? getDate(val[0], 'date') : ''
+      this.activityDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     }
   }
 }

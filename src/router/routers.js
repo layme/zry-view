@@ -1,5 +1,5 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
+// import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -102,6 +102,48 @@ export default [
     ]
   },
   {
+    path: '/resource',
+    name: 'resource',
+    meta: {
+      icon: 'ios-book',
+      title: '房源'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'project',
+        name: 'project',
+        meta: {
+          icon: '_qq',
+          title: '项目'
+        },
+        component: () => import('@/view/house-resource/project-list/projectList.vue')
+      },
+      {
+        path: 'addProject',
+        name: 'addProject',
+        meta: {
+          icon: '_qq',
+          title: '新增项目',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/house-resource/project-action/project.vue')
+      },
+      {
+        path: 'updateProject',
+        name: 'updateProject',
+        meta: {
+          icon: '_qq',
+          title: '修改项目',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/house-resource/project-action/project.vue')
+      }
+    ]
+  },
+  {
     path: '/smartLock',
     name: 'lock',
     meta: {
@@ -150,6 +192,71 @@ export default [
     ]
   },
   {
+    path: '/report',
+    name: 'report',
+    meta: {
+      icon: 'ios-book',
+      title: '报表'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'occupancyRate',
+        name: 'occupancyRate',
+        meta: {
+          icon: '_qq',
+          title: '入住率'
+        },
+        component: () => import('@/view/report/occupancy-rate/occupancyRate.vue')
+      },
+      {
+        path: 'profitLoss',
+        name: 'profitLoss',
+        meta: {
+          icon: '_qq',
+          title: '盈亏报表'
+        },
+        component: () => import('@/view/report/profit-loss/profitLoss.vue')
+      },
+      {
+        path: 'operationIndex',
+        name: 'operationIndex',
+        meta: {
+          icon: '_qq',
+          title: '运营指标'
+        },
+        component: () => import('@/view/report/operation-index/operationIndex.vue')
+      },
+      {
+        path: 'dailyIndex',
+        name: 'dailyIndex',
+        meta: {
+          icon: '_qq',
+          title: '单日运营指标'
+        },
+        component: () => import('@/view/report/daily-index/dailyIndex.vue')
+      },
+      {
+        path: 'guestData',
+        name: 'guestData',
+        meta: {
+          icon: '_qq',
+          title: '客群数据'
+        },
+        component: () => import('@/view/report/guest-data/guestData.vue')
+      },
+      {
+        path: 'guestAnalysis',
+        name: 'guestAnalysis',
+        meta: {
+          icon: '_qq',
+          title: '客群分析'
+        },
+        component: () => import('@/view/report/guest-analysis/guestAnalysis.vue')
+      }
+    ]
+  },
+  {
     path: '/preferential',
     name: 'preferential',
     meta: {
@@ -168,8 +275,8 @@ export default [
         component: () => import('@/view/preferential/activity-list/activityList.vue')
       },
       {
-        path: 'activityCreate',
-        name: 'activityCreate',
+        path: 'createActivity',
+        name: 'createActivity',
         meta: {
           icon: '_qq',
           title: '新增优惠活动',
@@ -187,9 +294,169 @@ export default [
           notCache: true
         },
         component: () => import('@/view/preferential/activity-detail/activityDetail.vue')
+      },
+      {
+        path: 'coupon',
+        name: 'coupon',
+        meta: {
+          icon: '_qq',
+          title: '优惠券'
+        },
+        component: () => import('@/view/preferential/coupon-list/couponList.vue')
+      },
+      {
+        path: 'couponDetail',
+        name: 'couponDetail',
+        meta: {
+          icon: '_qq',
+          title: '优惠券详情',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/preferential/coupon-detail/couponDetail.vue')
       }
     ]
   },
+  {
+    path: '/config',
+    name: 'config',
+    meta: {
+      icon: 'ios-book',
+      title: '配置'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'channel',
+        name: 'channel',
+        meta: {
+          icon: '_qq',
+          title: '渠道'
+        },
+        component: () => import('@/view/config/channel/channel.vue')
+      }
+    ]
+  },
+  {
+    path: '/marketing',
+    name: 'marketing',
+    meta: {
+      icon: 'ios-book',
+      title: '营销'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'marketingActivity',
+        name: 'marketingActivity',
+        meta: {
+          icon: '_qq',
+          title: '营销活动'
+        },
+        component: () => import('@/view/marketing/marketing-activity/marketingActivityList.vue')
+      }
+    ]
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    meta: {
+      icon: 'ios-book',
+      title: '聊天'
+    },
+    component: Main,
+    children: []
+  },
+  {
+    path: '/repair',
+    name: 'repair',
+    meta: {
+      icon: 'ios-book',
+      title: '维修'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'repairList',
+        name: 'repairList',
+        meta: {
+          icon: '_qq',
+          title: '在线报修'
+        },
+        component: () => import('@/view/repair/repair-list/repairList.vue')
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    name: 'permission',
+    meta: {
+      icon: 'ios-book',
+      title: '权限'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'projectPermission',
+        name: 'projectPermission',
+        meta: {
+          icon: '_qq',
+          title: '项目权限'
+        },
+        component: () => import('@/view/permission/project/projectPermission.vue')
+      }
+    ]
+  },
+  {
+    path: '/evaluate',
+    name: 'evaluate',
+    meta: {
+      icon: 'ios-book',
+      title: '评价'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'evaluateList',
+        name: 'evaluateList',
+        meta: {
+          icon: '_qq',
+          title: '评价列表'
+        },
+        component: () => import('@/view/evaluate/evaluate-list/evaluateList.vue')
+      },
+      {
+        path: 'lowEvaluate',
+        name: 'lowEvaluate',
+        meta: {
+          icon: '_qq',
+          title: '低评处理'
+        },
+        component: () => import('@/view/evaluate/low-evaluate/lowEvaluate.vue')
+      }
+    ]
+  },
+  {
+    path: '/guest',
+    name: 'guest',
+    meta: {
+      icon: 'ios-book',
+      title: '客史'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'guestList',
+        name: 'guestList',
+        meta: {
+          icon: '_qq',
+          title: '客史'
+        },
+        component: () => import('@/view/guest/guest-list/guestList.vue')
+      }
+    ]
+  },
+  /*
   {
     path: '',
     name: 'doc',
@@ -603,6 +870,7 @@ export default [
       }
     ]
   },
+  */
   {
     path: '/401',
     name: 'error_401',

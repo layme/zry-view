@@ -2,7 +2,9 @@
   <div></div>
 </template>
 <script>
-export default {}
+export default {
+  name: ''
+}
 </script>
 <style lang="less" scoped>
 </style>

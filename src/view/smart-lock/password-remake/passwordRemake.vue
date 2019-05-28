@@ -8,7 +8,7 @@
         <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>
       </FormItem>
     </Form>
-    <Table stripe :columns="columns" :data="passwordList" :loading="loading" class="my-table">
+    <Table stripe :columns="columns" :data="passwordList" :loading="loading">
       <template slot-scope="{ row }" slot="pswStatus">
         <Tag color="success" v-if="row.pswStatus === 1">有效</Tag>
         <Tag color="warning" v-else-if="row.pswStatus === 2">无效</Tag>
