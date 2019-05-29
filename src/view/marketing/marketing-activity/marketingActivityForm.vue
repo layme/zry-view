@@ -36,7 +36,7 @@
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
+        <Button type="primary" icon=""> 新 增</Button>
       </Col>
     </Row>
   </Form>

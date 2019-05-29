@@ -1,13 +1,56 @@
 <template>
   <div>
-    <marketing-activity-form @search="listActivity"></marketing-activity-form>
+    <Form :model="paramDto" :label-width="70">
+      <Row :gutter="20">
+        <Col span="8">
+          <FormItem label="活动项目">
+            <Select v-model="paramDto.projectBid" placeholder="">
+              <Option
+                v-for="item in $store.state.user.projectList"
+                :key="item.bid"
+                :label="item.projectName"
+                :value="item.bid">
+              </Option>
+            </Select>
+          </FormItem>
+        </Col>
+        <Col span="8">
+          <FormItem label="活动标题">
+            <Input v-model.trim="paramDto.title" placeholder="" clearable></Input>
+          </FormItem>
+        </Col>
+        <Col span="8">
+          <FormItem label="活动状态">
+            <Select v-model="paramDto.isOnline" placeholder="">
+              <Option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </Option>
+            </Select>
+          </FormItem>
+        </Col>
+      </Row>
+      <Row :gutter="20">
+        <Col span="12">
+          <Button type="primary" icon="ios-search" @click="listActivity"> 查 询</Button>
+        </Col>
+        <Col span="12" style="text-align: right">
+          <Button type="primary" icon=""> 新 增</Button>
+        </Col>
+      </Row>
+    </Form>
     <Table stripe :columns="columns" :data="activityList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="isOnline">
         <Tag v-if="row.isOnline === 1" color="success">已上线</Tag>
         <Tag v-else color="default">已下线</Tag>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a>上线</a>
+        <a v-if="row.isOnline === 1" class="my-btn">下线</a>
+        <a v-else class="my-btn">上线</a>
+        <a class="my-btn">修改</a>
+        <a>删除</a>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
@@ -25,9 +68,22 @@ export default {
   data () {
     return {
       paramDto: {
+        projectBid: '',
+        title: '',
+        isOnline: '',
         page: 1,
         limit: 10
       },
+      statusOptions: [
+        {
+          label: '已上线',
+          value: 1
+        },
+        {
+          label: '已下线',
+          value: 0
+        }
+      ],
       loading: false,
       activityList: [
         {
@@ -104,7 +160,7 @@ export default {
         {
           title: '操作',
           slot: 'action',
-          width: 70
+          width: 130
         }
       ]
     }
