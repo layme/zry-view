@@ -1,46 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="70">
-      <Row :gutter="20">
-        <Col span="8">
-          <FormItem label="活动项目">
-            <Select v-model="paramDto.projectBid" placeholder="">
-              <Option
-                v-for="item in $store.state.user.projectList"
-                :key="item.bid"
-                :label="item.projectName"
-                :value="item.bid">
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-        <Col span="8">
-          <FormItem label="活动标题">
-            <Input v-model.trim="paramDto.title" placeholder="" clearable></Input>
-          </FormItem>
-        </Col>
-        <Col span="8">
-          <FormItem label="活动状态">
-            <Select v-model="paramDto.isOnline" placeholder="">
-              <Option
-                v-for="item in statusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-      </Row>
-      <Row :gutter="20">
-        <Col span="12">
-          <Button type="primary" icon="ios-search" @click="listActivity"> 查 询</Button>
-        </Col>
-        <Col span="12" style="text-align: right">
-          <Button type="primary" icon=""> 新 增</Button>
-        </Col>
-      </Row>
-    </Form>
+    <marketing-activity-search-form @search="listActivity" @create="createActivity"></marketing-activity-search-form>
     <Table stripe :columns="columns" :data="activityList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="isOnline">
         <Tag v-if="row.isOnline === 1" color="success">已上线</Tag>
@@ -49,28 +9,36 @@
       <template slot-scope="{ row }" slot="action">
         <a v-if="row.isOnline === 1" class="my-btn">下线</a>
         <a v-else class="my-btn">上线</a>
-        <a class="my-btn">修改</a>
+        <a class="my-btn" @click="updateActivity(row)">修改</a>
         <a>删除</a>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Modal
+      v-model="visible"
+      :title="title"
+      :loading="modalLoading"
+      width="500"
+      @on-ok="saveActivity">
+      <marketing-activity-form v-if="visible" ref="activityForm" :activity="row" @submit="handleSubmit"
+                               @error="handleError"></marketing-activity-form>
+    </Modal>
   </div>
 </template>
 <script>
+import marketingActivitySearchForm from './marketingActivitySearchForm'
 import marketingActivityForm from './marketingActivityForm'
 
 export default {
   name: 'marketingActivityList',
   components: {
+    marketingActivitySearchForm,
     marketingActivityForm
   },
   data () {
     return {
       paramDto: {
-        projectBid: '',
-        title: '',
-        isOnline: '',
         page: 1,
         limit: 10
       },
@@ -162,7 +130,11 @@ export default {
           slot: 'action',
           width: 130
         }
-      ]
+      ],
+      visible: false,
+      title: '123412',
+      modalLoading: true,
+      row: {}
     }
   },
   methods: {
@@ -175,6 +147,34 @@ export default {
       this.loading = true
       console.info('paramDto', this.paramDto)
       this.loading = false
+    },
+    createActivity () {
+      this.title = '新增营销活动'
+      this.visible = true
+      this.row = {}
+    },
+    updateActivity (row) {
+      this.title = '修改营销活动'
+      this.visible = true
+      this.row = row
+    },
+    saveActivity () {
+      this.$refs.activityForm.validForm()
+      // setTimeout(() => {
+      //   this.modalLoading = false
+      //   this.$nextTick(() => {
+      //     this.modalLoading = true
+      //   })
+      // }, 1000)
+    },
+    handleSubmit (dto) {
+      this.visible = false
+    },
+    handleError () {
+      this.modalLoading = false
+      this.$nextTick(() => {
+        this.modalLoading = true
+      })
     }
   }
 }
