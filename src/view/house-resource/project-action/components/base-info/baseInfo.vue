@@ -175,7 +175,7 @@
 <script>
 import MapCard from '@/components/baidu-map/MapCard.vue'
 import { getCityList, getAreaList, getOwnerList } from '@/api/common'
-import { getBaseInfo, saveBase, updateBase } from '@/api/baseInfo'
+import { getBaseInfo, saveBase, updateBase } from '@/api/project'
 
 export default {
   name: 'baseInfo',

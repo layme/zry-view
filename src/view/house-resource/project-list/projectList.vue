@@ -27,6 +27,7 @@
 </template>
 <script>
 import projectForm from './projectForm.vue'
+import { validOrNot, showOrNot, canOrderOrNot } from '@/api/project'
 export default {
   name: 'projectList',
   components: {
@@ -126,9 +127,87 @@ export default {
       console.info('listProject paramDto', this.paramDto)
       this.loading = false
     },
-    validOrNot (row) {},
-    showOrNot (row) {},
-    canOrderOrNot (row) {},
+    validOrNot (row) {
+      let val = 0
+      let ti = ''
+      if (row.isValid === 1) {
+        val = 0
+        ti = '停用后，将无法在App等渠道显示，并暂停所有订单，已下订单也将无法操作，请确认是否继续？'
+      } else {
+        val = 1
+        ti = '启用后，项目可正常使用，请确认是否继续？'
+      }
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>' + ti + '</p>',
+        onOk: () => {
+          validOrNot(row.bid, val).then(res => {
+            if (res.code === 200) {
+              this.$Message.success('操作成功')
+              this.handlePageChange()
+            } else {
+              this.$Message.warning(res.message)
+            }
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    showOrNot (row) {
+      let val = 0
+      let ti = ''
+      if (row.isShow === 1) {
+        val = 0
+        ti = '隐藏后，App端无法看到该项目，不影响已创建的订单，请确认是否继续？'
+      } else {
+        val = 1
+        ti = '展示后，App端可以看到该项目，请确认是否继续？'
+      }
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>' + ti + '</p>',
+        onOk: () => {
+          showOrNot(row.bid, val).then(res => {
+            if (res.code === 200) {
+              this.$Message.success('操作成功')
+              this.handlePageChange()
+            } else {
+              this.$Message.warning(res.message)
+            }
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    canOrderOrNot (row) {
+      let val = 0
+      let ti = ''
+      if (row.canOrder === 1) {
+        val = 0
+        ti = '禁止App端预定床位，但是App端可以浏览该项目，请确认是否继续？'
+      } else {
+        val = 1
+        ti = '允许App端预定床位，请确认是否继续？'
+      }
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>' + ti + '</p>',
+        onOk: () => {
+          canOrderOrNot(row.bid, val).then(res => {
+            if (res.code === 200) {
+              this.$Message.success('操作成功')
+              this.handlePageChange()
+            } else {
+              this.$Message.warning(res.message)
+            }
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
     toUpdateProject (bid) {
       const route = {
         name: 'updateProject',
