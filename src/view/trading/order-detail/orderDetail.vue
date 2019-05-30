@@ -162,9 +162,9 @@ export default {
 
   .card-cls {
     margin-top: 20px;
-    -webkit-box-shadow: #dcdee2 0 0 10px;
-    -moz-box-shadow: #dcdee2 0 0 10px;
-    box-shadow: #dcdee2 0 0 10px;
+    -webkit-box-shadow: #dcdee2 0 1px 6px;
+    -moz-box-shadow: #dcdee2 0 1px 6px;
+    box-shadow: #dcdee2 0 1px 6px;
   }
 
   .con {

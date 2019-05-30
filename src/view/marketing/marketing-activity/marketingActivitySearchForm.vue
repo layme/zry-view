@@ -20,7 +20,7 @@
       </Col>
       <Col span="8">
         <FormItem label="活动状态">
-          <Select v-model="paramDto.isOnline" placeholder="">
+          <Select v-model="paramDto.isOnline" placeholder="" clearable>
             <Option
               v-for="item in statusOptions"
               :key="item.value"

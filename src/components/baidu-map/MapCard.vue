@@ -88,8 +88,8 @@ export default {
     left: 140px;
     z-index: 3;
     width: 200px;
-    -webkit-box-shadow: #dcdee2 0 0 10px;
-    -moz-box-shadow: #dcdee2 0 0 10px;
-    box-shadow: #dcdee2 0 0 10px;
+    -webkit-box-shadow: #dcdee2 0 1px 6px;
+    -moz-box-shadow: #dcdee2 0 1px 6px;
+    box-shadow: #dcdee2 0 1px 6px;
   }
 </style>

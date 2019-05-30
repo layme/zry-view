@@ -18,7 +18,7 @@
     </FormItem>
     <FormItem label="活动日期" prop="dateRange">
       <DatePicker v-model="paramDto.dateRange" type="daterange" split-panels placeholder=""
-                  class="my-date-picker"></DatePicker>
+                  :editable="false" class="my-date-picker"></DatePicker>
     </FormItem>
     <FormItem label="活动链接" prop="jumpLink">
       <Input v-model.trim="paramDto.jumpLink" placeholder="" clearable></Input>
@@ -65,10 +65,10 @@ export default {
           { required: true, message: '请选择项目', trigger: 'change' }
         ],
         title: [
-          { required: true, message: '请输入标题', trigger: 'blur' }
+          { required: true, type: 'string', message: '请输入标题', trigger: 'blur' }
         ],
         subTitle: [
-          { required: true, message: '请输入副标题', trigger: 'blur' }
+          { required: true, type: 'string', message: '请输入副标题', trigger: 'blur' }
         ],
         dateRange: [
           { required: true,
@@ -80,13 +80,13 @@ export default {
             trigger: 'change' }
         ],
         jumpLink: [
-          { required: true, message: '请输入活动链接', trigger: 'blur' }
+          { required: true, type: 'string', message: '请输入活动链接', trigger: 'blur' }
         ],
         imgIndex: [
-          { required: true, message: '请输入显示顺序', trigger: 'blur' }
+          { required: true, type: 'string', message: '请输入显示顺序', trigger: 'blur' }
         ],
         isJump: [
-          { required: true, message: '请选择是否跳转', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择是否跳转', trigger: 'change' }
         ]
       }
     }
@@ -116,7 +116,7 @@ export default {
       this.paramDto.dateRange.push(this.activity.startDate)
       this.paramDto.dateRange.push(this.activity.endDate)
       this.paramDto.jumpLink = this.activity.jumpLink
-      this.paramDto.imgIndex = this.activity.imgIndex
+      this.paramDto.imgIndex = this.activity.imgIndex.toString()
       this.paramDto.isJump = this.activity.isJump
     }
   }

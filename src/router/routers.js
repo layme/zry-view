@@ -3,6 +3,7 @@ import Main from '@/components/main'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
+ * name: 要和组件中的name一一对应，这个是为了满足keep alive的include，keep alive根据组件name缓存组件
  * meta: {
  *  title: { String|Number|Function }
  *         显示在侧边栏、面包屑和标签栏的文字
@@ -61,7 +62,7 @@ export default [
     children: [
       {
         path: 'order',
-        name: 'order',
+        name: 'orderList',
         meta: {
           icon: '_qq',
           title: '订单列表'
@@ -81,7 +82,7 @@ export default [
       },
       {
         path: 'refund',
-        name: 'refund',
+        name: 'refundList',
         meta: {
           icon: '_qq',
           title: '退款列表'
@@ -112,7 +113,7 @@ export default [
     children: [
       {
         path: 'project',
-        name: 'project',
+        name: 'projectList',
         meta: {
           icon: '_qq',
           title: '项目'
@@ -125,8 +126,7 @@ export default [
         meta: {
           icon: '_qq',
           title: '新增项目',
-          hideInMenu: true,
-          notCache: true
+          hideInMenu: true
         },
         component: () => import('@/view/house-resource/project-action/project.vue')
       },
@@ -157,8 +157,7 @@ export default [
         name: 'temporaryPassword',
         meta: {
           icon: '_qq',
-          title: '临时密码',
-          notCache: true
+          title: '临时密码'
         },
         component: () => import('@/view/smart-lock/temporary-password/temporaryPassword.vue')
       },
@@ -267,7 +266,7 @@ export default [
     children: [
       {
         path: 'activity',
-        name: 'activity',
+        name: 'activityList',
         meta: {
           icon: '_qq',
           title: '优惠活动'
@@ -280,7 +279,8 @@ export default [
         meta: {
           icon: '_qq',
           title: '新增优惠活动',
-          hideInMenu: true
+          hideInMenu: true,
+          notCache: true
         },
         component: () => import('@/view/preferential/activity-create/activityCreate.vue')
       },
@@ -297,7 +297,7 @@ export default [
       },
       {
         path: 'coupon',
-        name: 'coupon',
+        name: 'couponList',
         meta: {
           icon: '_qq',
           title: '优惠券'
@@ -348,7 +348,7 @@ export default [
     children: [
       {
         path: 'marketingActivity',
-        name: 'marketingActivity',
+        name: 'marketingActivityList',
         meta: {
           icon: '_qq',
           title: '营销活动'
@@ -365,7 +365,17 @@ export default [
       title: '聊天'
     },
     component: Main,
-    children: []
+    children: [
+      {
+        path: 'group',
+        name: 'groupList',
+        meta: {
+          icon: '_qq',
+          title: '群聊'
+        },
+        component: () => import('@/view/chat/group-list/groupList.vue')
+      }
+    ]
   },
   {
     path: '/repair',

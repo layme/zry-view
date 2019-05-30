@@ -10,7 +10,7 @@
         <a v-if="row.isOnline === 1" class="my-btn">下线</a>
         <a v-else class="my-btn">上线</a>
         <a class="my-btn" @click="updateActivity(row)">修改</a>
-        <a>删除</a>
+        <a @click="confirmRemove(row)">删除</a>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
@@ -160,21 +160,31 @@ export default {
     },
     saveActivity () {
       this.$refs.activityForm.validForm()
-      // setTimeout(() => {
-      //   this.modalLoading = false
-      //   this.$nextTick(() => {
-      //     this.modalLoading = true
-      //   })
-      // }, 1000)
     },
     handleSubmit (dto) {
       this.visible = false
     },
     handleError () {
-      this.modalLoading = false
-      this.$nextTick(() => {
-        this.modalLoading = true
+      setTimeout(() => {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      }, 500)
+    },
+    confirmRemove (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>确定删除该营销活动吗？</p>',
+        onOk: () => {
+          this.removeActivity(row)
+        },
+        onCancel: () => {
+        }
       })
+    },
+    removeActivity (row) {
+      this.$Message.success('remove success')
     }
   }
 }

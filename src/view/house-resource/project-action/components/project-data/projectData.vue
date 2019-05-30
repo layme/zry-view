@@ -1,16 +1,12 @@
 <template>
   <div>
-    <Layout>
-      <Sider class="my-sider">
-        <!--<Tabs :tab-position="position" style="height: 100%;" :value="currentLabel" @tab-click="handleProjectData">-->
-          <!--<TabPane label="经营资质" name="qualification"></TabPane>-->
-          <!--<TabPane label="签约合同" name="contract"></TabPane>-->
-          <!--<TabPane label="其他" name="else"></TabPane>-->
-        <!--</Tabs>-->
+    <Layout style="background-color: #ffffff;">
+      <Sider style="background-color: #ffffff;" width="100">
         <ButtonGroup vertical>
-          <Button type="primary">经营资质</Button>
-          <Button type="primary">签约合同</Button>
-          <Button type="primary">其他</Button>
+          <Button :type="'qualification' === currentLabel ? 'primary' : ''" @click="turnTo('qualification')">经营资质
+          </Button>
+          <Button :type="'contract' === currentLabel ? 'primary' : ''" @click="turnTo('contract')">签约合同</Button>
+          <Button :type="'else' === currentLabel ? 'primary' : ''" @click="turnTo('else')">其他</Button>
         </ButtonGroup>
       </Sider>
       <Content>
@@ -20,28 +16,28 @@
           <Card shadow="hover" :body-style="{ padding: '0px' }" style="margin: 10px">
             <div class="img-div">
               <Button class="img-btn" size="mini" type="danger" circle icon="el-icon-delete"
-                         @click="deleteImgConfirm(item.bid)">
+                      @click="deleteImgConfirm(item.bid)">
               </Button>
               <img :src="item.attachmentImgUrl" class="img-class" alt="经营资质">
             </div>
           </Card>
         </Col>
-        <div v-if="!showList.length" style="color: #909399; margin-top: 20px; text-align: center"><i class="el-icon-picture-outline"> 暂无数据</i></div>
+        <div v-if="!showList.length" class="no-img"><i class="el-icon-picture-outline"> 暂无数据</i></div>
       </Content>
     </Layout>
-    <Modal title="上传图片" :visible.sync="uploadDialogVisible" width="50" @close="handleClose">
+    <Modal title="上传图片" v-model="uploadDialogVisible" width="50" @close="handleClose">
       <Upload v-if="uploadDialogVisible"
-                 class="pic-uploader"
-                 list-type="picture-card"
-                 accept="image/*"
-                 multiple
-                 :action="uploadPicUrl"
-                 :limit="10"
-                 :before-upload="beforeUpload"
-                 :on-remove="handleRemove"
-                 :on-success="handleSuccess"
-                 :on-exceed="handleExceed"
-                 :on-error="handleError">
+              class="pic-uploader"
+              list-type="picture-card"
+              accept="image/*"
+              multiple
+              :action="uploadPicUrl"
+              :limit="10"
+              :before-upload="beforeUpload"
+              :on-remove="handleRemove"
+              :on-success="handleSuccess"
+              :on-exceed="handleExceed"
+              :on-error="handleError">
         <div slot="tip" class="el-upload__tip">图片大小不能超过 2MB</div>
         <i class="el-icon-plus pic-uploader-icon"></i>
       </Upload>
@@ -55,6 +51,7 @@
 
 <script>
 import { getData, saveData, deleteData } from '@/api/projectData'
+
 export default {
   name: 'projectData',
   props: {
@@ -82,9 +79,6 @@ export default {
         this.turnTo(this.currentLabel)
       })
     },
-    handleProjectData (tab) {
-      this.turnTo(tab.name)
-    },
     turnTo (name) {
       switch (name) {
         case 'qualification':
@@ -102,22 +96,20 @@ export default {
       }
     },
     deleteImgConfirm (val) {
-      this.$confirm('确定删除该图片吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.deleteImg(val)
-      }).catch(() => {
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>确定删除该图片吗？</p>',
+        onOk: () => {
+          this.deleteImg(val)
+        },
+        onCancel: () => {
+        }
       })
     },
     deleteImg (val) {
       deleteData(val).then(res => {
         if (res.code === 200) {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
+          this.$Message.success('删除成功')
           this.listData()
         }
       })
@@ -125,10 +117,7 @@ export default {
     beforeUpload (file) {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        this.$message({
-          message: '文件的大小不能超过 2MB',
-          type: 'warning'
-        })
+        this.$Message.warning('文件的大小不能超过 2MB')
       }
       return isLt2M
     },
@@ -136,10 +125,7 @@ export default {
       if (response.code === 200) {
         this.imgList.push(response.body)
       } else {
-        this.$message({
-          message: response.message,
-          type: 'error'
-        })
+        this.$Message.error('response.message')
       }
     },
     handleRemove (file, fileList) {
@@ -154,16 +140,10 @@ export default {
       })
     },
     handleExceed (files, fileList) {
-      this.$message({
-        message: '一次最多上传 10 张图片',
-        type: 'warning'
-      })
+      this.$Message.warning('一次最多上传 10 张图片')
     },
     handleError (err, file, fileList) {
-      this.$message({
-        message: '图片上传失败',
-        type: 'error'
-      })
+      this.$Message.error('图片上传失败')
       console.log('upload err ', err)
     },
     handleClose () {
@@ -186,10 +166,7 @@ export default {
       }
       saveData(dto).then(res => {
         if (res.code === 200) {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
+          this.$Message.success('保存成功')
           this.uploadDialogVisible = false
           this.listData()
         }
@@ -203,10 +180,6 @@ export default {
 </script>
 
 <style scoped>
-  .my-sider {
-    width: 100px;
-    margin-right: 20px;
-  }
   .img-div {
     position: relative;
   }
@@ -250,6 +223,12 @@ export default {
     width: 148px;
     height: 148px;
     line-height: 148px;
+    text-align: center;
+  }
+
+  .no-img {
+    color: #909399;
+    margin-top: 20px;
     text-align: center;
   }
 </style>
