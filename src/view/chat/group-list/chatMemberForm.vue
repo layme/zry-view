@@ -2,29 +2,34 @@
   <Form ref="chatForm" :model="paramDto" :label-width="100">
     <Row>
       <Col :span="8">
-        <FormItem label="用户昵称" prop="nickName">
+        <FormItem label="当前群聊">
+          <Tag color="blue">{{ groupName }}</Tag>
+        </FormItem>
+      </Col>
+      <Col :span="8">
+        <FormItem label="用户昵称">
           <Input v-model.trim="paramDto.nickName" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
-        <FormItem label="用户手机" prop="customerMobile">
+        <FormItem label="用户手机">
           <Input v-model.trim="paramDto.customerMobile" placeholder="" clearable></Input>
-        </FormItem>
-      </Col>
-      <Col :span="8">
-        <FormItem label="操作人" prop="opFid">
-          <Input v-model.trim="paramDto.opFid" placeholder="" clearable></Input>
         </FormItem>
       </Col>
     </Row>
     <Row>
       <Col :span="8">
-        <FormItem label="用户角色" prop="memberRole">
+        <FormItem label="操作人">
+          <Input v-model.trim="paramDto.opFid" placeholder="" clearable></Input>
+        </FormItem>
+      </Col>
+      <Col :span="8">
+        <FormItem label="用户角色">
           <Input v-model.trim="paramDto.memberRole" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
-        <FormItem label="用户状态" prop="memberStatu">
+        <FormItem label="用户状态">
           <Input v-model.trim="paramDto.memberStatu" placeholder="" clearable></Input>
         </FormItem>
       </Col>
@@ -42,10 +47,12 @@
 <script>
 export default {
   name: 'chatMemberForm',
+  props: {
+    groupName: String
+  },
   data () {
     return {
       paramDto: {
-        groupId: '',
         nickName: '',
         customerMobile: '',
         opFid: '',

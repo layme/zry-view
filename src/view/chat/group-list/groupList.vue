@@ -107,10 +107,12 @@ export default {
     },
     handleDetail (index) {
       const groupId = this.groupList[index].groupId
+      const groupName = this.groupList[index].name
       const route = {
         name: 'chatMemberList',
         query: {
-          groupId: groupId
+          groupId: groupId,
+          groupName: groupName
         }
       }
       this.$router.push(route)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <chat-member-form @click="listChatMember"></chat-member-form>
+    <chat-member-form :groupName="groupName" @click="listChatMember"></chat-member-form>
     <Table stripe :columns="columns" :data="chatList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="userInfo">
         <a>查看</a>
@@ -26,7 +26,9 @@ export default {
   data () {
     return {
       loading: false,
+      groupName: '',
       paramDto: {
+        groupId: '',
         page: 1,
         limit: 10
       },
@@ -82,7 +84,14 @@ export default {
       this.handlePageChange()
     },
     handlePageChange () {
+      this.groupName = this.$route.query.groupName
+      this.paramDto.groupId = this.$route.query.groupId
       console.info('paramDto', this.paramDto)
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.handlePageChange()
     }
   },
   created () {
