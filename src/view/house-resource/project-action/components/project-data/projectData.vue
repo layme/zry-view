@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Layout style="background-color: #ffffff;">
+  <div style="height: 100%;">
+    <Layout style="background-color: #ffffff; height: 100%;">
       <Sider style="background-color: #ffffff;" width="100">
         <ButtonGroup vertical>
           <Button :type="'qualification' === currentLabel ? 'primary' : ''" @click="turnTo('qualification')">经营资质
@@ -9,7 +9,7 @@
           <Button :type="'else' === currentLabel ? 'primary' : ''" @click="turnTo('else')">其他</Button>
         </ButtonGroup>
       </Sider>
-      <Content>
+      <Content style="height: 100%;">
         <Button type="primary" @click="uploadDialogVisible = true">上传图片</Button>
         <br/>
         <Col :span="6" v-for="item in showList" :key="item.bid">
@@ -22,7 +22,12 @@
             </div>
           </Card>
         </Col>
-        <div v-if="!showList.length" class="no-img"><i class="el-icon-picture-outline"> 暂无数据</i></div>
+        <div v-if="!showList.length" class="no-img">
+          <!--<Icon type="ios-image-outline" style="width: 200px"/>-->
+          <img src="../../../../../assets/images/no-img.jpg" style="color: #c5c8ce; width: 200px"/>
+          <br />
+          暂无数据
+        </div>
       </Content>
     </Layout>
     <Modal title="上传图片" v-model="uploadDialogVisible" width="50" @close="handleClose">
@@ -228,7 +233,9 @@ export default {
 
   .no-img {
     color: #909399;
-    margin-top: 20px;
+    margin-top: calc(100vh / 2);
     text-align: center;
+    height: 100%;
+    /*line-height: ~"calc(100% - 0)";*/
   }
 </style>
