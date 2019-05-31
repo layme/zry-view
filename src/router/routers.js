@@ -374,6 +374,17 @@ export default [
           title: '群聊'
         },
         component: () => import('@/view/chat/group-list/groupList.vue')
+      },
+      {
+        path: 'chat',
+        name: 'chatMemberList',
+        meta: {
+          icon: '_qq',
+          title: '群聊成员',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/chat/group-list/chatMemberList.vue')
       }
     ]
   },

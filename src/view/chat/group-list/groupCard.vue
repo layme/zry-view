@@ -17,15 +17,15 @@
             <span class="my-content">创建人: {{ group.opBid }}</span>
           </Col>
           <Col :span="6" style="text-align: right">
-            <a class="my-btn">
+            <a class="my-btn" @click="toDetail">
               <Icon type="md-arrow-dropright" />
-              详情
+              成员
             </a>
-            <a class="my-btn">
+            <a class="my-btn" @click="toUpdate">
               <Icon type="md-settings" />
               设置
             </a>
-            <a :style="{ color: '#ed4014' }">解散</a>
+            <a :style="{ color: '#ed4014' }" @click="remove">解散</a>
           </Col>
         </Row>
       </Content>
@@ -43,6 +43,17 @@ export default {
   },
   data () {
     return {}
+  },
+  methods: {
+    toDetail () {
+      this.$emit('detail', this.index)
+    },
+    toUpdate () {
+      this.$emit('update', this.index)
+    },
+    remove () {
+      this.$emit('remove', this.index)
+    }
   },
   filters: {
     dateFilter (val) {

@@ -18,22 +18,32 @@
           <Button type="primary" icon="ios-search" @click="listGroup"> 查 询</Button>
         </Col>
         <Col span="12" style="text-align: right">
-          <Button type="primary"> 新建群聊</Button>
+          <Button type="primary" @click="addGroup"> 新建群聊</Button>
         </Col>
       </Row>
     </Form>
-    <group-card v-for="(item, index) in groupList" :key="index" :index="index" :group="item" class="my-card"></group-card>
+    <group-card v-for="(item, index) in groupList" :key="index" :index="index" :group="item" class="my-card"
+                @detail="handleDetail" @update="updateGroup" @remove="handleRemove" ></group-card>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Modal
+      v-model="visible"
+      :title="title"
+      :loading="loading"
+      @on-ok="saveGroup">
+      <group-form ref="groupForm" v-if="visible" :group="row" @submit="handleSubmit" @error="handleError"></group-form>
+    </Modal>
   </div>
 </template>
 <script>
 import groupCard from './groupCard.vue'
+import groupForm from './groupForm.vue'
 
 export default {
   name: 'groupList',
   components: {
-    groupCard
+    groupCard,
+    groupForm
   },
   data () {
     return {
@@ -70,7 +80,11 @@ export default {
           isDefault: 0
         }
       ],
-      total: 0
+      total: 0,
+      visible: false,
+      loading: true,
+      title: '',
+      row: {}
     }
   },
   methods: {
@@ -80,6 +94,54 @@ export default {
     },
     handlePageChange () {
       console.info('paramDto', this.paramDto)
+    },
+    addGroup () {
+      this.visible = true
+      this.title = '新建群聊'
+      this.row = {}
+    },
+    updateGroup (index) {
+      this.visible = true
+      this.title = '修改群聊'
+      this.row = this.groupList[index]
+    },
+    handleDetail (index) {
+      const groupId = this.groupList[index].groupId
+      const route = {
+        name: 'chatMemberList',
+        query: {
+          groupId: groupId
+        }
+      }
+      this.$router.push(route)
+    },
+    handleRemove (index) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>确定删除该群聊吗？</p>',
+        onOk: () => {
+          this.removeGroup(index)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    removeGroup (index) {
+      this.$Message.success('remove success')
+    },
+    saveGroup () {
+      this.$refs.groupForm.validForm()
+    },
+    handleSubmit (dto) {
+      this.visible = false
+    },
+    handleError () {
+      setTimeout(() => {
+        this.loading = false
+        this.$nextTick(() => {
+          this.loading = true
+        })
+      }, 500)
     }
   }
 }
