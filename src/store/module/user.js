@@ -1,5 +1,5 @@
 import {
-  // login,
+  login,
   logout,
   getUserInfo,
   getMessage,
@@ -77,20 +77,17 @@ export default {
     // 登录
     handleLogin ({ commit }, { userName, password }) {
       userName = userName.trim()
-      // return new Promise((resolve, reject) => {
-      //   login({
-      //     userName,
-      //     password
-      //   }).then(res => {
-      //     const data = res.data
-      //     commit('setToken', data.token)
-      //     resolve()
-      //   }).catch(err => {
-      //     reject(err)
-      //   })
-      // })
-      return new Promise(() => {
-        commit('setToken', '345asd7sf89a')
+      return new Promise((resolve, reject) => {
+        login({
+          userName,
+          password
+        }).then(res => {
+          const data = res.data
+          commit('setToken', data.token)
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
     // 退出登录
