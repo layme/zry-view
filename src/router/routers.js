@@ -405,6 +405,17 @@ export default [
           title: '在线报修'
         },
         component: () => import('@/view/repair/repair-list/repairList.vue')
+      },
+      {
+        path: 'repairDetail',
+        name: 'repairDetail',
+        meta: {
+          icon: '_qq',
+          title: '维修单详情',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/repair/repair-detail/repairDetail.vue')
       }
     ]
   },
@@ -433,7 +444,7 @@ export default [
     name: 'evaluate',
     meta: {
       icon: 'ios-book',
-      title: '评价'
+      title: '用户评价'
     },
     component: Main,
     children: [
@@ -442,18 +453,29 @@ export default [
         name: 'evaluateList',
         meta: {
           icon: '_qq',
-          title: '评价列表'
+          title: '全部评价'
         },
         component: () => import('@/view/evaluate/evaluate-list/evaluateList.vue')
       },
       {
-        path: 'lowEvaluate',
-        name: 'lowEvaluate',
+        path: 'lowEvaluateList',
+        name: 'lowEvaluateList',
         meta: {
           icon: '_qq',
-          title: '低评处理'
+          title: '低分评价'
         },
-        component: () => import('@/view/evaluate/low-evaluate/lowEvaluate.vue')
+        component: () => import('@/view/evaluate/low-evaluate/lowEvaluateList.vue')
+      },
+      {
+        path: 'lowEvaluateFollowUp',
+        name: 'lowEvaluateFollowUp',
+        meta: {
+          icon: '_qq',
+          title: '低评处理',
+          hideInMenu: true,
+          notCache: true
+        },
+        component: () => import('@/view/evaluate/low-evaluate-follow-up/lowEvaluateFollowUp.vue')
       }
     ]
   },

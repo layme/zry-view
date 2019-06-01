@@ -1,6 +1,15 @@
 import axios from '@/libs/api.request'
 
-// 特殊用户操作
+//
+export const getGuests = data => {
+  return axios.request({
+    url: '/guest/listGuest.action',
+    method: 'get',
+    params: data
+  })
+}
+
+//
 export const getGuestInfo = data => {
   return axios.request({
     url: '/guest/getGuestDetail.action',

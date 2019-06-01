@@ -49,6 +49,7 @@
   </Form>
 </template>
 <script>
+import { getDate } from '@/libs/tools'
 export default {
   name: 'orderForm',
   data () {
@@ -92,12 +93,12 @@ export default {
   },
   watch: {
     'paramDto.checkInTime' (val) {
-      this.paramDto.checkInStartTime = val[0]
-      this.paramDto.checkInEndTime = val[1]
+      this.paramDto.checkInStartTime = val[0] ? getDate(val[0], 'date') : ''
+      this.paramDto.checkInEndTime = val[1] ? getDate(val[1], 'date') : ''
     },
     'paramDto.refundTime' (val) {
-      this.paramDto.refundStartTime = val[0]
-      this.paramDto.refundEndTime = val[1]
+      this.paramDto.refundStartTime = val[0] ? getDate(val[0], 'date') : ''
+      this.paramDto.refundEndTime = val[1] ? getDate(val[1], 'date') : ''
     }
   }
 }

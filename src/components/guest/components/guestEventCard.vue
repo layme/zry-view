@@ -2,12 +2,12 @@
   <div>
     <Card dis-hover>
       <Row :gutter="20">
-        <Col :span="6">
+        <Col :span="14">
           <Tag v-if="event.eventType === 1" class="my-tag" color="success">好评</Tag>
           <Tag v-else class="my-tag" color="warning">投诉</Tag>
           {{ event.eventDate | dateFilter }}
         </Col>
-        <Col :span="18" style="text-align: right">
+        <Col :span="10" style="text-align: right">
           <Button size="small" type="primary" icon="ios-create-outline" shape="circle"
                      class="my-btn" @click="update"></Button>
           <Button size="small" type="error" icon="ios-trash-outline" shape="circle"

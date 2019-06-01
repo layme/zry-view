@@ -4,7 +4,7 @@
       <p slot="title">
         费用项目
       </p>
-      <a href="#" slot="extra" @click.prevent="visible = true">
+      <a slot="extra" @click.prevent="visible = true">
         <Icon type="ios-add-circle-outline"/>
         添加
       </a>

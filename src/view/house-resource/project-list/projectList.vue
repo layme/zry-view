@@ -208,11 +208,11 @@ export default {
         }
       })
     },
-    toUpdateProject (bid) {
+    toUpdateProject (projectBid) {
       const route = {
         name: 'updateProject',
         query: {
-          projectBid: bid
+          projectBid
         }
       }
       this.$router.push(route)

@@ -111,8 +111,8 @@ export default {
       const route = {
         name: 'chatMemberList',
         query: {
-          groupId: groupId,
-          groupName: groupName
+          groupId,
+          groupName
         }
       }
       this.$router.push(route)

@@ -2,7 +2,7 @@
   <div>
     <Table :columns="columns" :data="recordList" size="small">
       <template slot-scope="{ row }" slot="orderNumber">
-        <a href="#" @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
+        <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
       <template slot-scope="{ row }" slot="checkInDate">
         <div>{{ row.checkInDate | dateFilter }}</div>
@@ -201,11 +201,13 @@ export default {
         },
         {
           title: '入住时间',
-          slot: 'checkInDate'
+          slot: 'checkInDate',
+          width: 150
         },
         {
           title: '退房时间',
-          slot: 'checkOutDate'
+          slot: 'checkOutDate',
+          width: 150
         }
       ]
     }

@@ -20,7 +20,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="项目">
-          <Select v-model="paramDto.projectBid">
+          <Select v-model="paramDto.projectBid" placeholder="" clearable>
             <Option
               v-for="item in $store.state.user.projectList"
               :key="item.bid"
@@ -33,7 +33,7 @@
       <Col span="8">
         <FormItem label="活动时间">
           <DatePicker v-model="paramDto.dateRange" type="daterange" split-panels placeholder=""
-                      class="my-date-picker"></DatePicker>
+                      class="my-date-picker" clearable></DatePicker>
         </FormItem>
       </Col>
       <Col span="8">

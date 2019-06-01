@@ -25,12 +25,16 @@
       </Col>
       <Col :span="8">
         <FormItem label="用户角色">
-          <Input v-model.trim="paramDto.memberRole" placeholder="" clearable></Input>
+          <Select v-model="paramDto.memberRole" placeholder="请选择" clearable>
+            <Option v-for="x in memberRoleOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="用户状态">
-          <Input v-model.trim="paramDto.memberStatu" placeholder="" clearable></Input>
+          <Select v-model="paramDto.memberStatu" placeholder="请选择" clearable>
+            <Option v-for="x in memberStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
         </FormItem>
       </Col>
     </Row>
@@ -39,7 +43,7 @@
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <Button type="primary">加入群聊</Button>
+        <Button type="primary" @click="join">加入群聊</Button>
       </Col>
     </Row>
   </Form>
@@ -58,12 +62,39 @@ export default {
         opFid: '',
         memberRole: '',
         memberStatu: ''
-      }
+      },
+      memberRoleOptions: [
+        {
+          label: '普通成员',
+          value: 0
+        },
+        {
+          label: '管理员',
+          value: 1
+        },
+        {
+          label: '群主',
+          value: 2
+        }
+      ],
+      memberStatusOptions: [
+        {
+          label: '已入群',
+          value: 0
+        },
+        {
+          label: '已禁言',
+          value: 1
+        }
+      ]
     }
   },
   methods: {
     submit () {
       this.$emit('search', this.paramDto)
+    },
+    join () {
+      this.$emit('join')
     }
   }
 }

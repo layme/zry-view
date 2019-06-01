@@ -184,7 +184,7 @@ export default {
     // 获取未读消息条数
     this.getUnreadMessageCount()
     // 设置水印
-    watermark.set(this.$store.state.userName)
+    watermark.set(this.$store.state.user.userName)
   },
   created () {
     // console.log(process.env.NODE_ENV)

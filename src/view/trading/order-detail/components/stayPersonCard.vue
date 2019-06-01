@@ -67,7 +67,7 @@
     <Modal
       v-model="visible"
       :title="title"
-      width="60"
+      width="800"
       footer-hide>
       <guest-tabs v-if="visible" @close="handleClose"></guest-tabs>
     </Modal>
