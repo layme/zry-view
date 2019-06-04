@@ -118,7 +118,7 @@ export default [
           icon: '_qq',
           title: '项目'
         },
-        component: () => import('@/view/house-resource/project-list/projectList.vue')
+        component: () => import('@/view/resource/project-list/projectList.vue')
       },
       {
         path: 'addProject',
@@ -128,7 +128,7 @@ export default [
           title: '新增项目',
           hideInMenu: true
         },
-        component: () => import('@/view/house-resource/project-action/project.vue')
+        component: () => import('@/view/resource/project-action/project.vue')
       },
       {
         path: 'updateProject',
@@ -139,7 +139,7 @@ export default [
           hideInMenu: true,
           notCache: true
         },
-        component: () => import('@/view/house-resource/project-action/project.vue')
+        component: () => import('@/view/resource/project-action/project.vue')
       }
     ]
   },
@@ -354,6 +354,15 @@ export default [
           title: '营销活动'
         },
         component: () => import('@/view/marketing/marketing-activity/marketingActivityList.vue')
+      },
+      {
+        path: 'projectSort',
+        name: 'projectSort',
+        meta: {
+          icon: '_qq',
+          title: '项目排序'
+        },
+        component: () => import('@/view/marketing/project-sort/projectSort.vue')
       }
     ]
   },
