@@ -14,14 +14,24 @@
         <span>暂无数据</span>
       </div>
     </div>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       :title="title"
       :loading="loading"
       @on-ok="validForm">
       <Form :model="eventDto" :rules="eventRules" ref="eventForm" :label-width="60" v-if="visible">
+        <FormItem label="项目" prop="projectBid" >
+          <Select v-model="paramDto.projectBid" placeholder="" class="my-form" clearable>
+            <Option
+              v-for="item in $store.state.user.projectList"
+              :key="item.bid"
+              :label="item.projectName"
+              :value="item.bid">
+            </Option>
+          </Select>
+        </FormItem>
         <FormItem label="类型" prop="eventType">
           <Select v-model="eventDto.eventType" class="my-form">
             <Option
@@ -47,11 +57,12 @@
 <script>
 import { getDate } from '@/libs/tools'
 import guestEventCard from './guestEventCard'
+import { listEvent, addOrUpdateEvent, deleteEvent } from '@/api/guest'
 
 export default {
   name: 'guestEvent',
   props: {
-    idNumber: String
+    guestFid: String
   },
   components: {
     guestEventCard
@@ -59,64 +70,20 @@ export default {
   data () {
     return {
       paramDto: {
-        idNumber: '',
-        page: 1,
-        limit: 5
+        guestFid: this.guestFid,
+        pageIndex: 1,
+        pageSize: 3
       },
-      eventList: [
-        {
-          'id': 21,
-          'fid': '8a5884fa6ac97b93016ad91400370005',
-          'guestFid': '19e1be2308ef11e9a9ef000ec6d2a0d4',
-          'sceneFid': '63615afa5a344153a047aca1ea32cc51',
-          'sceneName': '北京CBD自如驿',
-          'eventContent': 'sdhsh',
-          'eventType': 1,
-          'eventLevel': 0,
-          'eventDate': 1558420125000,
-          'isDel': 0,
-          'createFid': '60006896',
-          'createDate': 1558420127000,
-          'lastModifyFid': null,
-          'lastModifyDate': 1558420127000
-        }, {
-          'id': 20,
-          'fid': '8a5884fa6ac97b93016ad913d97f0004',
-          'guestFid': '19e1be2308ef11e9a9ef000ec6d2a0d4',
-          'sceneFid': '63615afa5a344153a047aca1ea32cc51',
-          'sceneName': '北京CBD自如驿',
-          'eventContent': 'sgsergh',
-          'eventType': 1,
-          'eventLevel': 0,
-          'eventDate': 1558420115000,
-          'isDel': 0,
-          'createFid': '60006896',
-          'createDate': 1558420117000,
-          'lastModifyFid': null,
-          'lastModifyDate': 1558420117000
-        }, {
-          'id': 19,
-          'fid': '8a5884fa6ac97b93016ad913bf400003',
-          'guestFid': '19e1be2308ef11e9a9ef000ec6d2a0d4',
-          'sceneFid': '63615afa5a344153a047aca1ea32cc51',
-          'sceneName': '北京CBD自如驿',
-          'eventContent': 'sdfg',
-          'eventType': 1,
-          'eventLevel': 0,
-          'eventDate': 1558420108000,
-          'isDel': 0,
-          'createFid': '60006896',
-          'createDate': 1558420111000,
-          'lastModifyFid': null,
-          'lastModifyDate': 1558420111000
-        }
-      ],
+      eventList: [],
       total: 0,
       visible: false,
       loading: true,
       title: '',
       eventDto: {},
       eventRules: {
+        projectBid: [
+          { required: true, type: 'string', message: '请选择项目', trigger: 'change' }
+        ],
         eventType: [
           { required: true, type: 'number', message: '请选择类型', trigger: 'change' }
         ],
@@ -150,17 +117,20 @@ export default {
     }
   },
   methods: {
-    getEventList () {
-      console.info(this.idNumber)
-    },
     handlePageChange () {
-      console.info('paramDto', this.paramDto)
+      listEvent(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.eventList = res.body.rows
+          this.total = res.body.total
+        }
+      })
     },
     addEvent () {
       this.title = '添加事件'
       this.visible = true
       this.eventDto = {
-        guestFid: '',
+        projectBid: '',
+        guestFid: this.guestFid,
         eventFid: '',
         eventContent: '',
         eventType: 1,
@@ -182,20 +152,26 @@ export default {
       })
     },
     save () {
-      this.$Message.success('save success')
-      this.getEventList()
-      this.visible = false
-    },
-    updateEvent () {
-    },
-    removeEvent () {
-      this.$Message.success('remove success')
-      this.visible = false
+      addOrUpdateEvent(this.eventDto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功')
+          this.visible = false
+          this.handlePageChange()
+        } else {
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 500)
+        }
+      })
     },
     handleUpdate (index) {
       this.title = '修改事件'
       this.visible = true
       this.eventDto.guestFid = this.eventList[index].fid
+      this.eventDto.projectBid = this.eventList[index].projectBid
       this.eventDto.eventFid = this.eventList[index].eventFid
       this.eventDto.eventContent = this.eventList[index].eventContent
       this.eventDto.eventType = this.eventList[index].eventType
@@ -211,9 +187,20 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    removeEvent () {
+      deleteEvent({ guestFid: this.guestFid }).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('删除成功')
+          this.handlePageChange()
+        }
+      })
+      this.$Message.success('remove success')
+      this.visible = false
     }
   },
   created () {
+    this.handlePageChange()
   },
   filters: {
     genderFilter (val) {

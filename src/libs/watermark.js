@@ -10,8 +10,8 @@ let setWatermark = (str) => {
   // 创建一个画布
   let can = document.createElement('canvas')
   // 设置画布的长宽
-  can.width = 200
-  can.height = 200
+  can.width = 320
+  can.height = 300
 
   let cans = can.getContext('2d')
   // 旋转角度

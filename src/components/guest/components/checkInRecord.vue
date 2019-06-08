@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table :columns="columns" :data="recordList" size="small">
+    <Table :columns="columns" :data="recordList" size="small" :loading="loading">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
@@ -17,163 +17,22 @@
 </template>
 <script>
 import { getDate } from '@/libs/tools'
+import { listRecord } from '@/api/guest'
 import checkInRecordExpand from './checkInRecordExpand'
 
 export default {
   name: 'checkInRecord',
   props: {
-    idNumber: String
+    guestFid: String
   },
   data () {
     return {
       paramDto: {
-        guestFid: '',
-        page: 1,
-        limit: 10
+        guestFid: this.guestFid,
+        pageIndex: 1,
+        pageSize: 10
       },
-      recordList: [
-        {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170730067',
-          'orderBid': 'da9097240e424c7784fb336fd3564836',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501603200000,
-          'checkOutDate': 1501689600000,
-          'bookDate': 1501423554000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }, {
-          'projectName': '北京CBD自如驿',
-          'houseName': '8人间',
-          'orderNumber': 'BJ101170721016',
-          'orderBid': '868e0b82b5fc48a28a376c0f1ef9a7d8',
-          'room': 'H房间',
-          'bed': '06',
-          'checkInDate': 1501084800000,
-          'checkOutDate': 1501603200000,
-          'bookDate': 1500600193000,
-          'purpose': null,
-          'channel': null,
-          'impress': null,
-          'suggestion': null
-        }
-      ],
+      recordList: [],
       total: 0,
       columns: [
         {
@@ -209,7 +68,8 @@ export default {
           slot: 'checkOutDate',
           width: 150
         }
-      ]
+      ],
+      loading: false
     }
   },
   methods: {
@@ -226,10 +86,24 @@ export default {
       this.$emit('close')
     },
     getRecordList () {
+      this.paramDto.pageIndex = 1
+      this.handlePageChange()
     },
     handlePageChange () {
-      console.info('paramDto', this.paramDto)
+      this.loading = true
+      listRecord(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.recordList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     }
+  },
+  created () {
+    this.getRecordList()
   },
   filters: {
     dateFilter (val) {

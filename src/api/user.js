@@ -1,4 +1,5 @@
 import axios from '@/libs/api.request'
+import { getToken } from '@/libs/util'
 
 export const login = ({ userName, password }) => {
   const data = {
@@ -6,32 +7,36 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-    url: 'login',
-    data,
-    method: 'post'
+    url: '/security/login.action',
+    method: 'post',
+    data: data
   })
 }
 
 export const getUserInfo = (token) => {
   return axios.request({
-    url: 'get_info',
+    url: '/security/userInfo',
+    method: 'get',
     params: {
       token
-    },
-    method: 'get'
+    }
   })
 }
 
 export const logout = (token) => {
   return axios.request({
-    url: 'logout',
-    method: 'post'
+    url: '/security/logout',
+    method: 'post',
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: {
+      token: token
+    }
   })
 }
 
 export const getUnreadCount = () => {
   return axios.request({
-    url: 'message/count',
+    url: '/remind/listRemind.action',
     method: 'get'
   })
 }

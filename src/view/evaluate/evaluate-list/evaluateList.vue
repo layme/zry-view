@@ -8,8 +8,8 @@
         <span>没有找到匹配的记录</span>
       </div>
     </Card>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
 
     <Modal
       v-model="replyVisible"
@@ -45,8 +45,8 @@ export default {
     return {
       totalScore: '',
       paramDto: {
-        page: 1,
-        limit: 10
+        pageIndex: 1,
+        pageSize: 5
       },
       loading: false,
       delay: 1500,
@@ -55,148 +55,7 @@ export default {
       replyTitle: '',
       haveData: true,
       total: 0,
-      evaluateList: [
-        {
-          'bid': '4966329',
-          'logicCode': '24952134',
-          'evaluateSceneCode': '63615afa5a344153a047aca1ea32cc51',
-          'businessCode': 'BJ101190319166',
-          'customerAvgStarLevel': 5.0,
-          'customerSuggestion': '很棒很棒很棒很棒x100 来住了25天 和大家一起做耳环 一起玩三国杀 真的特别开心 感觉大家就像一家人 房间床位很温馨 床垫软软的很舒服 地理位置也很方便 前台的小哥哥小姐姐们都特别好特别亲切 很想念那些陪伴我一起度过这段时间的你们 每一段旅行都是人生开启的新支线 而我现在要回去刷主线了哈哈哈哈 期待可以与你们再相遇 手动比心～',
-          'evaluatePersonCode': '5170ab73-f23e-4d24-95c3-5e417c84c857',
-          'evaluatePersonName': '',
-          'evaluatePersonPhone': '13698090711',
-          'evaluateTime': '2019-04-26 12:07',
-          'lowEvaluateManagerFeedbackStatus': 0,
-          'lowEvaluateManagerName': null,
-          'lowEvaluateManagerFeedbackTime': null,
-          'lowEvaluateManagerFeedbackRemark': null,
-          'followUpStatus': 0,
-          'evaluateStatus': 1,
-          'starList': [{
-            'lowEvaluateBid': '252',
-            'answerContent': '5',
-            'answerScore': null,
-            'questionType': 7,
-            'questionContent': '环境',
-            'answerSignCode': '5'
-          }, {
-            'lowEvaluateBid': '253',
-            'answerContent': '5',
-            'answerScore': null,
-            'questionType': 7,
-            'questionContent': '卫生',
-            'answerSignCode': '5'
-          }, {
-            'lowEvaluateBid': '251',
-            'answerContent': '5',
-            'answerScore': null,
-            'questionType': 7,
-            'questionContent': '服务',
-            'answerSignCode': '5'
-          }],
-          'labelList': [{
-            'lowEvaluateBid': '247',
-            'answerContent': '环境好',
-            'answerScore': '1',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '公区有趣',
-            'answerScore': '6',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '网速快',
-            'answerScore': '5',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '干净整洁',
-            'answerScore': '3',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '位置好',
-            'answerScore': '4',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '性价比高',
-            'answerScore': '7',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '247',
-            'answerContent': '服务贴心',
-            'answerScore': '2',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }],
-          'urlList': [{
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C1/CtgFCVzChB2AYAWCAAENQC1JFaU819.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C3/CtgFCFzChA-AEtKeAADDck8vf8w608.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C1/CtgFCVzChB2AcwujAAE2RcZb_xc140.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C1/CtgFCVzChB2ATy2YAAG4qnU9URE983.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C3/CtgFCFzChA-AVPjmAAHXbR7ikBk424.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C3/CtgFCFzChA-AXqiCAAHauMrZg4U191.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': '248',
-            'answerContent': 'http://image.ziroom.com/g2m2/M00/0A/C1/CtgFCVzChB2AVL0SABGyysxEsAY837.jpg',
-            'answerScore': null,
-            'questionType': 5,
-            'questionContent': '图片URL',
-            'answerSignCode': null
-          }]
-        }
-      ],
+      evaluateList: [],
       replyDto: {
         lowEvaluateRecordCode: 0,
         feedbackRemark: ''
@@ -215,23 +74,24 @@ export default {
   methods: {
     listEvaluate (dto) {
       Object.assign(this.paramDto, dto)
-      this.paramDto.page = 1
+      this.paramDto.pageIndex = 1
       this.handlePageChange()
+      this.projectScore(this.paramDto.projectBid)
     },
     handlePageChange () {
-      getEvaluate(this.evalParamDto).then(res => {
-        if (res.data.status === 200) {
-          this.evaluateList = res.data.body.list
-          this.total = res.data.body.total
+      this.$delete(this.paramDto, 'evaluateTime')
+      getEvaluate(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.evaluateList = res.body.list
+          this.total = res.body.total
           this.haveData = this.total > 0
         } else {
-          this.$Message.warning(res.message)
           this.haveData = false
         }
       })
     },
-    projectScore () {
-      getProjectScore().then(res => {
+    projectScore (projectBid) {
+      getProjectScore(projectBid).then(res => {
         if (res.data.status === 200) {
           this.totalScore = res.data
         } else {
@@ -286,7 +146,6 @@ export default {
           }, this.delay)
           this.replyVisible = false
         } else {
-          this.$Message.warning(res.message)
           this.handleError()
         }
       })
@@ -320,8 +179,6 @@ export default {
           setTimeout(function () {
             this.handlePageChange()
           }, this.delay)
-        } else {
-          this.$Message.warning(res.message)
         }
       })
     },
@@ -348,7 +205,7 @@ export default {
   },
   created () {
     this.projectScore()
-    this.handlePageChange(0)
+    this.handlePageChange()
   }
 }
 </script>

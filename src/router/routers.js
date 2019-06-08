@@ -140,6 +140,15 @@ export default [
           notCache: true
         },
         component: () => import('@/view/resource/project-action/project.vue')
+      },
+      {
+        path: 'owner',
+        name: 'ownerList',
+        meta: {
+          icon: '_qq',
+          title: '业主'
+        },
+        component: () => import('@/view/resource/owner-list/ownerList.vue')
       }
     ]
   },

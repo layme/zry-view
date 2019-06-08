@@ -69,17 +69,21 @@
 </template>
 <script>
 import { getDate } from '@/libs/tools'
-import { addORemoveBlack } from '@/api/guest'
+import { getGuests, addORemoveBlack } from '@/api/guest'
 
 export default {
   name: 'guestInfo',
   props: {
-    idNumber: String,
-    guest: Object
+    guestFid: String
   },
   data () {
     return {
-      guestInfo: this.guest,
+      guestDto: {
+        fid: this.guestFid,
+        pageIndex: 1,
+        pageSize: 1
+      },
+      guestInfo: {},
       guestBlackDto: {
         guestFid: '',
         currentStatus: 0
@@ -88,29 +92,19 @@ export default {
   },
   methods: {
     getGuestInfo () {
-      console.info(this.idNumber)
-      this.guestInfo = {
-        'fid': '8c0364f40f3d11e9be1200ffe680200f',
-        'name': '蒋东',
-        'gender': 2,
-        'idType': 1,
-        'idNumber': '33032419910328****',
-        'birthplace': null,
-        'birth': '1991-03-28',
-        'idAddress': null,
-        'mobile': '134****1245',
-        'checkInTimes': 28,
-        'lastProjectName': '北京CBD自如驿',
-        'lastCheckIn': 1558195200000,
-        'isBlack': 0
-      }
+      getGuests(this.guestDto).then(res => {
+        if (res.code === 200) {
+          this.guestInfo = res.body.rows[0]
+        }
+      })
+      this.guestInfo = {}
     },
     // 黑名单操作确认
     confirmBlack () {
       let text = this.guestInfo.isBlack === 1 ? '转为正常用户' : '转为特殊用户'
       this.$Modal.confirm({
         title: '通知',
-        content: '<p>该用户将被' + text + '，继续？</p>',
+        content: `<p>该用户将被${text}，继续？</p>`,
         onOk: () => {
           this.addORemoveBlack()
         },
@@ -119,7 +113,7 @@ export default {
       })
     },
     // 特殊用户操作
-    addORemoveBlack (val) {
+    addORemoveBlack () {
       this.guestBlackDto.guestFid = this.guestInfo.fid
       this.guestBlackDto.currentStatus = this.guestInfo.isBlack
       addORemoveBlack(this.guestBlackDto).then(res => {
@@ -131,9 +125,7 @@ export default {
     }
   },
   created () {
-    if (!this.guestInfo) {
-      this.getGuestInfo()
-    }
+    this.getGuestInfo()
   },
   filters: {
     genderFilter (val) {

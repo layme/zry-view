@@ -16,7 +16,8 @@ export default {
   /**
    * @description 本地开发api请求基础路径
    */
-  devUrl: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
+  // devUrl: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
+  devUrl: 'http://localhost:8081',
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */

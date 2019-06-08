@@ -37,64 +37,7 @@ export default {
       // 分页总数
       total: 0,
       // 列表查询结果
-      evaluateList: [
-        {
-          'bid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-          'logicCode': '3855382',
-          'evaluateSceneCode': '63615afa5a344153a047aca1ea32cc51',
-          'businessCode': 'BJ101181122008',
-          'customerAvgStarLevel': 3.7,
-          'customerSuggestion': '先是给我安排了个男生间，后又换到女生间还是没有打扫的，态度倒是很好，因为每次去北京基本都住这里，可能知道我是常客，希望下次能改进吧！',
-          'evaluatePersonCode': '52d075cb-5b60-4780-baaf-9bf5bf9a3aa8',
-          'evaluatePersonName': '苏畅',
-          'evaluatePersonPhone': '13810353181',
-          'evaluateTime': '2018-11-27 17:32',
-          'lowEvaluateManagerFeedbackStatus': null,
-          'lowEvaluateManagerName': null,
-          'lowEvaluateManagerFeedbackTime': null,
-          'lowEvaluateManagerFeedbackRemark': null,
-          'followUpStatus': 2,
-          'evaluateStatus': null,
-          'starList': [{
-            'lowEvaluateBid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-            'answerContent': '环境',
-            'answerScore': '3',
-            'questionType': 7,
-            'questionContent': '环境',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-            'answerContent': '卫生',
-            'answerScore': '3',
-            'questionType': 7,
-            'questionContent': '卫生',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-            'answerContent': '服务',
-            'answerScore': '5',
-            'questionType': 7,
-            'questionContent': '服务',
-            'answerSignCode': null
-          }],
-          'labelList': [{
-            'lowEvaluateBid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-            'answerContent': '环境好',
-            'answerScore': '1',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }, {
-            'lowEvaluateBid': 'e4cd81f612db4ace9f4f9c4659ec3d16',
-            'answerContent': '服务贴心',
-            'answerScore': '1',
-            'questionType': 4,
-            'questionContent': '标签',
-            'answerSignCode': null
-          }],
-          'urlList': []
-        }
-      ]
+      evaluateList: []
     }
   },
   methods: {

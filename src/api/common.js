@@ -22,7 +22,7 @@ export const getAreaList = (data) => {
 // 获取业主列表
 export const getOwnerList = () => {
   return axios.request({
-    url: '/owner/ownerList',
+    url: '/owner-list/ownerList',
     method: 'get'
   })
 }

@@ -3,7 +3,7 @@
     <Row>
       <Tag class="my-tag"
            :key="index"
-           v-for="(tag,index) in hobbyTags"
+           v-for="(tag,index) in guestHobbyDto.hobbyTags"
            closable
            type="dot"
            color="primary"
@@ -19,7 +19,7 @@
              @keyup.enter.native="handleInputConfirm"
              @on-blur="handleInputConfirm">
       </Input>
-      <Button v-else-if="hobbyTags && hobbyTags.length < 30" class="my-tag"
+      <Button v-else-if="guestHobbyDto.hobbyTags && guestHobbyDto.hobbyTags.length < 30" class="my-tag"
               @click="showInput" icon="ios-add"> 新增
       </Button>
     </Row>
@@ -29,26 +29,36 @@
   </div>
 </template>
 <script>
+import { listHobby, saveTags } from '@/api/guest'
 export default {
   name: 'guestTag',
   props: {
-    idNumber: String
+    guestFid: String
   },
   data () {
     return {
-      hobbyTags: [],
+      guestHobbyDto: {
+        guestFid: this.guestFid,
+        hobbyTags: []
+      },
       inputVisible: false,
       inputValue: '',
       isChange: false
     }
   },
   methods: {
+    listHobby () {
+      listHobby(this.guestFid).then(res => {
+        if (res.code === 200) {
+          this.guestHobbyDto.hobbyTags = res.body
+        }
+      })
+    },
     // 删除标签
     handleClose (index) {
-      this.hobbyTags.splice(index, 1)
+      this.guestHobbyDto.hobbyTags.splice(index, 1)
       this.isChange = true
     },
-
     // 显示标签输入框
     showInput () {
       this.inputVisible = true
@@ -56,28 +66,34 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
-
     // 生成标签
     handleInputConfirm () {
       let inputValue = this.inputValue
       if (inputValue) {
-        if (this.hobbyTags.indexOf(inputValue) !== -1) {
+        if (this.guestHobbyDto.hobbyTags.indexOf(inputValue) !== -1) {
           this.$Message.warning('标签不能重复')
           this.$refs.saveTagInput.focus()
           return
         }
-        this.hobbyTags.push(inputValue)
+        this.guestHobbyDto.hobbyTags.push(inputValue)
         this.isChange = true
       }
       this.inputVisible = false
       this.inputValue = ''
     },
-
     // 向后台提交标签
     saveTags () {
-      this.$Message.success('save success')
-      this.isChange = false
+      saveTags(this.guestHobbyDto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功')
+          this.listHobby()
+          this.isChange = false
+        }
+      })
     }
+  },
+  created () {
+    this.listHobby()
   }
 }
 </script>

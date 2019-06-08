@@ -52,14 +52,14 @@
         <a @click="openGuest(row)">查看详情</a>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="guestDto.page"
-          :page-size="guestDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="guestDto.pageIndex"
+          :page-size="guestDto.pageSize" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       :title="title"
       width="800"
       footer-hide>
-      <guest-tabs v-if="visible" :idNumber="idNumber" @close="handleClose"></guest-tabs>
+      <guest-tabs v-if="visible" :guest-fid="guestFid" @close="handleClose"></guest-tabs>
     </Modal>
   </div>
 </template>
@@ -95,37 +95,7 @@ export default {
       },
       loadingTable: false,
       total: 0,
-      guestList: [
-        {
-          'fid': '7337f99d0f3d11e9be1200ffe680200f',
-          'name': '林子程',
-          'gender': 2,
-          'idType': 1,
-          'idNumber': '35078219950626****',
-          'birthplace': null,
-          'birth': '1995-06-26',
-          'idAddress': null,
-          'mobile': '无',
-          'checkInTimes': 2,
-          'lastProjectName': '北京CBD自如驿',
-          'lastCheckIn': 1501603200000,
-          'isBlack': 0
-        }, {
-          'fid': '7338463c0f3d11e9be1200ffe680200f',
-          'name': '时文浩',
-          'gender': 2,
-          'idType': 1,
-          'idNumber': '37110219970405****',
-          'birthplace': null,
-          'birth': '1997-04-05',
-          'idAddress': null,
-          'mobile': '无',
-          'checkInTimes': 1,
-          'lastProjectName': '北京CBD自如驿',
-          'lastCheckIn': 1501603200000,
-          'isBlack': 0
-        }
-      ],
+      guestList: [],
       columns: [
         {
           title: '序号',
@@ -171,27 +141,32 @@ export default {
       ],
       visible: false,
       title: '',
-      idNumber: ''
+      guestFid: ''
     }
   },
   methods: {
     // 查询列表
     listGuest () {
+      this.guestDto.pageIndex = 1
+      this.handlePageChange()
+    },
+    handlePageChange () {
+      this.loadingTable = true
       getGuests(this.guestDto).then(res => {
         if (res.code === 200) {
-          this.guestList = res.data.rows
-          this.total = res.data.total
+          this.guestList = res.body.rows
+          this.total = res.body.total
         } else {
           this.$Message.warning('查询失败，请稍后重试')
         }
+        this.loadingTable = false
+      }).catch(() => {
+        this.loadingTable = false
       })
     },
-    handlePageChange () {
-      console.info('guestDto', this.guestDto)
-    },
     openGuest (row) {
-      this.title = `客史详情 - ${row.stayPersonName}`
-      this.idNumber = row.idNumber
+      this.title = `客史详情 - ${row.name}`
+      this.guestFid = row.fid
       this.visible = true
     },
     handleClose () {
@@ -206,7 +181,11 @@ export default {
       return val === 1 ? '特殊用户' : '正常用户'
     },
     dateFilter (val) {
-      return getDate(val, 'date')
+      if (val) {
+        return getDate(val, 'date')
+      } else {
+        return '-'
+      }
     }
   },
   created () {

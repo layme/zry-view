@@ -1,16 +1,16 @@
 <template>
   <Tabs type="card" v-model="activeName">
-    <TabPane label="基本信息">
-      <guest-info></guest-info>
+    <TabPane label="基本信息" name="info">
+      <guest-info :guest-fid="guestFid"></guest-info>
     </TabPane>
-    <TabPane label="入住记录">
-      <check-in-record @close="handleClose"></check-in-record>
+    <TabPane label="入住记录" name="record">
+      <check-in-record :guest-fid="guestFid" @close="handleClose"></check-in-record>
     </TabPane>
-    <TabPane label="客人喜好">
-      <guest-tag></guest-tag>
+    <TabPane label="客人喜好" name="tag">
+      <guest-tag :guest-fid="guestFid"></guest-tag>
     </TabPane>
-    <TabPane label="事件记录">
-      <guest-event></guest-event>
+    <TabPane label="事件记录" name="event">
+      <guest-event :guest-fid="guestFid"></guest-event>
     </TabPane>
   </Tabs>
 </template>
@@ -22,7 +22,7 @@ import guestEvent from './components/guestEvent'
 export default {
   name: 'guestTabs',
   props: {
-    idNumber: String,
+    guestFid: String,
     active: String
   },
   components: {
@@ -33,7 +33,7 @@ export default {
   },
   data () {
     return {
-      activeName: this.active
+      activeName: this.active ? this.active : 'info'
     }
   },
   methods: {

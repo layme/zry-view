@@ -85,7 +85,7 @@ export default {
   data () {
     return {
       paramDto: {
-        projectBid: this.$store.state.user.projectList[0],
+        projectBid: this.$store.state.user.projectList[0].bid,
         orderNumber: '',
         evaluateTime: [],
         startDate: '',

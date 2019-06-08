@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <i-col :xs="12" :md="8" :lg="4" v-for="(infor, i) in inforCardData" :key="`infor-${i}`" style="height: 120px;padding-bottom: 10px;">
         <infor-card shadow :color="infor.color" :icon="infor.icon" :icon-size="36">
-          <count-to :end="infor.count" count-class="count-style"/>
+          <count-to :end="infor.count" :count-class="countStyle"/>
           <p>{{ infor.title }}</p>
         </infor-card>
       </i-col>
@@ -67,6 +67,9 @@ export default {
         Fri: 24643,
         Sat: 1322,
         Sun: 1324
+      },
+      countStyle: {
+        fontSize: '50px'
       }
     }
   },
