@@ -7,9 +7,11 @@ import {
   hasRead,
   removeReaded,
   restoreTrash,
-  getUnreadCount
+  getUnreadCount,
+  changeCurrentProject
 } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
+import { Message } from 'iview'
 
 export default {
   state: {
@@ -18,7 +20,7 @@ export default {
     hlUser: '',
     phoneMobile: '',
     token: getToken(),
-    access: '',
+    access: [],
     hasGetInfo: false,
     unreadCount: 0,
     messageUnreadList: [],
@@ -26,8 +28,7 @@ export default {
     messageTrashList: [],
     messageContentStore: {},
     projectList: [],
-    currentProject: '',
-    upsUserVo: {}
+    currentProject: {}
   },
   mutations: {
     setName (state, name) {
@@ -78,9 +79,6 @@ export default {
     },
     setCurrentProject (state, currentProject) {
       state.currentProject = currentProject
-    },
-    setUpsUserVo (state, upsUserVo) {
-      state.upsUserVo = upsUserVo
     }
   },
   getters: {
@@ -106,7 +104,7 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -118,25 +116,30 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        try {
-          getUserInfo(state.token).then(res => {
-            const data = res.body
-            commit('setName', data.name)
-            commit('setUsername', data.username)
-            commit('setHlUser', data.hlUser)
-            commit('setPhoneMobile', data.phoneMobile)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            commit('setProjectList', data.projectList)
-            commit('setCurrentProject', data.currentProject)
-            commit('setUpsUserVo', data.upsUserVo)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
-        } catch (error) {
-          reject(error)
-        }
+        getUserInfo().then(res => {
+          const data = res.body
+          commit('setName', data.name)
+          commit('setUsername', data.username)
+          commit('setHlUser', data.hlUser)
+          commit('setPhoneMobile', data.phoneMobile)
+          commit('setAccess', data.access)
+          commit('setHasGetInfo', true)
+          commit('setProjectList', data.projectList)
+          commit('setCurrentProject', data.currentProject)
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    changeCurrentProject ({ state, commit }, projectBid) {
+      return new Promise((resolve, reject) => {
+        changeCurrentProject(projectBid).then(res => {
+          if (res.code === 200) {
+            commit('setCurrentProject', state.projectList.find(item => item.bid === projectBid))
+            Message.success('项目切换成功')
+          }
+        })
       })
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表

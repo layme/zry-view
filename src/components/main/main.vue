@@ -16,6 +16,7 @@
           <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
           <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+          <current-project :project-list="$store.state.user.projectList" style="margin-right: 10px;"></current-project>
         </header-bar>
       </Header>
       <Content class="main-content-con">
@@ -44,6 +45,7 @@ import ABackTop from './components/a-back-top'
 import Fullscreen from './components/fullscreen'
 import Language from './components/language'
 import ErrorStore from './components/error-store'
+import CurrentProject from './components/current-project'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
 import routers from '@/router/routers'
@@ -59,6 +61,7 @@ export default {
     TagsNav,
     Fullscreen,
     ErrorStore,
+    CurrentProject,
     User,
     ABackTop
   },
@@ -67,7 +70,8 @@ export default {
       collapsed: false,
       minLogo,
       maxLogo,
-      isFullscreen: false
+      isFullscreen: false,
+      projectBid: ''
     }
   },
   computed: {

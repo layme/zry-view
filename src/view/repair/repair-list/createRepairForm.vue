@@ -3,18 +3,6 @@
     <Divider orientation="left">基本信息</Divider>
     <Row>
       <Col :span="12">
-        <FormItem label="项目" prop="projectBid">
-          <Select v-model="paramDto.projectBid" placeholder="" clearable>
-            <Option
-              v-for="item in $store.state.user.projectList"
-              :key="item.bid"
-              :label="item.projectName"
-              :value="item.bid">
-            </Option>
-          </Select>
-        </FormItem>
-      </Col>
-      <Col :span="12">
         <FormItem label="报修区域" prop="areaType">
           <Select v-model="paramDto.areaType" placeholder="" clearable>
             <Option value="0" label="公区"></Option>
@@ -22,9 +10,7 @@
           </Select>
         </FormItem>
       </Col>
-    </Row>
-    <Row v-if="isRoom">
-      <Col :span="12">
+      <Col :span="12" v-if="isRoom">
         <FormItem label="房间号" prop="roomNum">
           <Select v-model="paramDto.roomNum" placeholder="" clearable>
             <Option
@@ -126,7 +112,7 @@
     <Row>
       <Col :span="12">
         <FormItem label="预约日期" prop="visitDate">
-          <DatePicker v-model="paramDto.visitDate" type="daterange" split-panels placeholder=""
+          <DatePicker v-model="paramDto.visitDateValue" type="date" :options="dateOptions" placeholder=""
                       class="full-width" clearable></DatePicker>
         </FormItem>
       </Col>
@@ -144,8 +130,13 @@
 </template>
 <script>
 import { getRooms, getDesc } from '@/api/repair'
+import { getDate } from '@/libs/tools'
 export default {
   name: 'createRepairForm',
+  props: {
+    areaOptions: Array,
+    goodsOptions: Array
+  },
   data () {
     return {
       paramDto: {
@@ -157,17 +148,15 @@ export default {
         goodsCode: '',
         failureId: '',
         remark: '',
-        repairsMan: this.$store.state.user.userName,
-        repairsMobile: this.$store.state.user.userName,
-        visitLinkman: this.$store.state.user.userName,
-        visitMobile: this.$store.state.user.userName,
+        repairsMan: this.$store.state.user.name,
+        repairsMobile: this.$store.state.user.phoneMobile,
+        visitLinkman: this.$store.state.user.name,
+        visitMobile: this.$store.state.user.phoneMobile,
+        visitDateValue: '',
         visitDate: '',
         visitTime: ''
       },
       rules: {
-        projectBid: [
-          { required: true, message: '请选择项目', trigger: 'change' }
-        ],
         areaType: [
           { required: true, message: '请选择报修区域', trigger: 'change' }
         ],
@@ -189,8 +178,8 @@ export default {
         visitMobile: [
           { required: true, message: '请输入上门联系方式', trigger: 'blur' }
         ],
-        visitDate: [
-          { required: true, message: '请选择上门日期', trigger: 'change' }
+        visitDateValue: [
+          { required: true, type: 'date', message: '请选择上门日期', trigger: 'change' }
         ],
         visitTime: [
           { required: true, message: '请选择上门时段', trigger: 'change' }
@@ -200,27 +189,39 @@ export default {
         ]
       },
       isRoom: false,
-      areaOptions: [],
       roomOptions: [],
-      goodsOptions: [],
-      goodSaveOptions: [],
-      faultFlagOptions: []
+      faultFlagOptions: [],
+      dateOptions: {
+        disabledDate (date) {
+          return date && date.valueOf() < Date.now() - 86400000
+        }
+      }
+    }
+  },
+  computed: {
+    goodSaveOptions () {
+      if (this.paramDto.categoryCode) {
+        return this.goodsOptions.find(item => item.typeCode === this.paramDto.categoryCode.split(',')[1]).goodsList
+      } else {
+        return []
+      }
     }
   },
   methods: {
     getRoomList () {
-      getRooms(this.paramDto.projectBid).then(res => {
-        this.roomOptions = res.data
+      getRooms(this.$store.state.user.currentProject.bid).then(res => {
+        this.roomOptions = res.body
       })
     },
     getDesc () {
       getDesc(this.paramDto.goodsCode.split(',')[1]).then(res => {
-        this.faultFlagOptions = res.faultFlagList
+        this.faultFlagOptions = res.body
       })
     },
     validForm () {
       this.$refs['repairSaveForm'].validate((valid) => {
         if (valid) {
+          this.paramDto.projectBid = this.$store.state.user.currentProject.bid
           this.$emit('submit', this.paramDto)
         } else {
           this.$emit('error')
@@ -229,48 +230,33 @@ export default {
     }
   },
   watch: {
-    'paramDto.projectBid' (val) {
-      if (val) {
-        this.getRoomList()
-        this.paramDto.roomNum = ''
-      } else {
-        this.roomOptions = []
-        this.paramDto.roomNum = ''
-      }
-    },
     'paramDto.areaType' (val) {
       if (val) {
         this.paramDto.roomNum = ''
         this.isRoom = val === '1'
-        this.getRoomList()
       } else {
         this.paramDto.roomNum = ''
         this.isRoom = false
-        this.roomOptions = []
       }
     },
-    'paramDto.categoryCod' (val) {
-      if (val) {
-        this.paramDto.goodsCode = ''
-        for (let i = 0; i < this.goodsOptions.length; i++) {
-          if (this.goodsOptions[i].typeCode === val.split(',')[1]) {
-            this.goodSaveOptions = this.goodsOptions[i].goodsList
-            break
-          }
-        }
-      } else {
-        this.goodSaveOptions = []
-        this.paramDto.goodsCode = ''
-      }
-    },
-    'paramDto.categoryCode' (val) {
+    'paramDto.goodsCode' (val) {
       if (val) {
         this.getDesc()
       } else {
         this.paramDto.failureId = ''
         this.faultFlagOptions = []
       }
+    },
+    'paramDto.visitDateValue' (val) {
+      if (val) {
+        this.paramDto.visitDate = getDate(val, 'date')
+      } else {
+        this.paramDto.visitDate = ''
+      }
     }
+  },
+  created () {
+    this.getRoomList()
   }
 }
 </script>

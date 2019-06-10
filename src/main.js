@@ -18,9 +18,10 @@ import 'v-org-tree/dist/v-org-tree.css'
 import BaiduMap from 'vue-baidu-map'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+import { isHave } from '@/libs/action.js'
+import '@/libs/filters.js'
 
 // 实际打包时应该不引入mock
-/* eslint-disable */
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 Vue.use(iView, {
@@ -51,6 +52,14 @@ Vue.prototype.$config = config
  */
 importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
+// 按钮权限指令
+Vue.directive('action', {
+  bind: function (el, binding) {
+    if (!isHave(binding.value)) {
+      el.parentNode.removeChild(el)
+    }
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

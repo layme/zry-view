@@ -12,7 +12,7 @@
     </FormItem>
     <FormItem label="取消备注" prop="description">
       <Input type="textarea" :rows="2" v-model="paramDto.description"
-             maxlength="50"
+             :maxlength="50"
              placeholder="此处最多输入50个字符"></Input>
     </FormItem>
   </Form>

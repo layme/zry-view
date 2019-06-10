@@ -43,7 +43,8 @@ class HttpRequest {
     instance.interceptors.response.use(resp => {
       this.destroy(url, true)
       if (resp.data.code !== 200) {
-        Message.warning(resp.data.message)
+        let message = resp.data.message ? resp.data.message : '系统异常'
+        Message.warning(message)
       }
       return resp.data
     }, error => {

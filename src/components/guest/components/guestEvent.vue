@@ -22,18 +22,8 @@
       :loading="loading"
       @on-ok="validForm">
       <Form :model="eventDto" :rules="eventRules" ref="eventForm" :label-width="60" v-if="visible">
-        <FormItem label="项目" prop="projectBid" >
-          <Select v-model="paramDto.projectBid" placeholder="" class="my-form" clearable>
-            <Option
-              v-for="item in $store.state.user.projectList"
-              :key="item.bid"
-              :label="item.projectName"
-              :value="item.bid">
-            </Option>
-          </Select>
-        </FormItem>
         <FormItem label="类型" prop="eventType">
-          <Select v-model="eventDto.eventType" class="my-form">
+          <Select v-model="eventDto.eventType" class="my-form" placeholder="">
             <Option
               v-for="item in eventTypeOptions"
               :key="item.value"
@@ -81,9 +71,6 @@ export default {
       title: '',
       eventDto: {},
       eventRules: {
-        projectBid: [
-          { required: true, type: 'string', message: '请选择项目', trigger: 'change' }
-        ],
         eventType: [
           { required: true, type: 'number', message: '请选择类型', trigger: 'change' }
         ],
@@ -129,7 +116,7 @@ export default {
       this.title = '添加事件'
       this.visible = true
       this.eventDto = {
-        projectBid: '',
+        projectBid: this.$store.state.user.currentProject.bid,
         guestFid: this.guestFid,
         eventFid: '',
         eventContent: '',

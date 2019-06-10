@@ -7,30 +7,34 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-    url: '/security/login.action',
+    url: '/security/login',
     method: 'post',
     data: data
   })
 }
 
-export const getUserInfo = (token) => {
+export const getUserInfo = () => {
   return axios.request({
     url: '/security/userInfo',
-    method: 'get',
+    method: 'get'
+  })
+}
+
+export const changeCurrentProject = (projectBid) => {
+  return axios.request({
+    url: '/security/changeCurrentProject',
+    method: 'post',
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
-      token
+      projectBid: projectBid
     }
   })
 }
 
-export const logout = (token) => {
+export const logout = () => {
   return axios.request({
     url: '/security/logout',
-    method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
-    params: {
-      token: token
-    }
+    method: 'post'
   })
 }
 

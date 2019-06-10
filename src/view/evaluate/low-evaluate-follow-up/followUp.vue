@@ -6,7 +6,7 @@
     </FormItem>
     <FormItem style="text-align: center">
       <Button type="primary" @click="valid" class="my-btn">提 交</Button>
-      <Button type="success" @click="finish">完 结</Button>
+      <Button type="success" v-action="btnAccess" @click="finish">完 结</Button>
     </FormItem>
   </Form>
 </template>
@@ -27,7 +27,8 @@ export default {
         content: [
           { required: true, message: '请输入跟进描述', trigger: 'blur' }
         ]
-      }
+      },
+      btnAccess: '/evaluate/confirmFinish.action'
     }
   },
   methods: {

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <repair-form @search="listRepair" @create="handleCreate"></repair-form>
+    <repair-form :area-options="areaOptions" :goods-options="goodsOptions" @search="listRepair"
+                 @create="handleCreate"></repair-form>
     <Table stripe :columns="columns" :data="repairList" :loading="loadingTable" class="my-table">
       <template slot-scope="{ row }" slot="orderSn">
         <a @click="toRepairDetail(row)">{{ row.orderSn }}</a>
@@ -26,7 +27,8 @@
       :loading="createLoading"
       width="700"
       @on-ok="validSave">
-      <create-repair-form v-if="createVisible" ref="createForm" @submit="saveRepair"
+      <create-repair-form v-if="createVisible" ref="createForm" :area-options="areaOptions"
+                          :goods-options="goodsOptions" @submit="saveRepair"
                           @error="handleCreateError"></create-repair-form>
     </Modal>
     <Modal
@@ -45,7 +47,7 @@ import { getDate } from '@/libs/tools'
 import repairForm from './repairForm.vue'
 import createRepairForm from './createRepairForm.vue'
 import cancelRepairForm from './cancelRepairForm.vue'
-import { saveRepair, getCancelReasons, cancelRepair } from '@/api/repair'
+import { getRepair, saveRepair, getCancelReasons, cancelRepair, getAreas, getGoods } from '@/api/repair'
 
 export default {
   name: 'repairList',
@@ -62,47 +64,7 @@ export default {
         limit: 10
       },
       total: 0,
-      repairList: [
-        {
-          id: 415,
-          fid: 'a5de0f09951b435faeec4c80dd5940ed',
-          orderSn: 'WX2019012501656',
-          businessType: 3,
-          businessSource: 14,
-          projectFid: '63615afa5a344153a047aca1ea32cc51',
-          projectName: '北京CBD自如驿',
-          areaType: 0,
-          contractCode: 'ZRY10000000',
-          rentContractCode: 'ZRY10000000',
-          houseCode: 'ZRY10000000',
-          houseSourceCode: null,
-          roomNum: '公区',
-          categoryCode: '8a90a3eb5dcdfe4b015dd04fe39202d7',
-          categoryName: '电器',
-          goodsCode: '8a90a3eb5dcdfe4b015dd08c810b0356',
-          goodsName: '空调',
-          spaceId: '2c9085f5338ddceb01338e0771590172',
-          spaceName: '卧室',
-          emergencyDegree: 0,
-          failureId: '不制热',
-          failureName: '8a90a3ea5dccb41b015dd0934d5504c4',
-          failureDesc: '回归测试',
-          isReworking: 0,
-          visitTimeFlag: 1548407447000,
-          visitTime: '18:00-22:00',
-          visitLinkman: '任宏远',
-          visitMobile: '13240149104',
-          repairsMobile: null,
-          repairsMan: '任宏远',
-          orderStatus: 'WAITING',
-          createBy: '60006896',
-          createTime: 1548407419000,
-          lastModifyBy: '60006896',
-          lastModifyTime: 1548407447000,
-          isDel: 0,
-          cityCode: '110000'
-        }
-      ],
+      repairList: [],
       columns: [
         {
           title: '序号',
@@ -163,7 +125,9 @@ export default {
       cancelReasons: [],
       cancelVisible: false,
       cancelLoading: true,
-      billNum: ''
+      billNum: '',
+      areaOptions: [],
+      goodsOptions: []
     }
   },
   methods: {
@@ -173,9 +137,16 @@ export default {
       this.handlePageChange()
     },
     handlePageChange () {
-      this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      this.loadingTable = true
+      getRepair(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.repairList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loadingTable = false
+      }).catch(() => {
+        this.loadingTable = false
+      })
     },
     handleCreate () {
       this.createVisible = true
@@ -183,16 +154,16 @@ export default {
     validSave () {
       this.$refs.createForm.validForm()
     },
-    saveRepair () {
-      saveRepair(this.repairSaveDto).then(res => {
+    saveRepair (dto) {
+      saveRepair(dto).then(res => {
         if (res.code === 200) {
           this.$Message.success('保存成功')
+          this.createVisible = false
+          this.loadingTable = true
           setTimeout(() => {
             this.handlePageChange()
-          }, 600)
-          this.createVisible = false
+          }, 500)
         } else {
-          this.$Message.warning(res.message)
           this.handleCreateError()
         }
       })
@@ -211,13 +182,13 @@ export default {
     },
     getCancelReasons () {
       getCancelReasons().then(res => {
-        this.cancelReasons = res.data
+        this.cancelReasons = res.body
       })
     },
     validCancel () {
       this.$refs.cancelForm.validForm()
     },
-    cancelRepair () {
+    cancelRepair (dto) {
       cancelRepair(dto).then(res => {
         if (res.code === 200) {
           this.$Message.success('取消成功')
@@ -226,7 +197,6 @@ export default {
           }, 600)
           this.cancelVisible = false
         } else {
-          this.$Message.warning(res.message)
           this.handleCancelError()
         }
       })
@@ -266,6 +236,20 @@ export default {
         default:
           return false
       }
+    },
+    getAreas () {
+      getAreas().then(res => {
+        if (res.code === 200) {
+          this.areaOptions = res.body
+        }
+      })
+    },
+    getGoods () {
+      getGoods().then(res => {
+        if (res.code === 200) {
+          this.goodsOptions = res.body
+        }
+      })
     }
   },
 
@@ -297,8 +281,9 @@ export default {
     }
   },
   created () {
-    this.handlePageChange()
     this.getCancelReasons()
+    this.getAreas()
+    this.getGoods()
   }
 }
 </script>

@@ -129,7 +129,7 @@ export default {
     getDetail () {
       getDetail(this.$route.query.orderSn).then(res => {
         if (res.code === 200) {
-          this.repair = res.repair
+          this.repair = res.body
         } else {
           this.$Message.warning(res.message)
         }

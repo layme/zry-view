@@ -23,7 +23,7 @@ export default [
     path: '/login',
     name: 'login',
     meta: {
-      title: 'Login - 登录',
+      title: '登录',
       hideInMenu: true
     },
     component: () => import('@/view/discard/login/login.vue')
@@ -65,7 +65,8 @@ export default [
         name: 'orderList',
         meta: {
           icon: '_qq',
-          title: '订单列表'
+          title: '订单列表',
+          access: ['/order/toListOrder.action']
         },
         component: () => import('@/view/trading/order-list/orderList.vue')
       },
@@ -85,7 +86,8 @@ export default [
         name: 'refundList',
         meta: {
           icon: '_qq',
-          title: '退款列表'
+          title: '退款列表',
+          access: ['/refund/toNewListRefund.action']
         },
         component: () => import('@/view/trading/refund-list/refundList.vue')
       },
@@ -116,7 +118,8 @@ export default [
         name: 'projectList',
         meta: {
           icon: '_qq',
-          title: '项目'
+          title: '项目',
+          access: ['/project/toListProject.action']
         },
         component: () => import('@/view/resource/project-list/projectList.vue')
       },
@@ -146,7 +149,8 @@ export default [
         name: 'ownerList',
         meta: {
           icon: '_qq',
-          title: '业主'
+          title: '业主',
+          access: ['/owner/toOwnerList.action']
         },
         component: () => import('@/view/resource/owner-list/ownerList.vue')
       }
@@ -471,7 +475,8 @@ export default [
         name: 'evaluateList',
         meta: {
           icon: '_qq',
-          title: '全部评价'
+          title: '全部评价',
+          access: ['/evaluate/toListEvaluate.action']
         },
         component: () => import('@/view/evaluate/evaluate-list/evaluateList.vue')
       },
@@ -480,7 +485,8 @@ export default [
         name: 'lowEvaluateList',
         meta: {
           icon: '_qq',
-          title: '低分评价'
+          title: '低分评价',
+          access: ['/lowEvaluate/toListLowEvaluate.action']
         },
         component: () => import('@/view/evaluate/low-evaluate/lowEvaluateList.vue')
       },

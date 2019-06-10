@@ -2,18 +2,6 @@
   <Form :model="paramDto" :label-width="80">
     <Row :gutter="20">
       <Col :span="8">
-        <FormItem label="项目">
-          <Select v-model="paramDto.projectBid" placeholder="" clearable>
-            <Option
-              v-for="item in $store.state.user.projectList"
-              :key="item.bid"
-              :label="item.projectName"
-              :value="item.bid">
-            </Option>
-          </Select>
-        </FormItem>
-      </Col>
-      <Col :span="8">
         <FormItem label="订单编号">
           <Input v-model.trim="paramDto.orderNumber" placeholder="" :maxlength="20"></Input>
         </FormItem>
@@ -24,8 +12,6 @@
                       class="full-width" clearable></DatePicker>
         </FormItem>
       </Col>
-    </Row>
-    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="处理状态">
           <Select v-model="paramDto.followUpStatus" placeholder="" clearable>
@@ -38,6 +24,8 @@
           </Select>
         </FormItem>
       </Col>
+    </Row>
+    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="总分区间">
           <Select v-model="paramDto.totalScore" placeholder="" clearable>
@@ -81,7 +69,7 @@ export default {
   data () {
     return {
       paramDto: {
-        projectBid: this.$store.state.user.projectList[0],
+        projectBid: this.$store.state.user.currentProject.bid,
         orderNumber: '',
         evaluateTime: [],
         startDate: '',
@@ -133,6 +121,9 @@ export default {
     'paramDto.evaluateTime' (val) {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
+    },
+    '$store.state.user.currentProject' (to, from) {
+      this.paramDto.projectBid = to.bid
     }
   }
 }

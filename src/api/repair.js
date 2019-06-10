@@ -9,7 +9,7 @@ export const getRepair = data => {
   })
 }
 
-// 特殊用户操作
+// 保存维修单
 export const saveRepair = data => {
   return axios.request({
     url: '/repair/saveRepairOrder.action',
@@ -18,11 +18,17 @@ export const saveRepair = data => {
   })
 }
 
-export const removeEvent = data => {
+export const getAreas = () => {
   return axios.request({
-    url: '',
-    method: 'post',
-    data: data
+    url: '/repair/getAreas',
+    method: 'get'
+  })
+}
+
+export const getGoods = () => {
+  return axios.request({
+    url: '/repair/getGoods',
+    method: 'get'
   })
 }
 

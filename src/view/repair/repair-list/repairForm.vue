@@ -2,18 +2,6 @@
   <Form :model="paramDto" :label-width="60">
     <Row :gutter="20">
       <Col :span="8">
-        <FormItem label="项目">
-          <Select v-model="paramDto.projectBid" placeholder="" clearable>
-            <Option
-              v-for="item in $store.state.user.projectList"
-              :key="item.bid"
-              :label="item.projectName"
-              :value="item.bid">
-            </Option>
-          </Select>
-        </FormItem>
-      </Col>
-      <Col :span="8">
         <FormItem label="区域">
           <Select v-model="paramDto.spaceid" placeholder="" clearable>
             <Option
@@ -37,8 +25,6 @@
           </Select>
         </FormItem>
       </Col>
-    </Row>
-    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="物品">
           <Select v-model="paramDto.goodsCode" placeholder="" clearable>
@@ -52,6 +38,8 @@
           </Select>
         </FormItem>
       </Col>
+    </Row>
+    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="状态">
           <Select v-model="paramDto.orderStatus" placeholder="" clearable>
@@ -70,14 +58,14 @@
                       class="full-width" clearable></DatePicker>
         </FormItem>
       </Col>
-    </Row>
-    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="上门时间">
           <DatePicker v-model="paramDto.visitTime" type="daterange" split-panels placeholder=""
                       class="full-width" clearable></DatePicker>
         </FormItem>
       </Col>
+    </Row>
+    <Row :gutter="20">
       <Col :span="8">
         <FormItem label="关键字">
           <Input v-model.trim="paramDto.keyWords" :maxlength="10" clearable
@@ -99,10 +87,14 @@
 import { getDate } from '@/libs/tools'
 export default {
   name: 'repairForm',
+  props: {
+    areaOptions: Array,
+    goodsOptions: Array
+  },
   data () {
     return {
       paramDto: {
-        projectBid: '',
+        projectFid: this.$store.state.user.currentProject.bid,
         spaceid: '',
         categoryCode: '',
         goodsCode: '',
@@ -115,11 +107,7 @@ export default {
         visitTimeEnd: '',
         keyWords: ''
       },
-      areaOptions: [],
-      // 大类物品集合
-      goodsOptions: [],
       // 物品
-      goodOptions: [],
       statusOptions: [
         { value: 'TO_SEND', text: '待自如派单' },
         { value: 'TO_BE_ASSIGNED', text: '待供应商派工' },
@@ -130,6 +118,15 @@ export default {
         { value: 'COMPLETE', text: '已完成' },
         { value: 'CANCEL', text: '已取消' }
       ]
+    }
+  },
+  computed: {
+    goodOptions () {
+      if (this.paramDto.categoryCode) {
+        return this.goodsOptions.find(item => item.typeCode === this.paramDto.categoryCode).goodsList
+      } else {
+        return []
+      }
     }
   },
   methods: {
@@ -148,7 +145,13 @@ export default {
     'paramDto.visitTime' (val) {
       this.paramDto.visitTimeStart = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.visitTimeEnd = val[1] ? getDate(val[1], 'date') : ''
+    },
+    '$store.state.user.currentProject' (to, from) {
+      this.paramDto.projectBid = to.bid
     }
+  },
+  created () {
+    this.search()
   }
 }
 </script>
