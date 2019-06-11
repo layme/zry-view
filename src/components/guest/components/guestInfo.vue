@@ -68,7 +68,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import { getGuests, addORemoveBlack } from '@/api/guest'
 
 export default {
@@ -130,9 +129,6 @@ export default {
   filters: {
     genderFilter (val) {
       return val === 2 ? '男' : val === 1 ? '女' : '未知'
-    },
-    dateFilter (val) {
-      return getDate(val, 'date')
     },
     idTypeFilter (val) {
       switch (val) {

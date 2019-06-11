@@ -5,7 +5,7 @@
         <Col :span="14">
           <Tag v-if="event.eventType === 1" class="my-tag" color="success">好评</Tag>
           <Tag v-else class="my-tag" color="warning">投诉</Tag>
-          {{ event.eventDate | dateFilter }}
+          {{ event.eventDate | dateTimeFilter }}
         </Col>
         <Col :span="10" style="text-align: right">
           <Button size="small" type="primary" icon="ios-create-outline" shape="circle"
@@ -26,7 +26,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'guestEventCard',
   props: {
@@ -46,11 +45,6 @@ export default {
     }
   },
   created () {
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'all')
-    }
   }
 }
 </script>

@@ -5,23 +5,23 @@
         入住人信息
       </p>
       <Form ref="stayPersonForm" :model="stayPersonDto" :label-width="100">
-        <div v-for="(item, index) in stayPersonDto.stayPersons" :key="index" class="con-stay">
-          <div class="subscript-stay">
-            回头客
+        <div v-for="(item, index) in stayPersonDto.stayPersonList" :key="index" class="con-stay">
+          <div class="subscript-stay" v-if="guestTypeFormat(item.bid)">
+            {{ guestTypeFormat(item.bid) }}
           </div>
           <Row>
             <Col :span="22">
               <Row>
                 <Col :span="8">
                   <FormItem label="姓名">
-                    <Input type="text" v-model.trim="item.stayPersonName"></Input>
+                    <Input type="text" v-model.trim="item.name" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
                   <FormItem label="性别">
                     <RadioGroup v-model="item.sex">
-                      <Radio label="1">男</Radio>
-                      <Radio label="2">女</Radio>
+                      <Radio :label="1">男</Radio>
+                      <Radio :label="2">女</Radio>
                     </RadioGroup>
                   </FormItem>
                 </Col>
@@ -34,34 +34,38 @@
               <Row>
                 <Col :span="8">
                   <FormItem label="证件类型">
-                    <Select v-model="item.cardType">
+                    <Select v-model="item.credentialType" placeholder="" transfer>
                       <Option v-for="card in cardTypeOptions" :value="card.value" :key="card.value">{{ card.label }}
                       </Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem label="证件号">
-                    <Input type="text" v-model.trim="item.cardNumber"></Input>
+                  <FormItem v-if="item.credentialType === 1" label="证件号" :prop="'stayPersonList.' + index + '.credentialNumber'" :rules="[
+                  { pattern: /^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|30|31)|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/,
+                  message: '身份证号码格式不对', trigger: 'blur' }]">
+                    <Input type="text" v-model.trim="item.credentialNumber" placeholder=""></Input>
+                  </FormItem>
+                  <FormItem v-else label="证件号">
+                    <Input type="text" v-model.trim="item.credentialNumber" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
                   <FormItem label="手机号">
-                    <Input type="text" v-model.trim="item.phone"></Input>
+                    <Input type="text" v-model.trim="item.phone" placeholder=""></Input>
                   </FormItem>
                 </Col>
               </Row>
             </Col>
-            <Col :span="2" class="other-col">
+            <Col :span="2" class="other-col" v-if="item.guestFid">
               <Tooltip content="查看客史详情" placement="left">
                 <Button shape="circle" icon="ios-person" @click="openGuest(index)"></Button>
               </Tooltip>
             </Col>
           </Row>
         </div>
-        <Button type="primary" class="my-btn">保 存</Button>
-        <Button class="my-btn">重 置</Button>
-        <Button type="primary" class="my-btn">客史记录</Button>
+        <Button type="primary" class="my-btn" @click="validateForm">保 存</Button>
+        <Button v-if="orderStatus === 2" type="primary" class="my-btn" ghost>客史记录</Button>
       </Form>
     </Card>
     <Modal
@@ -69,7 +73,7 @@
       :title="title"
       width="800"
       footer-hide>
-      <guest-tabs v-if="visible" @close="handleClose"></guest-tabs>
+      <guest-tabs v-if="visible" :guest-fid="guestFid" :active="active" @close="handleClose"></guest-tabs>
     </Modal>
   </div>
 </template>
@@ -79,7 +83,13 @@ import guestTabs from '@/components/guest/guestTabs'
 export default {
   name: 'stayPersonCard',
   props: {
-    data: Object
+    stayList: {
+      type: Array,
+      default: () => []
+    },
+    guestType: Object,
+    orderBid: String,
+    orderStatus: Number
   },
   components: {
     guestTabs
@@ -87,18 +97,8 @@ export default {
   data () {
     return {
       stayPersonDto: {
-        orderBid: '',
-        stayPersons: [
-          {
-            bid: '',
-            stayPersonName: '',
-            sex: '',
-            houseTypeName: '4人间',
-            cardType: '',
-            cardNumber: '',
-            phone: ''
-          }
-        ]
+        orderId: '',
+        stayPersonList: []
       },
       cardTypeOptions: [
         {
@@ -115,17 +115,58 @@ export default {
         }
       ],
       title: '',
-      visible: false
+      visible: false,
+      guestFid: '',
+      active: 'record'
     }
   },
   methods: {
+    initData () {
+      this.stayPersonDto.orderId = this.orderBid
+      this.stayList.forEach(item => {
+        this.stayPersonDto.stayPersonList.push({
+          bid: item.bid,
+          orderBid: this.orderBid,
+          name: item.name,
+          sex: item.sex,
+          credentialType: item.credentialType,
+          credentialNumber: item.credentialNumber,
+          phone: item.phone,
+          houseTypeName: item.houseTypeName
+        })
+      })
+    },
     openGuest (index) {
-      this.title = '客史详情 - ' + this.stayPersonDto.stayPersons[index].stayPersonName
+      this.title = `客史详情 - ${this.stayPersonDto.stayPersons[index].name}`
       this.visible = true
+      this.guestFid = this.stayPersonDto.stayPersons[index].guestFid
     },
     handleClose () {
       this.visible = false
+    },
+    guestTypeFormat (val) {
+      return this.guestType[val]
+    },
+    validateForm () {
+      this.$refs.stayPersonForm.validate((valid) => {
+        if (valid) {
+          this.save()
+        } else {
+          return false
+        }
+      })
+    },
+    save () {
+      this.$emit('save', this.stayPersonDto)
     }
+  },
+  watch: {
+    data () {
+      this.initData()
+    }
+  },
+  created () {
+    this.initData()
   }
 }
 </script>

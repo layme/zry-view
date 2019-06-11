@@ -16,7 +16,7 @@
           <strong>¥ {{ item.money }}</strong>
         </Col>
         <Col :span="8">
-          <Button v-if="item.needBack === 1" type="text" size="small" :style="{ color: '#2d8cf0' }">退还</Button>
+          <a v-if="item.needBack === 1" :style="{ color: '#2d8cf0' }">退还</a>
           <span v-if="item.needBack === 2">已退还</span>
         </Col>
       </Row>
@@ -27,7 +27,7 @@
       @on-ok="saveFee">
       <Form ref="feeForm" :model="feeDto" :rules="feeRules" :label-width="50" v-if="visible">
         <FormItem label="项目" prop="type">
-          <Select v-model="feeDto.type">
+          <Select v-model="feeDto.type" placeholder="">
             <Option v-for="x in typeOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
         </FormItem>
@@ -41,6 +41,9 @@
 <script>
 export default {
   name: 'feeCard',
+  props: {
+    order: Object
+  },
   data () {
     return {
       feeList: [

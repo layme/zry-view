@@ -92,7 +92,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import { getDetail } from '@/api/repair'
 
 export default {
@@ -118,11 +117,6 @@ export default {
           assignOrderTime: ''
         }
       }
-    }
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'date')
     }
   },
   methods: {

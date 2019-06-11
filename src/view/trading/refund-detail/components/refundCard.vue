@@ -11,7 +11,7 @@
           <span slot="close">关闭</span>
         </i-switch>
       </span>
-      <span :style="{ marginLeft: '20px' }">申请时间：{{ refundData.createTime | dateFilter }}</span>
+      <span :style="{ marginLeft: '20px' }">申请时间：{{ refundData.createTime | dateTimeFilter }}</span>
     </div>
     <Row :gutter="20">
       <Col :span="12">
@@ -36,7 +36,6 @@
   </Card>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'refundCard',
   props: {
@@ -93,9 +92,6 @@ export default {
     }
   },
   filters: {
-    dateFilter (val) {
-      return getDate(val, 'all')
-    },
     bedStatusFilter (val) {
     },
     feeTypeFilter (val) {}

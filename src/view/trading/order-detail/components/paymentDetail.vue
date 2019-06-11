@@ -13,7 +13,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'paymentDetail',
   props: {
@@ -68,9 +67,6 @@ export default {
   created () {
   },
   filters: {
-    dateFilter (val) {
-      return getDate(val, 'date')
-    },
     consumeFilter (val) {
       if (val === 0) {
         return '消费'

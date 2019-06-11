@@ -43,7 +43,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import repairForm from './repairForm.vue'
 import createRepairForm from './createRepairForm.vue'
 import cancelRepairForm from './cancelRepairForm.vue'
@@ -275,9 +274,6 @@ export default {
         case 'CANCEL':
           return '已取消'
       }
-    },
-    dateFilter (val) {
-      return getDate(val, 'date')
     }
   },
   created () {

@@ -2,13 +2,13 @@
   <div>
     <Card dis-hover>
       <p slot="title">订单备注</p>
-      <Input type="text" v-model.trim="orderRemark.remark" class="remark-cls" :maxlength="50" clearable></Input>
-      <Button type="primary" style="margin-left: 20px">保 存</Button>
+      <Input type="text" v-model.trim="orderRemark" class="remark-cls" :maxlength="50" placeholder="输入备注 最多50字" clearable></Input>
+      <Button type="primary" style="margin-left: 20px" :disabled="!orderRemark" @click="saveOrderRemark">保 存</Button>
       <Divider dashed/>
       <Timeline :pending="isPending">
         <TimelineItem v-for="(item, index) in remarks" :key="index" v-if="index < 2">
-          <p class="time">{{ item.remark }}</p>
-          <p class="content">{{ item.createBy }} · {{ item.createTime }}</p>
+          <p class="time">{{ item.operContent }}</p>
+          <p class="content">{{ item.operator }} · {{ item.operTime }}</p>
         </TimelineItem>
         <TimelineItem v-if="isPending">
           <a href="#" @click="visible = true">查看更多</a>
@@ -22,8 +22,8 @@
       <div :style="{ paddingLeft: '20px' }">
         <Timeline>
           <TimelineItem v-for="(item, index) in remarks" :key="index">
-            <p class="time">{{ item.remark }}</p>
-            <p class="content">{{ item.createBy }} · {{ item.createTime }}</p>
+            <p class="time">{{ item.operContent }}</p>
+            <p class="content">{{ item.operator }} · {{ item.operTime }}</p>
           </TimelineItem>
         </Timeline>
       </div>
@@ -34,27 +34,25 @@
 export default {
   name: 'orderRemarkCard',
   props: {
-    data: Object
+    remarks: Array
   },
   data () {
     return {
-      orderRemark: {
-        orderBid: '',
-        remark: ''
-      },
-      remarks: [
-        {
-          remark: '需要换到向阳的房间',
-          createTime: '2019-05-17 18:00:00',
-          createBy: '任宏远'
-        }
-      ],
+      orderRemark: '',
       visible: false
     }
   },
   computed: {
     isPending: function () {
       return this.remarks.length > 2
+    }
+  },
+  methods: {
+    saveOrderRemark () {
+      this.$emit('save', this.orderRemark)
+    },
+    clear () {
+      this.orderRemark = ''
     }
   }
 }

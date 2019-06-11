@@ -7,49 +7,49 @@
       <Row>
         <Col :span="6">
           <FormItem label="预定人姓名：">
-            <span>{{ data.customer }}</span>
+            <span>{{ order.cusName }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="预定人手机号：">
-            <span>{{ data.phone }}</span>
+            <span>{{ order.cusPhone }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="邮箱：">
-            <span>{{ data.email }}</span>
+            <span>{{ order.cusMail }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="支付方式：">
-            <span>{{ data.payWay }}</span>
+            <span>{{ order.payMethod | payMethodFilter }}</span>
           </FormItem>
         </Col>
       </Row>
       <Row>
         <Col :span="6">
           <FormItem label="入住时段：">
-            <span>{{ data.startDate }} 到 {{ data.endDate }}</span>
+            <span>{{ order.orderStartDate | dateFilter }} 到 {{ order.orderEndDate | dateFilter }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="预定床位数：">
-            <Tag color="blue">{{ data.bedCount }}</Tag>
+            <Tag color="blue">{{ order.orderBedCount }}</Tag>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="订单来源：">
-            <span>{{ data.source }}</span>
+            <span>{{ channelFormat(order.secondChannel) }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="允许续住：">
-            <span>{{ data.can }}</span>
+            <span>否</span>
           </FormItem>
         </Col>
       </Row>
-      <Button type="primary" class="my-btn" v-if="data.status === 5">支 付</Button>
-      <Button type="warning" class="my-btn" v-if="data.status === 1 || data.status === 5" @click.prevent="cancelOrder">取 消</Button>
+      <Button type="primary" class="my-btn" v-if="order.status === 5">支 付</Button>
+      <Button type="warning" class="my-btn" v-if="order.status === 1 || order.status === 5" @click.prevent="cancelOrder">取 消</Button>
     </Form>
   </Card>
 </template>
@@ -57,7 +57,8 @@
 export default {
   name: 'baseInfoCard',
   props: {
-    data: Object
+    order: Object,
+    channel: Array
   },
   data () {
     return {}
@@ -73,6 +74,9 @@ export default {
         onCancel: () => {
         }
       })
+    },
+    channelFormat (val) {
+      return val ? this.channel.find(item => item.code === val).text : '未知'
     }
   }
 }

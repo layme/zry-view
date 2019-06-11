@@ -43,7 +43,57 @@ const timeFilter = val => {
   return getDate(val, 'time')
 }
 
+const payMethodFilter = val => {
+  switch (val) {
+    case '0':
+      return 'POS支付'
+    case 'wx_ad_pay':
+      return '微信支付'
+    case 'wx_ios_pay':
+      return '微信支付'
+    case 'cft_wx_pay':
+      return '微信支付'
+    case 'yl_ad_pay':
+      return '银联支付'
+    case 'yl_ios_pay':
+      return '银联支付'
+    case '1':
+      return 'OTA预付'
+    case 'balance':
+      return '余额支付'
+    case 'ali_mobile':
+      return '支付宝支付'
+    case '2':
+      return '余额+微信支付'
+    case '3':
+      return '余额+支付宝支付'
+  }
+}
+
+const stayPersonStatusFilter = val => {
+  switch (val) {
+    case 1:
+      return '未入住'
+    case 2:
+      return '已入住'
+    case 3:
+      return '已续租'
+    case 4:
+      return '已退租'
+    case 5:
+      return '已保存床位'
+    case 8:
+      return '已支付取消'
+    case 9:
+      return '未入住取消'
+    case 10:
+      return '未入住退房'
+  }
+}
+
 Vue.filter('orderStatusFilter', orderStatusFilter)
 Vue.filter('dateTimeFilter', dateTimeFilter)
 Vue.filter('dateFilter', dateFilter)
 Vue.filter('timeFilter', timeFilter)
+Vue.filter('payMethodFilter', payMethodFilter)
+Vue.filter('stayPersonStatusFilter', stayPersonStatusFilter)

@@ -64,7 +64,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import { getGuests } from '@/api/guest'
 import guestTabs from '@/components/guest/guestTabs'
 
@@ -179,13 +178,6 @@ export default {
     },
     isBlackFilter (val) {
       return val === 1 ? '特殊用户' : '正常用户'
-    },
-    dateFilter (val) {
-      if (val) {
-        return getDate(val, 'date')
-      } else {
-        return '-'
-      }
     }
   },
   created () {

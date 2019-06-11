@@ -23,7 +23,7 @@
         </FormItem>
       </Form>
       <div style="margin-top: 20px" v-if="replyDto.lowEvaluateManagerFeedbackTime">
-        <span>发表于：{{ replyDto.lowEvaluateManagerFeedbackTime | dateFilter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>发表于：{{ replyDto.lowEvaluateManagerFeedbackTime | dateTimeFilter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
         <span>回复员工：{{ replyDto.feedbackerName }}</span>
       </div>
     </Modal>
@@ -33,7 +33,6 @@
 import evaluateForm from './evaluateForm.vue'
 import evaluateCard from './evaluateCard.vue'
 import { getEvaluate, getProjectScore, shieldValuate, reply } from '@/api/evaluate'
-import { getDate } from '@/libs/tools'
 
 export default {
   name: 'evaluateList',
@@ -196,11 +195,6 @@ export default {
       handler (val) {
         // this.replyDto.feedbackRemark = val.replace(/[\"\<\>\;\:\\]/g, ' ')
       }
-    }
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'all')
     }
   },
   created () {

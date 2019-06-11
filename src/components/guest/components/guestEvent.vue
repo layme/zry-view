@@ -45,7 +45,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import guestEventCard from './guestEventCard'
 import { listEvent, addOrUpdateEvent, deleteEvent } from '@/api/guest'
 
@@ -192,9 +191,6 @@ export default {
   filters: {
     genderFilter (val) {
       return val === 2 ? '男' : val === 1 ? '女' : '未知'
-    },
-    dateFilter (val) {
-      return getDate(val, 'date')
     }
   }
 }

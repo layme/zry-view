@@ -39,7 +39,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'temporaryPassword',
   data () {
@@ -132,11 +131,6 @@ export default {
   },
   created () {
     this.handlePageChange()
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'date')
-    }
   }
 }
 </script>

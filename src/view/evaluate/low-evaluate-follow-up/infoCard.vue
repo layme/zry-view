@@ -35,7 +35,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'infoCard',
   props: {
@@ -51,9 +50,6 @@ export default {
       } else {
         return '低评已完结'
       }
-    },
-    dateFilter (val) {
-      return getDate(val, 'all')
     }
   }
 }

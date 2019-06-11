@@ -1,12 +1,13 @@
 <template>
   <div class="con">
-    <div class="subscript">
-      {{ orderInfo.status | orderStatusFilter }}
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
+    <div v-if="Object.keys(orderInfo).length" class="subscript" :style="{ backgroundColor: orderStatusBC }">
+      {{ orderInfo.orderStatus | orderStatusFilter }}
     </div>
-    <Row>
+    <Row v-if="Object.keys(orderInfo).length">
       <Col :span="12">
         <strong class="order order-number">订单号：{{ orderNumber }}</strong>
-        <strong class="order order-price">¥ {{ orderInfo.amount }}</strong>
+        <strong class="order order-price">¥ {{ orderInfo.amountNoCoupon }}</strong>
       </Col>
       <Col :span="12" style="text-align: right">
         <ButtonGroup>
@@ -17,16 +18,28 @@
         </ButtonGroup>
       </Col>
     </Row>
-    <base-info-card :data="orderInfo" class="card-cls"></base-info-card>
+    <base-info-card v-if="Object.keys(orderInfo).length" :order="orderInfo" :channel="firstChannel"
+                    class="card-cls"></base-info-card>
     <Row :gutter="20">
       <Col :span="18">
-        <stay-person-card class="card-cls"></stay-person-card>
+        <stay-person-card v-if="Object.keys(orderInfo).length" :stay-list="orderInfo.stayPersonDtoList"
+                          :guest-type="guestType" :order-bid="orderInfo.orderBid" :order-status="orderInfo.orderStatus"
+                          @save="saveStayPerson"
+                          class="card-cls"></stay-person-card>
       </Col>
       <Col :span="6">
-        <order-remark-card class="card-cls"></order-remark-card>
+        <order-remark-card v-if="Object.keys(orderInfo).length" ref="remarkRef" :remarks="recordList" class="card-cls"
+                           @save="saveOrderRemark"></order-remark-card>
       </Col>
     </Row>
-    <order-action-card class="card-cls"></order-action-card>
+    <order-action-card v-if="Object.keys(orderInfo).length"
+                       :order="orderInfo"
+                       :has-check-in="hasCheckInStayPerson"
+                       :lock-pwd-list="lockPwdList"
+                       :lock-pwd-have1="lockPwdHave1"
+                       :lock-pwd-have2="lockPwdHave2"
+                       class="card-cls">
+    </order-action-card>
     <Modal
       v-model="logVisible"
       title="订单日志"
@@ -53,6 +66,7 @@ import orderRemarkCard from './components/orderRemarkCard'
 import orderActionCard from './components/orderActionCard'
 import orderLog from './components/orderLog'
 import paymentDetail from './components/paymentDetail'
+import { orderDetail, saveOrderRemark, getOrderRemark, saveStayPerson } from '@/api/order'
 
 export default {
   name: 'orderDetail',
@@ -67,29 +81,59 @@ export default {
   data () {
     return {
       orderNumber: '',
-      orderInfo: {
-        bid: '561972384',
-        customer: '易贤超',
-        phone: '15659971836',
-        email: '',
-        payWay: '微信支付',
-        startDate: '2019-05-18',
-        endDate: '2019-05-21',
-        bedCount: 1,
-        source: 'iOS',
-        can: '2019-05-21',
-        amount: 300.00,
-        status: 2
-      },
+      loading: false,
+      orderInfo: {},
+      accountBank: '',
+      lockPwdList: [],
+      lockPwdHave1: '',
+      lockPwdHave2: '',
+      hasCheckInStayPerson: '',
+      ticketInfo: '',
+      renewOrderEndMinDate: '',
+      recordList: [],
+      guestType: {},
+      firstChannel: [],
       logVisible: false,
       paymentVisible: false,
       email: ''
     }
   },
+  computed: {
+    orderStatusBC () {
+      switch (this.orderInfo.orderStatus) {
+        case 1:
+          return '#5cadff'
+        case 2:
+          return '#19be6b'
+        case 3:
+          return '#ff9900'
+        default:
+          return '#2d8cf0'
+      }
+    }
+  },
   methods: {
     getOrderDetail () {
-      // do something
+      this.loading = true
       this.orderNumber = this.$route.query.orderNumber
+      orderDetail(this.orderNumber).then(res => {
+        if (res.code === 200) {
+          this.orderInfo = res.body.orderInfo
+          this.accountBank = res.body.accountBank
+          this.lockPwdList = res.body.lockPwdList
+          this.lockPwdHave1 = res.body.lockPwdHave1
+          this.lockPwdHave2 = res.body.lockPwdHave2
+          this.hasCheckInStayPerson = res.body.hasCheckInStayPerson
+          this.ticketInfo = res.body.ticketInfo
+          this.renewOrderEndMinDate = res.body.renewOrderEndMinDate
+          this.recordList = res.body.recordList
+          this.guestType = res.body.guestType
+          this.firstChannel = res.body.firstChannel
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     emailRender () {
       this.$Modal.confirm({
@@ -108,34 +152,32 @@ export default {
           })
         }
       })
-    }
-  },
-  filters: {
-    orderStatusFilter (val) {
-      switch (val) {
-        case 1:
-          return '已支付'
-        case 2:
-          return '已入住'
-        case 3:
-          return '退款申请中'
-        case 4:
-          return '已退款'
-        case 5:
-          return '待支付'
-        case 6:
-          return '已退房'
-        case 7:
-          return '已取消'
-        case 8:
-          return '已支付取消'
-        case 9:
-          return '未入住取消'
-        case 10:
-          return '未入住退房'
-        case 11:
-          return '已退订'
-      }
+    },
+    saveOrderRemark (dto) {
+      saveOrderRemark({ orderBid: this.orderInfo.orderBid, orderRemark: dto }).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('备注保存成功，备注信息稍后展示')
+          this.$refs.remarkRef.clear()
+          setTimeout(() => {
+            this.getOrderRemark()
+          }, 2000)
+        }
+      })
+    },
+    getOrderRemark () {
+      getOrderRemark(this.orderInfo.orderBid).then(res => {
+        if (res.code === 200) {
+          this.recordList = res.body
+        }
+      })
+    },
+    saveStayPerson (dto) {
+      saveStayPerson(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('入住人保存成功')
+          this.getOrderDetail()
+        }
+      })
     }
   },
   watch: {
@@ -169,6 +211,7 @@ export default {
 
   .con {
     position: relative;
+    height: 100%;
   }
 
   .subscript {
@@ -187,5 +230,10 @@ export default {
     -o-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
+  }
+
+  .full-spin {
+    height: 100%;
+    /*height: ~"calc(100% - 50px)"*/
   }
 </style>

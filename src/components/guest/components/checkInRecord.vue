@@ -5,10 +5,10 @@
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
       <template slot-scope="{ row }" slot="checkInDate">
-        <div>{{ row.checkInDate | dateFilter }}</div>
+        <div>{{ row.checkInDate | dateTimeFilter }}</div>
       </template>
       <template slot-scope="{ row }" slot="checkOutDate">
-        <div>{{ row.checkInDate | dateFilter }}</div>
+        <div>{{ row.checkInDate | dateTimeFilter }}</div>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
@@ -16,7 +16,6 @@
   </div>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 import { listRecord } from '@/api/guest'
 import checkInRecordExpand from './checkInRecordExpand'
 
@@ -104,11 +103,6 @@ export default {
   },
   created () {
     this.getRecordList()
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'all')
-    }
   }
 }
 </script>

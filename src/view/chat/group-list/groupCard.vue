@@ -8,7 +8,7 @@
         <span class="my-name">{{ group.name }}</span>
         <Row :gutter="10" :style="{ marginTop: '5px' }">
           <Col :span="6">
-            <span class="my-content">创建于: {{ group.createDate | dateFilter }}</span>
+            <span class="my-content">创建于: {{ group.createDate | dateTimeFilter }}</span>
           </Col>
           <Col :span="6">
             <span class="my-content">人数限制: {{ group.maxusers }} 人</span>
@@ -33,7 +33,6 @@
   </Card>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 
 export default {
   name: 'groupCard',
@@ -53,11 +52,6 @@ export default {
     },
     remove () {
       this.$emit('remove', this.index)
-    }
-  },
-  filters: {
-    dateFilter (val) {
-      return getDate(val, 'all')
     }
   }
 }

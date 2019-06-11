@@ -37,12 +37,11 @@
       </Col>
     </Row>
     <Row class="evaluate-list">
-      <span style="color: #909399">发表于&nbsp;&nbsp;{{ row.evaluateTime | dateFilter }}</span>
+      <span style="color: #909399">发表于&nbsp;&nbsp;{{ row.evaluateTime | dateTimeFilter }}</span>
     </Row>
   </Card>
 </template>
 <script>
-import { getDate } from '@/libs/tools'
 export default {
   name: 'lowEvaluateCard',
   props: {
@@ -67,9 +66,6 @@ export default {
       } else {
         return '已完结'
       }
-    },
-    dateFilter (val) {
-      return getDate(val, 'all')
     }
   }
 }
