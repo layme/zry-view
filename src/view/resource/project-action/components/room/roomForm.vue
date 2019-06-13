@@ -3,7 +3,7 @@
     <Row :gutter="10">
       <Col :span="11">
         <FormItem label="房间名称" prop="areaName">
-          <Input type="text" v-model.trim="roomDto.areaName" clearable></Input>
+          <Input type="text" v-model.trim="roomDto.areaName" placeholder="" clearable></Input>
         </FormItem>
       </Col>
     </Row>
@@ -49,7 +49,7 @@
     <Row :gutter="10">
       <Col :span="11">
         <FormItem label="面积" prop="acreage">
-          <Input type="text" v-model.trim="roomDto.acreage" clearable>
+          <Input type="text" v-model.trim="roomDto.acreage" placeholder="" clearable>
             <template slot="append">㎡</template>
           </Input>
         </FormItem>

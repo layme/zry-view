@@ -6,7 +6,7 @@
         <Row :gutter="10">
           <Col :span="8">
             <FormItem label="房型分类名称" prop="houseName">
-              <Input type="text" v-model.trim="houseSortDto.houseName"
+              <Input type="text" v-model.trim="houseSortDto.houseName" placeholder=""
                         clearable></Input>
             </FormItem>
           </Col>
@@ -38,8 +38,7 @@
         <Row :gutter="10">
           <Col :span="16">
             <FormItem label="介绍" prop="houseTypeDesc">
-              <Input type="textarea" v-model.trim="houseSortDto.houseTypeDesc" :rows="5" maxlength="200"
-                        show-word-limit></Input>
+              <Input type="textarea" v-model.trim="houseSortDto.houseTypeDesc" :rows="5" placeholder="" :maxlength="200"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -132,20 +131,24 @@ export default {
     },
     show (val) {
       this.$emit('show', this.houseSortDto.bid, val)
+    },
+    syncData () {
+      if (Object.keys(this.houseSort).length) {
+        this.houseSortDto.projectBid = this.projectBid
+        this.houseSortDto.bid = this.houseSort.bid
+        this.houseSortDto.houseName = this.houseSort.houseName
+        this.houseSortDto.houseTypeDesc = this.houseSort.houseTypeDesc
+        this.houseSortDto.isShow = this.houseSort.isShow
+      }
     }
   },
   watch: {
     houseSort (newVal) {
-      this.houseSortDto = newVal
+      this.syncData()
     }
   },
   mounted () {
-    if (Object.keys(this.houseSort).length) {
-      this.houseSortDto.projectBid = this.projectBid
-      this.houseSortDto.bid = this.houseSort.bid
-      this.houseSortDto.houseName = this.houseSort.houseName
-      this.houseSortDto.houseTypeDesc = this.houseSort.houseTypeDesc
-    }
+    this.syncData()
   }
 }
 </script>

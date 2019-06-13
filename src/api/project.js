@@ -1,6 +1,15 @@
 import axios from '@/libs/api.request'
 
 // 获取列表
+export const getProjects = (data) => {
+  return axios.request({
+    url: '/project/getProjectList',
+    method: 'get',
+    params: data
+  })
+}
+
+// 获取详情
 export const getBaseInfo = (data) => {
   return axios.request({
     url: '/project/getProjectDetail',

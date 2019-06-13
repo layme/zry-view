@@ -1,7 +1,7 @@
 <template>
   <div id="all">
-    <Input size="small" type="text" placeholder="请输入地点" prefix="ios-pin"
-              class="search-cls" v-model="keyword" clearable></Input>
+    <Input type="text" placeholder="请输入地点" prefix="ios-pin"
+              :style="searchStyle" v-model="keyword" clearable></Input>
     <baidu-map
       class="bm-view"
       :center="center"
@@ -22,7 +22,11 @@
 export default {
   name: 'MapCard',
   props: {
-    location: Object
+    location: Object,
+    searchStyle: {
+      type: Object,
+      default: () => {}
+    }
   },
   data () {
     return {
@@ -80,16 +84,5 @@ export default {
     height: 100%;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
-  }
-
-  .search-cls {
-    position: absolute;
-    top: 10px;
-    left: 140px;
-    z-index: 3;
-    width: 200px;
-    -webkit-box-shadow: #dcdee2 0 1px 6px;
-    -moz-box-shadow: #dcdee2 0 1px 6px;
-    box-shadow: #dcdee2 0 1px 6px;
   }
 </style>

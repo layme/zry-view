@@ -19,14 +19,6 @@ export const getAreaList = (data) => {
   })
 }
 
-// 获取业主列表
-export const getOwnerList = () => {
-  return axios.request({
-    url: '/owner-list/ownerList',
-    method: 'get'
-  })
-}
-
 // 获取结算公司 暂时不用
 export const getCompanyList = () => {
   return axios.request({

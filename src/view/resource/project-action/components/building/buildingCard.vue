@@ -48,18 +48,18 @@
       <Row :gutter="10">
         <Col :span="8">
           <FormItem label="楼梯数" prop="buildingStairnumber">
-            <Input type="text" v-model.trim="buildingDto.buildingStairnumber"
+            <Input type="text" v-model.trim="buildingDto.buildingStairnumber" placeholder=""
                       clearable></Input>
           </FormItem>
         </Col>
         <Col :span="8">
           <FormItem label="楼层数" prop="buildingFloornumber">
-            <Input v-model="buildingDto.buildingFloornumber" controls-position="right" :min="1" :max="100"></Input>
+            <Input type="text" v-model="buildingDto.buildingFloornumber" placeholder="" :maxlength="3" clearable></Input>
           </FormItem>
         </Col>
         <Col :span="8">
           <FormItem label="最低楼层" prop="lowestFloor">
-            <Input v-model="buildingDto.lowestFloor" controls-position="right" :min="-20" :max="100"></Input>
+            <Input type="text" v-model="buildingDto.lowestFloor" placeholder="" :maxlength="3" clearable></Input>
           </FormItem>
         </Col>
       </Row>
@@ -129,10 +129,12 @@ export default {
           { pattern: /^\d{1,2}?$/, message: '请输入1百以内的整数', trigger: 'blur' }
         ],
         buildingFloornumber: [
-          { required: true, message: '请输入楼层数', trigger: 'blur' }
+          { required: true, message: '请输入楼层数', trigger: 'blur' },
+          { pattern: /^([1-9][0-9]?|100)$/, message: '请输入1～100的整数', trigger: 'blur' }
         ],
         lowestFloor: [
-          { required: true, message: '请输入最低楼层', trigger: 'blur' }
+          { required: true, message: '请输入最低楼层', trigger: 'blur' },
+          { pattern: /^((-(20|1\d|[1-9]))|1[0-4]\d|100|[1-9]\d|\d)$/, message: '请输入-20～100的整数', trigger: 'blur' }
         ],
         rentableFloor: [
           { type: 'array', required: true, message: '请选择出租楼层', trigger: 'change' }

@@ -3,10 +3,10 @@
     <Layout style="background-color: #ffffff;">
       <Sider style="background-color: #ffffff;" width="100">
         <ButtonGroup vertical>
-          <Button :type="'qualification' === currentLabel ? 'primary' : ''" @click="turnTo('qualification')">经营资质
+          <Button :type="'qualification' === currentLabel ? 'primary' : 'default'" @click="turnTo('qualification')">经营资质
           </Button>
-          <Button :type="'contract' === currentLabel ? 'primary' : ''" @click="turnTo('contract')">签约合同</Button>
-          <Button :type="'else' === currentLabel ? 'primary' : ''" @click="turnTo('else')">其他</Button>
+          <Button :type="'contract' === currentLabel ? 'primary' : 'default'" @click="turnTo('contract')">签约合同</Button>
+          <Button :type="'else' === currentLabel ? 'primary' : 'default'" @click="turnTo('else')">其他</Button>
         </ButtonGroup>
       </Sider>
       <Content>
@@ -23,27 +23,40 @@
           </Card>
         </Col>
         <div v-if="!showList.length" class="no-img">
-          <img src="../../../../../assets/images/no-img.png" style="color: #c5c8ce; width: 200px"/>
-          <br />
-          暂无数据
+          <div class="no-img-inner">
+            暂无图片资料
+          </div>
         </div>
       </Content>
     </Layout>
     <Modal title="上传图片" v-model="uploadDialogVisible" width="50" @close="handleClose">
-      <Upload v-if="uploadDialogVisible"
-              class="pic-uploader"
-              list-type="picture-card"
-              accept="image/*"
-              multiple
-              :action="uploadPicUrl"
-              :limit="10"
-              :before-upload="beforeUpload"
-              :on-remove="handleRemove"
-              :on-success="handleSuccess"
-              :on-exceed="handleExceed"
-              :on-error="handleError">
+      <div class="demo-upload-list" v-for="(item, index) in imgList" :key="index">
+        <template v-if="item.status === 'finished'">
+          <img :src="item.url">
+          <div class="demo-upload-list-cover">
+            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+          </div>
+        </template>
+        <template v-else>
+          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+        </template>
+      </div>
+      <Upload
+        ref="upload"
+        v-if="uploadDialogVisible"
+        accept="image/*"
+        multiple
+        type="drag"
+        :action="uploadPicUrl"
+        :show-upload-list="false"
+        :on-success="handleSuccess"
+        :max-size="2048"
+        :on-exceeded-size="handleMaxSize"
+        style="display: inline-block; width: 148px;">
         <div slot="tip" class="el-upload__tip">图片大小不能超过 2MB</div>
-        <i class="el-icon-plus pic-uploader-icon"></i>
+        <div style="width: 148px; height: 148px; line-height: 148px;">
+          <Icon type="ios-camera" size="20"></Icon>
+        </div>
       </Upload>
       <span slot="footer" class="dialog-footer">
         <Button @click="uploadDialogVisible = false">取 消</Button>
@@ -69,7 +82,7 @@ export default {
       elseAtt: [],
       showList: [],
       uploadDialogVisible: false,
-      uploadPicUrl: '/system/upLoadImg.action',
+      uploadPicUrl: this.$store.state.app.baseUrl + '/system/upLoadImg.action',
       currentLabel: 'qualification',
       imgList: []
     }
@@ -118,12 +131,8 @@ export default {
         }
       })
     },
-    beforeUpload (file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$Message.warning('文件的大小不能超过 2MB')
-      }
-      return isLt2M
+    handleMaxSize (file) {
+      this.$Message.warning('文件大小超过了限制')
     },
     handleSuccess (response, file, fileList) {
       if (response.code === 200) {
@@ -183,15 +192,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .img-div {
     position: relative;
   }
-
   .img-btn {
     display: none;
   }
-
   .img-div:hover .img-btn {
     display: block;
     position: absolute;
@@ -199,42 +206,60 @@ export default {
     right: 10px;
     z-index: 3
   }
-
   .img-class {
     width: 100%;
     min-height: 100px;
   }
-
   .el-main {
     padding: 0 20px;
   }
-
-  .pic-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+  .no-img {
+    margin-top: 100px;
   }
-
-  .pic-uploader .el-upload:hover {
-    border-color: #409EFF;
+  .no-img-inner {
+    font-size: 30px;
+    color: #e8eaec;
+    text-align: center;
+    width: 400px;
+    border: #e8eaec 1px solid;
+    border-radius: 4px;
+    line-height: 230px;
+    margin: 0 auto;
   }
-
-  .pic-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
+  .demo-upload-list{
+    display: inline-block;
     width: 148px;
     height: 148px;
+    text-align: center;
     line-height: 148px;
-    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin-right: 4px;
   }
-
-  .no-img {
-    color: #e8eaec;
-    margin-top: 100px;
-    text-align: center;
-    font-size: 30px;
-    /*line-height: ~"calc(100% - 0)";*/
+  .demo-upload-list img{
+    width: 100%;
+    height: 100%;
+  }
+  .demo-upload-list-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+  }
+  .demo-upload-list:hover .demo-upload-list-cover{
+    display: block;
+  }
+  .demo-upload-list-cover i{
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
   }
 </style>

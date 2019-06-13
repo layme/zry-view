@@ -14,7 +14,7 @@
               <Row>
                 <Col :span="8">
                   <FormItem label="姓名">
-                    <Input type="text" v-model.trim="item.name" placeholder=""></Input>
+                    <Input type="text" v-model.trim="item.name" placeholder="" clearable></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
@@ -44,15 +44,15 @@
                   <FormItem v-if="item.credentialType === 1" label="证件号" :prop="'stayPersonList.' + index + '.credentialNumber'" :rules="[
                   { pattern: /^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|30|31)|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/,
                   message: '身份证号码格式不对', trigger: 'blur' }]">
-                    <Input type="text" v-model.trim="item.credentialNumber" placeholder=""></Input>
+                    <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
                   </FormItem>
                   <FormItem v-else label="证件号">
-                    <Input type="text" v-model.trim="item.credentialNumber" placeholder=""></Input>
+                    <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
                   <FormItem label="手机号">
-                    <Input type="text" v-model.trim="item.phone" placeholder=""></Input>
+                    <Input type="text" v-model.trim="item.phone" placeholder="" clearable></Input>
                   </FormItem>
                 </Col>
               </Row>

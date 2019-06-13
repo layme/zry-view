@@ -1,21 +1,21 @@
 import axios from 'axios'
 import store from '@/store'
-import { getToken } from '@/libs/util'
+import router from '@/router'
+import { delToken, getToken } from '@/libs/util'
 import { LoadingBar, Message, Modal } from 'iview'
 
 class HttpRequest {
-  constructor (baseUrl = baseURL) {
+  constructor (baseUrl) {
     this.baseUrl = baseUrl
     this.queue = {}
   }
   getInsideConfig () {
-    const config = {
+    return {
       baseURL: this.baseUrl,
       headers: {
         'Authorization': getToken() || ''
       }
     }
-    return config
   }
   destroy (url, isSuccess) {
     delete this.queue[url]

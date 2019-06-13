@@ -72,7 +72,7 @@
       <Form ref="roomAirForm" :model="roomAirDto" :label-width="80">
         <FormItem label="空检报告" prop="airReportUrl">
           <Input type="textarea" v-model.trim="roomAirDto.airQualityReportUrl" :rows="3" :maxlength="400"
-                 show-word-limit></Input>
+                 placeholder=""></Input>
         </FormItem>
       </Form>
       <span slot="footer" class="dialog-footer">
@@ -104,7 +104,7 @@ export default {
       parentHouseTypeOptions: [],
       houseTypeOptions: [],
       roomParamDto: {
-        projectFid: '',
+        projectFid: this.projectBid,
         houseBuildingFid: '',
         floorNumber: '',
         houseTypeFid: '',
@@ -172,14 +172,18 @@ export default {
   },
   methods: {
     getBuildOptions () {
-      getBuildings(this.projectBid).then(res => {
-        this.buildingOptions = res.body
-      })
+      if (this.projectBid) {
+        getBuildings(this.projectBid).then(res => {
+          this.buildingOptions = res.body
+        })
+      }
     },
     getParentHouseTypeOptions () {
-      getHouseSorts(this.projectBid).then(res => {
-        this.parentHouseTypeOptions = res.body
-      })
+      if (this.projectBid) {
+        getHouseSorts(this.projectBid).then(res => {
+          this.parentHouseTypeOptions = res.body
+        })
+      }
     },
     getHouseTypeOptions (data) {
       getHouseTypesByHouseSort(data).then(res => {
@@ -187,9 +191,11 @@ export default {
       })
     },
     listRoom () {
-      this.roomParamDto.projectFid = this.projectBid
-      this.roomParamDto.page = 1
-      this.handlePageChange()
+      if (this.projectBid) {
+        this.roomParamDto.projectFid = this.projectBid
+        this.roomParamDto.page = 1
+        this.handlePageChange()
+      }
     },
     handlePageChange () {
       getRooms(this.roomParamDto).then(res => {
@@ -234,7 +240,7 @@ export default {
     },
     saveRoomAirReport () {
       if (this.roomAirDto.airQualityReportUrl === this.roomAirDto.airQualityReportUrlBak) {
-        this.$Message.success('数据没有更新')
+        this.$Message.info('数据没有更新')
         this.airDialogVisible = false
       } else {
         updateRoom(this.roomAirDto).then(res => {
@@ -263,12 +269,10 @@ export default {
     }
   },
   watch: {
-    projectBid (val) {
-      if (val) {
-        this.getBuildOptions()
-        this.getParentHouseTypeOptions()
-        this.listRoom()
-      }
+    projectBid () {
+      this.getBuildOptions()
+      this.getParentHouseTypeOptions()
+      this.listRoom()
     },
     'roomParamDto.houseBuildingFid': function (newVal, oldVal) {
       this.roomParamDto.floorNumber = ''
@@ -283,11 +287,9 @@ export default {
     }
   },
   created () {
-    if (this.projectBid) {
-      this.getBuildOptions()
-      this.getParentHouseTypeOptions()
-      this.listRoom()
-    }
+    this.getBuildOptions()
+    this.getParentHouseTypeOptions()
+    this.listRoom()
   }
 }
 </script>

@@ -76,8 +76,7 @@
             <Row :gutter="10">
               <Col :span="24">
                 <FormItem label="房型描述" prop="introduction">
-                  <Input type="textarea" v-model.trim="houseTypeDto.introduction" :rows="5" maxlength="200"
-                         show-word-limit></Input>
+                  <Input type="textarea" v-model.trim="houseTypeDto.introduction" :rows="5" :maxlength="200"></Input>
                 </FormItem>
               </Col>
             </Row>
@@ -117,14 +116,14 @@
               <Col :span="8">
                 <FormItem label="原价" prop="originalPrice">
                   <Input type="text" v-model.trim="houseTypeDto.originalPrice"
-                         clearable>
+                         placeholder="" clearable>
                     <template slot="prepend">¥</template>
                   </Input>
                 </FormItem>
               </Col>
               <Col :span="8">
                 <FormItem label="平时价" prop="usualPrice">
-                  <Input type="text" v-model.trim="houseTypeDto.usualPrice" clearable>
+                  <Input type="text" v-model.trim="houseTypeDto.usualPrice" placeholder="" clearable>
                     <template slot="prepend">¥</template>
                   </Input>
                 </FormItem>
@@ -136,7 +135,7 @@
                           :prop="'priceList.' + i + '.specialPrice'"
                           :rules="[{required: true, message: '请输入特殊价格', trigger: 'blur'},
                                                       { pattern: /^\d{1,4}(\.\d{0,2})?$/, message: '请输入1万以内的两位小数或整数', trigger: 'blur' }]">
-                  <Input type="text" v-model.trim="price.specialPrice"
+                  <Input type="text" v-model.trim="price.specialPrice" placeholder=""
                          clearable>
                     <template slot="prepend">¥</template>
                   </Input>
@@ -328,7 +327,7 @@ export default {
       saveHouseType(this.houseTypeDto).then(res => {
         if (res.code === 200) {
           this.Message.success('保存成功')
-          this.$emit('open', 5)
+          this.$store.commit('upStep', 5)
         }
         this.loading = false
       }).catch(() => {
@@ -379,43 +378,43 @@ export default {
     },
     show (val) {
       this.$emit('show', this.houseTypeDto.bid, val)
+    },
+    syncData () {
+      if (Object.keys(this.houseType).length) {
+        this.houseTypeDto.projectBid = this.projectBid
+        this.houseTypeDto.bid = this.houseType.bid
+        this.houseTypeDto.houseTypeParentBid = this.houseType.houseTypeParentBid
+        this.houseTypeDto.houseName = this.houseType.houseName
+        this.houseTypeDto.houseArea = this.houseType.houseArea
+        this.houseTypeDto.isShow = this.houseType.isShow
+        this.houseTypeDto.checkInLimit = this.houseType.checkInLimit
+        this.houseTypeDto.isBathroom = this.houseType.isBathroom
+        this.houseTypeDto.isBath = this.houseType.isBath
+        this.houseTypeDto.introduction = this.houseType.introduction
+        this.houseTypeDto.bedList = this.houseType.bedList
+        this.houseTypeDto.originalPrice = this.houseType.originalPrice
+        this.houseTypeDto.usualPrice = this.houseType.usualPrice
+        this.houseTypeDto.priceList = JSON.parse(JSON.stringify(this.houseType.priceList))
+        this.houseTypeDto.priceList.forEach((item) => {
+          this.$set(item, 'dateRange', [])
+          item.dateRange.push(item.startDate)
+          item.dateRange.push(item.endDate)
+        })
+      }
     }
   },
   watch: {
     houseType (newVal) {
-      this.houseTypeDto = newVal
+      this.syncData()
     }
   },
   mounted () {
-    if (Object.keys(this.houseType).length) {
-      this.houseTypeDto.projectBid = this.projectBid
-      this.houseTypeDto.bid = this.houseType.bid
-      this.houseTypeDto.houseTypeParentBid = this.houseType.houseTypeParentBid
-      this.houseTypeDto.houseName = this.houseType.houseName
-      this.houseTypeDto.houseArea = this.houseType.houseArea
-      this.houseTypeDto.checkInLimit = this.houseType.checkInLimit
-      this.houseTypeDto.isBathroom = this.houseType.isBathroom
-      this.houseTypeDto.isBath = this.houseType.isBath
-      this.houseTypeDto.introduction = this.houseType.introduction
-      this.houseTypeDto.bedList = this.houseType.bedList
-      this.houseTypeDto.originalPrice = this.houseType.originalPrice
-      this.houseTypeDto.usualPrice = this.houseType.usualPrice
-      this.houseTypeDto.priceList = JSON.parse(JSON.stringify(this.houseType.priceList))
-      this.houseTypeDto.priceList.forEach((item) => {
-        this.$set(item, 'dateRange', [])
-        item.dateRange.push(item.startDate)
-        item.dateRange.push(item.endDate)
-      })
-    }
+    this.syncData()
   }
 }
 </script>
 
 <style scoped>
-  .my-top {
-    position: relative;
-  }
-
   .my-btn {
     margin-left: 20px;
   }

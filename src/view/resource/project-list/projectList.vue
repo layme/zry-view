@@ -21,13 +21,11 @@
         <a @click="toUpdateProject(row.bid)">修改</a>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
 import projectForm from './projectForm.vue'
-import { validOrNot, showOrNot, canOrderOrNot } from '@/api/project'
+import { getProjects, validOrNot, showOrNot, canOrderOrNot } from '@/api/project'
 export default {
   name: 'projectList',
   components: {
@@ -36,40 +34,11 @@ export default {
   data () {
     return {
       paramDto: {
-        page: 1,
-        limit: 10
+        pageNum: 1,
+        pageSize: 100
       },
       loading: false,
-      projectList: [
-        {
-          'bid': '9b92e3ff1fce40a7969295a3088a3f56',
-          'projectName': '北京工体自如驿',
-          'period': '1',
-          'operateSeq': '5',
-          'projectType': '1',
-          'projectAddress': '北京朝阳区工体东路20号二层202',
-          'houseTypeCount': '10',
-          'roomCount': 30,
-          'bedCount': 222,
-          'isValid': 1,
-          'isShow': 0,
-          'canOrder': 1
-        },
-        {
-          'bid': '0c4a4238a98e48c582c425c1851b7979',
-          'projectName': '武汉大陆坊自如驿',
-          'period': '2',
-          'operateSeq': '5',
-          'projectType': '1',
-          'projectAddress': '武汉江岸区中山大道922自如驿',
-          'houseTypeCount': '16',
-          'roomCount': 35,
-          'bedCount': 265,
-          'isValid': 1,
-          'isShow': 1,
-          'canOrder': 1
-        }
-      ],
+      projectList: [],
       total: 0,
       columns: [
         {
@@ -112,20 +81,23 @@ export default {
   },
   methods: {
     listProject (dto) {
+      this.loading = true
       Object.assign(this.paramDto, dto)
-      this.paramDto.page = 1
-      this.handlePageChange()
+      getProjects(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.projectList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     addProject () {
       const route = {
         name: 'addProject'
       }
       this.$router.push(route)
-    },
-    handlePageChange () {
-      this.loading = true
-      console.info('listProject paramDto', this.paramDto)
-      this.loading = false
     },
     validOrNot (row) {
       let val = 0
@@ -217,9 +189,6 @@ export default {
       }
       this.$router.push(route)
     }
-  },
-  created () {
-    this.listProject()
   },
   filters: {
     periodFormatter (val) {

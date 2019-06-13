@@ -96,7 +96,7 @@ export default {
     },
     getAreaList () {
       getAreaList(this.paramDto.cityCode).then(res => {
-        this.areaOptions = res.data.list
+        this.areaOptions = res.body
       })
     },
     submit () {
@@ -115,6 +115,10 @@ export default {
         this.areaOptions = []
       }
     }
+  },
+  created () {
+    this.getCity()
+    this.submit()
   }
 }
 </script>

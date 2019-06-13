@@ -31,6 +31,7 @@ export default {
   methods: {
     getHouseSorts () {
       if (!this.projectBid) {
+        this.houseSorts = [{}]
         return
       }
       getHouseSorts(this.projectBid).then(res => {

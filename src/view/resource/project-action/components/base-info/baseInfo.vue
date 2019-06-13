@@ -1,10 +1,9 @@
 <template>
-  <Form ref="baseForm" :model="baseDto" :rules="baseRules" :label-width="80" class="my-top">
-    <Spin size="large" fix v-if="loading">加载中...</Spin>
-    <Row :gutter="10">
+  <Form ref="baseForm" :model="baseDto" :rules="baseRules" :label-width="120">
+    <Row>
       <Col :span="8">
         <FormItem label="项目名称" prop="projectName">
-          <Input type="text" v-model.trim="baseDto.projectName" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.projectName" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
@@ -27,29 +26,25 @@
     <Row>
       <Col :span="8">
         <FormItem label="项目地址" prop="projectAddress">
-          <Input type="text" v-model.trim="baseDto.projectAddress" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.projectAddress" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="百度经度" prop="lng">
-          <Input type="text" v-model="baseDto.lng" :disabled="true"></Input>
+          <Input type="text" v-model="baseDto.lng" :disabled="true" placeholder=""></Input>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="百度纬度" prop="lat">
-          <Input type="text" v-model="baseDto.lat" :disabled="true"></Input>
+          <Input type="text" v-model="baseDto.lat" :disabled="true" placeholder="" class="map-input"></Input>
+          <a @click="mapVisible = true" style="margin-left: 12px">打开地图</a>
         </FormItem>
-      </Col>
-    </Row>
-    <Row>
-      <Col :span="16">
-        <map-card class="map-cls" :location="location" @click="handleMapClick"></map-card>
       </Col>
     </Row>
     <Row>
       <Col :span="8">
         <FormItem label="商圈" prop="tradeArea">
-          <Input type="text" v-model.trim="baseDto.tradeArea" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.tradeArea" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
@@ -60,7 +55,7 @@
       </Col>
       <Col :span="8">
         <FormItem label="建筑面积" prop="projectArea">
-          <Input type="text" v-model.trim="baseDto.projectArea" clearable>
+          <Input type="text" v-model.trim="baseDto.projectArea" placeholder="" clearable>
             <template slot="append">㎡</template>
           </Input>
         </FormItem>
@@ -69,7 +64,7 @@
     <Row>
       <Col :span="8">
         <FormItem label="楼栋数" prop="buildingCount">
-          <Input type="text" v-model.trim.number="baseDto.buildingCount" clearable></Input>
+          <Input type="text" v-model.trim.number="baseDto.buildingCount" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
@@ -92,40 +87,38 @@
     <Row>
       <Col :span="8">
         <FormItem label="签约日期" prop="signDate">
-          <DatePicker type="date" placeholder="请选择" v-model="baseDto.signDate"
-                          value-format="timestamp"
-                          style="width: 100%;" :editable="false" clearable></DatePicker>
+          <DatePicker type="date" placeholder="请选择" v-model="baseDto.signDate" class="my-date-picker"
+                      value-format="timestamp" @on-change="budgetEndLine" :editable="false" clearable></DatePicker>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="到期日期" prop="endlineDate">
-          <DatePicker type="date" placeholder="请选择" v-model="baseDto.endlineDate"
-                          value-format="timestamp"
-                          style="width: 100%;" :editable="false" clearable></DatePicker>
+          <DatePicker type="date" placeholder="请选择" v-model="baseDto.endlineDate" class="my-date-picker"
+                      value-format="timestamp" :editable="false" clearable></DatePicker>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="开业日期" prop="openDate">
-          <DatePicker type="date" placeholder="请选择" v-model="baseDto.openDate"
-                          value-format="timestamp"
-                          style="width: 100%;" :editable="false" clearable></DatePicker>
+          <DatePicker type="date" placeholder="请选择" v-model="baseDto.openDate" class="my-date-picker"
+                      value-format="timestamp"
+                      :editable="false" clearable></DatePicker>
         </FormItem>
       </Col>
     </Row>
     <Row>
       <Col :span="8">
         <FormItem label="项目经理" prop="projectManager">
-          <Input type="text" v-model.trim="baseDto.projectManager" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.projectManager" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="经理手机" prop="projectManagerMobile">
-          <Input type="text" v-model.trim="baseDto.projectManagerMobile" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.projectManagerMobile" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="项目电话" prop="sellPhone">
-          <Input type="text" v-model.trim="baseDto.sellPhone" clearable></Input>
+          <Input type="text" v-model.trim="baseDto.sellPhone" placeholder="" clearable></Input>
         </FormItem>
       </Col>
     </Row>
@@ -147,44 +140,51 @@
         </FormItem>
       </Col>
     </Row>
-    <Row :gutter="20">
+    <Row>
       <Col :span="16">
         <FormItem label="项目简介" prop="projectDesc">
-          <Input type="textarea" v-model.trim="baseDto.projectDesc" :rows="5" :maxlength="200"></Input>
+          <Input type="textarea" v-model.trim="baseDto.projectDesc" :rows="5" :maxlength="500" placeholder=""></Input>
         </FormItem>
       </Col>
     </Row>
     <Row>
       <Col :span="16">
         <FormItem label="空检报告" prop="projectReportUrl">
-          <Input type="textarea" v-model.trim="baseDto.projectReportUrl" :rows="3" :maxlength="400"></Input>
+          <Input type="textarea" v-model.trim="baseDto.projectReportUrl" :rows="3" :maxlength="400" placeholder=""></Input>
         </FormItem>
       </Col>
     </Row>
     <Row>
       <Col :span="16">
         <FormItem>
-          <Button v-if="projectBid" type="warning" @click="validateForm('baseForm')">修 改</Button>
+          <Button v-if="proBid" type="warning" @click="validateForm('baseForm')">修 改</Button>
           <Button v-else type="primary" @click="validateForm('baseForm')">保 存</Button>
-          <Button class="my-btn" @click="resetForm('baseForm')">重 置</Button>
+          <Button @click="resetForm('baseForm')" class="my-btn">重 置</Button>
         </FormItem>
       </Col>
     </Row>
+    <Modal title="选取经纬坐标" v-model="mapVisible" width="900" footer-hide>
+      <map-card class="map-cls" :search-style="searchStyle" :location="location" @click="handleMapClick"></map-card>
+    </Modal>
   </Form>
 </template>
 <script>
 import MapCard from '@/components/baidu-map/MapCard.vue'
-import { getCityList, getAreaList, getOwnerList } from '@/api/common'
+import { getCityList, getAreaList } from '@/api/common'
+import { getOwnerList } from '@/api/owner'
 import { getBaseInfo, saveBase, updateBase } from '@/api/project'
 
 export default {
-  name: 'baseInfo',
+  name: 'BaseInfo',
+  props: {
+    projectBid: String
+  },
   components: {
     MapCard
   },
   data () {
     return {
-      projectBid: '',
+      proBid: this.projectBid,
       cityOptions: [],
       areaOptions: [],
       ownerOptions: [],
@@ -252,10 +252,10 @@ export default {
           { max: 50, message: '不能超过50个字符', trigger: 'blur' }
         ],
         lng: [
-          { required: true, message: '请在地图中选择', trigger: 'change' }
+          { required: true, type: 'number', message: '请在地图中选择', trigger: 'change' }
         ],
         lat: [
-          { required: true, message: '请在地图中选择', trigger: 'change' }
+          { required: true, type: 'number', message: '请在地图中选择', trigger: 'change' }
         ],
         tradeArea: [
           { required: true, message: '请输入项目地址', trigger: 'blur' },
@@ -270,8 +270,7 @@ export default {
           { pattern: /^\d{1,4}(\.\d{0,2})?$/, message: '请输入1万以内的两位小数或整数', trigger: 'blur' }
         ],
         buildingCount: [
-          { required: true, message: '请输入楼栋数', trigger: 'blur' },
-          { type: 'number', max: 99, message: '请输入1百以内的整数', trigger: 'blur' }
+          { required: true, type: 'number', max: 99, message: '请输入1百以内的整数', trigger: 'blur' }
         ],
         projectType: [
           { required: true, message: '请选择合作类型', trigger: 'change' }
@@ -280,13 +279,13 @@ export default {
           { required: true, message: '请选择项目阶段', trigger: 'change' }
         ],
         signDate: [
-          { required: true, message: '请选择签约日期', trigger: 'change' }
+          { required: true, type: 'date', message: '请选择签约日期', trigger: 'change' }
         ],
         endlineDate: [
-          { required: true, message: '请选择到期日期', trigger: 'change' }
+          { required: true, type: 'date', message: '请选择到期日期', trigger: 'change' }
         ],
         openDate: [
-          { required: true, message: '请选择开业日期', trigger: 'change' }
+          { required: true, type: 'date', message: '请选择开业日期', trigger: 'change' }
         ],
         projectManager: [
           { required: true, message: '请输入项目经理', trigger: 'blur' },
@@ -301,13 +300,24 @@ export default {
           { max: 50, message: '不能超过50个字符', trigger: 'blur' }
         ],
         projectDesc: [
-          { required: true, message: '请输入项目描述', trigger: 'blur' },
-          { max: 200, message: '不能超过200个字符', trigger: 'blur' }
+          { required: true, message: '请输入项目简介', trigger: 'blur' },
+          { max: 500, message: '不能超过500个字符', trigger: 'blur' }
         ]
       },
       loading: false,
       location: { },
-      canClear: false
+      canClear: false,
+      mapVisible: false,
+      searchStyle: {
+        position: 'absolute',
+        top: '80px',
+        left: '30px',
+        zIndex: 3,
+        width: '270px',
+        '-webkit-box-shadow': ['#dcdee2', '0', '1px', '6px'],
+        '-moz-box-shadow': ['#dcdee2', '0', '1px', '6px'],
+        'box-shadow': ['#dcdee2', '0', '1px', '6px']
+      }
     }
   },
   methods: {
@@ -339,46 +349,74 @@ export default {
       })
     },
     getBaseInfo () {
-      this.projectBid = this.$route.query.projectBid
-      if (!this.projectBid) {
-        return
-      }
       this.loading = true
       getBaseInfo(this.projectBid).then(res => {
         this.baseDto = res.body
+        // this.getSimpleAddress()
         this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
-        this.canClear = false
         this.loading = false
+        this.canClear = false
       }).catch(() => {
         this.loading = false
       })
     },
-    saveOrUpBase () {
-      if (this.projectBid) {
-        this.updateBase()
-      } else {
-        this.saveBase()
-      }
+    getSimpleAddress () {
+      let cityLength = 0
+      let areaLength = 0
+      this.cityOptions.forEach((item) => {
+        if (item.cityCode === this.baseDto.cityCode) {
+          cityLength = item.cityName.length
+        }
+      })
+      this.areaOptions.forEach((item) => {
+        if (item.areaCode === this.baseDto.areaCode) {
+          areaLength = item.areaName.length
+        }
+      })
+      this.baseDto.projectAddress = this.baseDto.projectAddress.substring(cityLength + areaLength)
     },
-    saveBase () {
+    saveOrUpBase () {
+      let city = ''
+      let area = ''
+      this.cityOptions.forEach((item) => {
+        if (item.cityCode === this.baseDto.cityCode) {
+          city = item.cityName
+        }
+      })
+      this.areaOptions.forEach((item) => {
+        if (item.areaCode === this.baseDto.areaCode) {
+          area = item.areaName
+        }
+      })
+      let address = this.baseDto.projectAddress
+      this.baseDto.projectAddress = city + area + address
+      if (this.projectBid) {
+        this.updateBase(JSON.parse(JSON.stringify(this.baseDto)))
+      } else {
+        this.saveBase(JSON.parse(JSON.stringify(this.baseDto)))
+      }
+      this.baseDto.projectAddress = address
+    },
+    saveBase (dto) {
       this.loading = true
-      saveBase(this.baseDto).then(res => {
+      saveBase(dto).then(res => {
         if (res.code === 200) {
           this.$Message.success('保存成功')
-          this.projectBid = res.body
+          this.proBid = res.body
           this.$store.commit('upStep', 2)
-          this.$emit('success', this.projectBid)
+          this.$emit('success', this.proBid)
         }
         this.loading = false
       }).catch(() => {
         this.loading = false
       })
     },
-    updateBase () {
+    updateBase (dto) {
       this.loading = true
-      updateBase(this.baseDto).then(res => {
+      updateBase(dto).then(res => {
         if (res.code === 200) {
           this.$Message.success('修改成功')
+          this.proBid = res.body
           this.$store.commit('upStep', 2)
         }
         this.loading = false
@@ -389,12 +427,15 @@ export default {
     handleMapClick (point) {
       this.baseDto.lng = point.lng
       this.baseDto.lat = point.lat
+    },
+    budgetEndLine (val) {
+      let date = new Date(val)
+      date.setFullYear(date.getFullYear() + 10)
+      date.setDate(date.getDate() - 1)
+      this.baseDto.endlineDate = date
     }
   },
   watch: {
-    '$route' (to, from) {
-      this.getBaseInfo()
-    },
     'baseDto.cityCode': function (newVal, oldVal) {
       if (this.canClear) {
         this.baseDto.areaCode = ''
@@ -405,35 +446,28 @@ export default {
       } else {
         this.areaOptions = []
       }
-    },
-    'baseDto.signDate': function (newVal, oldVal) {
-      if (newVal) {
-        let date = new Date(newVal)
-        date.setFullYear(date.getFullYear() + 10)
-        date.setDate(date.getDate() - 1)
-        this.baseDto.endlineDate = date.getTime()
-      } else {
-        this.baseDto.endlineDate = ''
-      }
     }
   },
   created () {
     this.getCity()
     this.getOwner()
-    this.getBaseInfo()
+    if (this.projectBid) {
+      this.getBaseInfo()
+    }
   }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
   .map-cls {
-    height: 300px;
-    margin-left: 120px;
-    margin-bottom: 23px;
+    height: 500px;
+  }
+  .map-input {
+    width: ~"calc(100% - 60px)";
   }
   .my-btn {
     margin-left: 20px;
   }
-  .my-top {
-    position: relative;
+  .my-date-picker {
+    width: 100%;
   }
 </style>

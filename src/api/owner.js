@@ -8,6 +8,14 @@ export const getOwners = (data) => {
   })
 }
 
+// 获取业主列表
+export const getOwnerList = () => {
+  return axios.request({
+    url: '/owner/ownerList',
+    method: 'get'
+  })
+}
+
 export const saveOwner = (data) => {
   return axios.request({
     url: '/owner/saveOwner.action',

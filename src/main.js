@@ -18,7 +18,7 @@ import 'v-org-tree/dist/v-org-tree.css'
 import BaiduMap from 'vue-baidu-map'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
-import { isHave } from '@/libs/action.js'
+import { isHave } from '@/libs/action'
 import '@/libs/filters.js'
 
 // 实际打包时应该不引入mock

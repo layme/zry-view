@@ -4,20 +4,20 @@
       <p slot="title">
         费用项目
       </p>
-      <a slot="extra" @click.prevent="visible = true">
+      <a v-if="!feeList.length" slot="extra" @click.prevent="visible = true">
         <Icon type="ios-add-circle-outline"/>
         添加
       </a>
       <Row :gutter="10" class="fee-row" v-for="(item, index) in feeList" :key="index" :class="feeRow(index)">
         <Col :span="8">
-          <Tag color="blue">{{ item.type | feeTypeFilter }}</Tag>
+          <Tag color="blue">{{ item.depPaymentType | paymentTypeFilter }}</Tag>
         </Col>
         <Col :span="8">
-          <strong>¥ {{ item.money }}</strong>
+          <strong>¥ {{ item.depositSum }}</strong>
         </Col>
         <Col :span="8">
-          <a v-if="item.needBack === 1" :style="{ color: '#2d8cf0' }">退还</a>
-          <span v-if="item.needBack === 2">已退还</span>
+          <a v-if="item.depositStatus !== 2" :style="{ color: '#2d8cf0' }">退还</a>
+          <span v-else>已退还</span>
         </Col>
       </Row>
     </Card>
@@ -49,14 +49,15 @@ export default {
       feeList: [
         {
           bid: '',
-          type: 1,
-          money: 100,
-          needBack: 1
+          orderBid: '',
+          depPaymentType: '',
+          depositSum: '',
+          depositStatus: ''
         }
       ],
       feeDto: {
-        type: 1,
-        money: ''
+        depPaymentType: 1,
+        depositSum: ''
       },
       feeRules: {
         type: [{ required: true, message: '请选择费用项目', trigger: 'change' }],
@@ -75,6 +76,12 @@ export default {
     }
   },
   methods: {
+    initData () {
+      this.feeList[0].orderBid = this.order.orderBid
+      this.feeList[0].depPaymentType = this.order.depPaymentType
+      this.feeList[0].depositSum = this.order.depositSum
+      this.feeList[0].depositStatus = this.order.depositStatus
+    },
     saveFee () {
     },
     listFee () {
@@ -85,8 +92,16 @@ export default {
       }
     }
   },
+  watch: {
+    order () {
+      this.initData()
+    }
+  },
+  created () {
+    this.initData()
+  },
   filters: {
-    feeTypeFilter (val) {
+    paymentTypeFilter (val) {
       switch (val) {
         case 1:
           return '押金'

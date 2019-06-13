@@ -57,7 +57,7 @@
           :page-size="areaParamDto.limit" @on-change="handlePageChange"/>
     <Modal :title="title" :visible.sync="dialogVisible" width="35">
       <public-area-form v-if="dialogVisible" :projectBid="projectBid" :buildingOptions="buildingOptions"
-                 :area="areaData" @success="handleSuccess"></public-area-form>
+                        :area="areaData" @success="handleSuccess"></public-area-form>
     </Modal>
   </div>
 </template>
@@ -68,7 +68,7 @@ import { getBuildings } from '@/api/building'
 import { getAreas, deleteArea, validOrNot } from '@/api/publicArea'
 
 export default {
-  name: 'area',
+  name: 'publicArea',
   props: {
     projectBid: String
   },
@@ -239,6 +239,7 @@ export default {
   .my-table {
     margin-top: 20px
   }
+
   .my-btn {
     margin-right: 10px;
   }

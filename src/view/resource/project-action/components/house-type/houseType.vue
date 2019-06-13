@@ -106,6 +106,8 @@ export default {
         this.getHouseType()
         this.getHouseTypeParentBidOptions()
         this.getBedTypeList()
+      } else {
+        this.houseTypes = [{}]
       }
     }
   },
@@ -114,6 +116,8 @@ export default {
       this.getHouseType()
       this.getHouseTypeParentBidOptions()
       this.getBedTypeList()
+    } else {
+      this.houseTypes = [{}]
     }
   }
 }

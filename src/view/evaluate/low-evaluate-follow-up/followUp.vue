@@ -1,7 +1,7 @@
 <template>
   <Form ref="evalFollowUpForm" :model="paramDto" :rules="rules" :label-width="0">
     <FormItem prop="content">
-      <Input type="textarea" :rows="6" v-model="paramDto.content" maxlength="200"
+      <Input type="textarea" :rows="6" v-model="paramDto.content" :maxlength="200"
              placeholder="此处最多输入200个字符"></Input>
     </FormItem>
     <FormItem style="text-align: center">

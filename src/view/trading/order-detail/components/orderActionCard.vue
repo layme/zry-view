@@ -3,10 +3,10 @@
     <p slot="title">订单操作</p>
     <Row :gutter="20">
       <Col :span="16">
-        <bed-card v-if="Object.keys(order).length" :bed-list="order.bedList" :order-bid="order.orderBid"
-                  :order-status="order.orderStatus"></bed-card>
+        <bed-card v-if="Object.keys(order).length" ref="bedCard" :bed-list="order.bedList" :order-bid="order.orderBid"
+                  :order-status="order.orderStatus" :start-date="order.orderStartDate" :end-date="order.orderEndDate"></bed-card>
         <Button v-if="(order.stayPersonSaveStats === 1 || order.stayPersonStats === 6) && order.orderStatus === 1"
-                type="primary" class="my-btn">保存床位
+                type="primary" class="my-btn" @click="saveBed">保存床位
         </Button>
         <template v-if="order.orderStatus === 1">
           <Button type="primary" class="my-btn">办理入住</Button>
@@ -59,13 +59,19 @@ export default {
   },
   data () {
     return {
-      depositDto: {
-        item: '1',
-        type: '1',
-        money: '',
-        remark: ''
-      }
     }
+  },
+  methods: {
+    saveBed () {
+      let dto = this.$refs.bedCard.saveBed()
+      if (dto) {
+        this.$emit('saveBed', dto)
+      }
+    },
+    checkIn () {},
+    changeBed () {},
+    unbindBed () {},
+    cancelBook () {}
   }
 }
 </script>

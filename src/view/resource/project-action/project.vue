@@ -84,7 +84,6 @@ export default {
   },
   created () {
     this.getInfo()
-    console.log('project created')
   }
 }
 </script>

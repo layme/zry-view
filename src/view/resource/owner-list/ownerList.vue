@@ -17,7 +17,7 @@
         </Col>
       </Row>
     </Form>
-    <Table stripe :columns="columns" :data="orderList" :loading="loading" class="my-table">
+    <Table stripe :columns="columns" :data="ownerList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
       </template>
@@ -60,7 +60,7 @@ export default {
         {
           title: '序号',
           type: 'index',
-          minWidth: 50
+          width: 80
         },
         {
           title: '合同号',
@@ -137,6 +137,7 @@ export default {
         {
           title: '操作',
           key: 'action',
+          width: 110,
           render: (h, params) => {
             return h('div', [
               h('a', {
@@ -178,8 +179,8 @@ export default {
     handlePageChange () {
       getOwners(this.paramDto).then(res => {
         if (res.code === 200) {
-          this.ownerList = res.data.rows
-          this.total = res.data.total
+          this.ownerList = res.body.rows
+          this.total = res.body.total
         }
       })
     },
@@ -240,6 +241,9 @@ export default {
       this.ownerVo = row
       this.detailVisible = true
     }
+  },
+  created () {
+    this.listOwner()
   }
 }
 </script>

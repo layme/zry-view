@@ -21,14 +21,14 @@ export default {
     phoneMobile: '',
     token: getToken(),
     access: [],
-    hasGetInfo: false,
     unreadCount: 0,
     messageUnreadList: [],
     messageReadedList: [],
     messageTrashList: [],
     messageContentStore: {},
     projectList: [],
-    currentProject: {}
+    currentProject: {},
+    baseUrl: '123'
   },
   mutations: {
     setName (state, name) {
@@ -49,9 +49,6 @@ export default {
     setToken (state, token) {
       state.token = token
       setToken(token)
-    },
-    setHasGetInfo (state, status) {
-      state.hasGetInfo = status
     },
     setMessageCount (state, count) {
       state.unreadCount = count
@@ -94,8 +91,10 @@ export default {
           userName,
           password
         }).then(res => {
-          commit('setToken', res.body)
-          resolve()
+          if (res.code === 200) {
+            commit('setToken', res.body)
+          }
+          resolve(res)
         }).catch(err => {
           reject(err)
         })
@@ -106,7 +105,13 @@ export default {
       return new Promise((resolve, reject) => {
         logout().then(() => {
           commit('setToken', '')
+          commit('setName', '')
+          commit('setUsername', '')
+          commit('setHlUser', '')
+          commit('setPhoneMobile', '')
           commit('setAccess', [])
+          commit('setProjectList', [])
+          commit('setCurrentProject', {})
           resolve()
         }).catch(err => {
           reject(err)
@@ -123,7 +128,6 @@ export default {
           commit('setHlUser', data.hlUser)
           commit('setPhoneMobile', data.phoneMobile)
           commit('setAccess', data.access)
-          commit('setHasGetInfo', true)
           commit('setProjectList', data.projectList)
           commit('setCurrentProject', data.currentProject)
           resolve(data)

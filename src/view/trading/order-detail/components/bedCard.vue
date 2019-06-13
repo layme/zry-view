@@ -7,10 +7,10 @@
       <Checkbox
         :indeterminate="indeterminate"
         :value="checkAll"
-        @on-change="handleCheckAll">全选
+        @click.prevent.native="handleCheckAll">全选
       </Checkbox>
     </div>
-    <Row v-for="(item, index) in bedDto.beds" :key="index" class="bed-row" :class="bedRow(index)">
+    <Row v-for="(item, index) in bedDto.stayPersonList" :key="index" class="bed-row" :class="bedRow(index)">
       <Col :span="5">
         入住人：{{ item.stayPersonName }}
       </Col>
@@ -18,19 +18,24 @@
         房型信息：{{ item.houseTypeParentName }} - {{ item.houseTypeName }}
       </Col>
       <Col :span="4">
-        楼栋：{{ buildingFormat(index) }}
+        楼栋：{{ buildingFormat(item) }}
       </Col>
       <Col :span="4">
         房间号：{{ item.areaName ? item.areaName : '-' }}
       </Col>
       <Col :span="4">
-        床位号：{{ bedFormat(index) }}
+        床位号：
+        <span v-if="item.bedCode">{{ item.bedCode.substring(item.bedCode.length - 2) }}</span>
+        <template v-else>
+          <span v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" style="color: #ed4014;">已解绑床位</span>
+          <span v-else>暂未排床</span>
+        </template>
       </Col>
       <Col :span="2">
         <div
           v-if="orderStatus=== 1 || orderStatus=== 2 || orderStatus=== 6 || orderStatus === 11">
-          <Tag v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" color="blue">{{
-            item.stayPersonStatus | stayPersonStatusFilter }}
+          <Tag v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" color="blue">
+            {{ item.stayPersonStatus | stayPersonStatusFilter }}
           </Tag>
           <a v-else>选择床位</a>
         </div>
@@ -42,6 +47,7 @@
   </Card>
 </template>
 <script>
+import { getDate } from '@/libs/tools'
 export default {
   name: 'bedCard',
   props: {
@@ -50,13 +56,17 @@ export default {
       default: () => []
     },
     orderBid: String,
-    orderStatus: Number
+    orderStatus: Number,
+    startDate: Number,
+    endDate: Number
   },
   data () {
     return {
       bedDto: {
-        orderBid: '',
-        beds: []
+        orderId: '',
+        startDate: '',
+        endDate: '',
+        stayPersonList: []
       },
       checkAll: true,
       indeterminate: false
@@ -64,10 +74,26 @@ export default {
   },
   methods: {
     initData () {
-      this.bedDto.orderBid = this.orderBid
-      this.bedDto.beds = this.bedList
-      this.bedDto.beds.forEach(item => {
-        this.$set(item, 'isSelect', true)
+      this.bedDto.orderId = this.orderBid
+      this.bedDto.startDate = getDate(this.startDate, 'date')
+      this.bedDto.endDate = getDate(this.endDate, 'date')
+      this.bedList.forEach(item => {
+        this.bedDto.stayPersonList.push({
+          orderBid: this.orderBid,
+          bid: item.stayPersonBid,
+          areaBedBid: item.bedBid,
+          houseTypeBid: item.houseTypeBid,
+          areaBid: item.areaBid,
+          areaCode: item.areaName,
+          bedCode: item.bedCode,
+          stayPersonName: item.stayPersonName,
+          houseTypeParentName: item.houseTypeParentName,
+          houseTypeName: item.houseTypeName,
+          buildName: item.buildName,
+          areaName: item.areaName,
+          stayPersonStatus: item.stayPersonStatus,
+          isSelect: true
+        })
       })
     },
     bedRow (index) {
@@ -75,29 +101,16 @@ export default {
         return 'bed-row-not-first'
       }
     },
-    buildingFormat (index) {
-      const bed = this.bedDto.beds[index]
-      if (bed.buildName) {
-        return bed.buildName
+    buildingFormat (item) {
+      if (item.buildName) {
+        return item.buildName
       } else {
         return '-'
       }
     },
-    bedFormat (index) {
-      const bed = this.bedDto.beds[index]
-      if (bed.bedCode) {
-        return bed.bedCode.substring(bed.bedCode.length - 2)
-      } else {
-        if (bed.stayPersonStatus !== 1 && bed.stayPersonStatus !== 6) {
-          return '已解绑床位'
-        } else {
-          return '暂未排床'
-        }
-      }
-    },
     handleCheck () {
-      let selected = this.bedDto.beds.filter(item => item.isSelect)
-      if (selected.length === this.bedDto.beds.length) {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (selected.length === this.bedDto.stayPersonList.length) {
         this.indeterminate = false
         this.checkAll = true
       } else if (selected.length > 0) {
@@ -116,15 +129,35 @@ export default {
       }
       this.indeterminate = false
       if (this.checkAll) {
-        this.bedDto.beds.forEach(item => {
+        this.bedDto.stayPersonList.forEach(item => {
           item.isSelect = true
         })
       } else {
-        this.bedDto.beds.forEach(item => {
+        this.bedDto.stayPersonList.forEach(item => {
           item.isSelect = false
         })
       }
-    }
+    },
+    saveBed () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      let isPass = true
+      selected.forEach(item => {
+        if (!item.areaBedBid) {
+          this.$Message.warning(`${item.stayPersonName} 还未分配床位`)
+          isPass = false
+        }
+      })
+      if (isPass) {
+        this.$emit('saveBed', {
+          orderId: this.bedDto.orderId,
+          startDate: this.bedDto.startDate,
+          endDate: this.bedDto.endDate,
+          stayPersonList: selected
+        })
+      }
+    },
+    checkIn () {},
+    changeBed () {}
   },
   watch: {
     order () {

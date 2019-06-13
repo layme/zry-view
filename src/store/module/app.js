@@ -32,7 +32,8 @@ export default {
     homeRoute: {},
     local: localRead('local'),
     errorList: [],
-    hasReadErrorPage: false
+    hasReadErrorPage: false,
+    baseUrl: ''
   },
   getters: {
     menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
@@ -85,6 +86,9 @@ export default {
     },
     setHasReadErrorLoggerStatus (state, status = true) {
       state.hasReadErrorPage = status
+    },
+    setBaseUrl (state, url) {
+      state.baseUrl = url
     }
   },
   actions: {
@@ -101,6 +105,9 @@ export default {
       saveErrorLogger(info).then(() => {
         commit('addError', data)
       })
+    },
+    setBaseUrlAc ({ state, commit }, url) {
+      commit('setBaseUrl', url)
     }
   }
 }

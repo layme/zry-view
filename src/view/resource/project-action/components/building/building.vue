@@ -26,6 +26,7 @@ export default {
   methods: {
     getBuildings () {
       if (!this.projectBid) {
+        this.buildings = [{}]
         return
       }
       getBuildings(this.projectBid).then(res => {
