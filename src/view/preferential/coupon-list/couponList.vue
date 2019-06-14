@@ -1,6 +1,7 @@
 <template>
   <div>
-    <coupon-form @search="listCoupon" @export="exportData"></coupon-form>
+    <coupon-form :batch-number="$route.query.batchNumber" :activity-number="$route.query.activityNumber"
+                 @search="listCoupon" @export="exportData"></coupon-form>
     <Table stripe :columns="columns" :data="couponList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="ticketNumber">
         <a @click="toCouponDetail(row)">{{ row.ticketNumber }}</a>
@@ -18,11 +19,12 @@
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+          :page-size="paramDto.size" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
 import couponForm from './couponForm.vue'
+import { listCoupon } from '@/api/coupon'
 
 export default {
   name: 'couponList',
@@ -33,43 +35,9 @@ export default {
     return {
       paramDto: {
         page: 1,
-        limit: 10
+        size: 10
       },
-      couponList: [
-        {
-          'couponBid': '0bacf1f74c4b47ef91e9bcdadd0a0b1c',
-          'activityNumber': 'S19052415',
-          'ticketNumber': 'S190524150100002',
-          'couponState': '初始态',
-          'activityState': '进行中',
-          'customerPhone': null,
-          'orderNumber': null,
-          'orderBid': null,
-          'redeemCode': '9nf7vmcqfh',
-          'validDate': '绑定账户后15天内有效',
-          'conditions': '满50.0可用<br>',
-          'activityContent': 'renhyrenhyrenhyrenhy',
-          'activityBid': '0343f64e194c42f5bf98fb09ea534966',
-          'amount': null,
-          'limitMoney': null
-        }, {
-          'couponBid': '8b7b1c60449b44deaedfde6b880a41ca',
-          'activityNumber': 'S19052415',
-          'ticketNumber': 'S190524150100001',
-          'couponState': '初始态',
-          'activityState': '进行中',
-          'customerPhone': null,
-          'orderNumber': null,
-          'orderBid': null,
-          'redeemCode': 'imh6bmnqu4',
-          'validDate': '绑定账户后15天内有效',
-          'conditions': '满50.0可用<br>',
-          'activityContent': 'renhyrenhyrenhyrenhy',
-          'activityBid': '0343f64e194c42f5bf98fb09ea534966',
-          'amount': null,
-          'limitMoney': null
-        }
-      ],
+      couponList: [],
       total: 0,
       columns: [
         {
@@ -121,13 +89,23 @@ export default {
   methods: {
     listCoupon (dto) {
       Object.assign(this.paramDto, dto)
+      this.$delete(this.paramDto, 'dateRange')
+      this.paramDto.activityState = this.paramDto.activityState.join(',')
+      this.paramDto.couponState = this.paramDto.couponState.join(',')
       this.paramDto.page = 1
       this.handlePageChange()
     },
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      listCoupon(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.couponList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     exportData (dto) {
     },
@@ -151,9 +129,6 @@ export default {
       }
       this.$router.push(route)
     }
-  },
-  created () {
-    this.listCoupon()
   }
 }
 </script>

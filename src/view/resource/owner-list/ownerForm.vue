@@ -74,84 +74,50 @@
     <Row>
       <Col :span="8" v-if="ownerDto.ownerType === 1">
         <FormItem label="组织机构代码附件">
-          <!--<Upload class="upload-demo"-->
-          <!--multiple-->
-          <!--:action="uploadFileUrl"-->
-          <!--:limit="10"-->
-          <!--:show-file-list="false"-->
-          <!--:before-upload="beforeUpload"-->
-          <!--:on-remove="handleOrgRemove"-->
-          <!--:on-success="handleOrgSuccess"-->
-          <!--:on-exceed="handleExceed"-->
-          <!--:on-error="handleError">-->
-          <!--<Button type="text">点击上传</Button>-->
-          <!--<div slot="tip" class="Upload__tip">文件大小不能超过 2MB</div>-->
-          <!--</Upload>-->
-          <!--<div v-for="(o, i) in ownerDto.organizationCodeAtt" :key="i">-->
-          <!--<Button type="text" @click="previewFile(o.attachmentImgUrl)">-->
-          <!--{{ o.attachmentName }}-->
-          <!--</Button>-->
-          <!--<Button type="text" icon="el-icon-close" @click="ownerDto.organizationCodeAtt.splice(i, 1)"></Button>-->
-          <!--</div>-->
-
           <Upload
+            ref="orgUpload"
             multiple
-            :max-size="2048"
+            accept="application/pdf,image/*"
+            :headers="{ 'Authorization': $store.state.user.token }"
             :action="uploadFileUrl"
-            :before-upload="beforeUpload"
-            :on-remove="handleOrgRemove"
+            :default-file-list="defaultOrgList"
             :on-success="handleOrgSuccess"
-            :on-exceeded-size="handleExceed"
+            :on-preview="previewFile"
             :on-error="handleError">
             <a>点击上传</a>
-            <div slot="tip" class="my-tip">文件大小不能超过 2MB</div>
           </Upload>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="产权证附件">
-          <Upload class="upload-demo"
-                  multiple
-                  :action="uploadFileUrl"
-                  :limit="10"
-                  :show-file-list="false"
-                  :before-upload="beforeUpload"
-                  :on-remove="handleProRemove"
-                  :on-success="handleProSuccess"
-                  :on-exceed="handleExceed"
-                  :on-error="handleError">
-            <Button type="text">点击上传</Button>
-            <div slot="tip" class="Upload__tip">文件大小不能超过 2MB</div>
+          <Upload
+            ref="proUpload"
+            multiple
+            accept="application/pdf,image/*"
+            :headers="{ 'Authorization': $store.state.user.token }"
+            :action="uploadFileUrl"
+            :default-file-list="defaultProList"
+            :on-success="handleProSuccess"
+            :on-preview="previewFile"
+            :on-error="handleError">
+            <a>点击上传</a>
           </Upload>
-          <div v-for="(o, i) in ownerDto.titleDeedAtt" :key="i">
-            <Button type="text" @click="previewFile(o.attachmentImgUrl)">
-              {{ o.attachmentName }}
-            </Button>
-            <Button type="text" icon="el-icon-close" @click="ownerDto.titleDeedAtt.splice(i, 1)"></Button>
-          </div>
         </FormItem>
       </Col>
       <Col :span="8">
         <FormItem label="其他附件">
-          <Upload class="upload-demo"
-                  multiple
-                  :action="uploadFileUrl"
-                  :limit="10"
-                  :show-file-list="false"
-                  :before-upload="beforeUpload"
-                  :on-remove="handleOtherRemove"
-                  :on-success="handleOtherSuccess"
-                  :on-exceed="handleExceed"
-                  :on-error="handleError">
-            <Button type="text">点击上传</Button>
-            <div slot="tip" class="Upload__tip">文件大小不能超过 2MB</div>
+          <Upload
+            ref="otherUpload"
+            multiple
+            accept="application/pdf,image/*"
+            :headers="{ 'Authorization': $store.state.user.token }"
+            :default-file-list="defaultOtherList"
+            :action="uploadFileUrl"
+            :on-success="handleOtherSuccess"
+            :on-preview="previewFile"
+            :on-error="handleError">
+            <a>点击上传</a>
           </Upload>
-          <div v-for="(o, i) in ownerDto.elseAtt" :key="i">
-            <Button type="text" @click="previewFile(o.attachmentImgUrl)">
-              {{ o.attachmentName }}
-            </Button>
-            <Button type="text" icon="el-icon-close" @click="ownerDto.elseAtt.splice(i, 1)"></Button>
-          </div>
         </FormItem>
       </Col>
     </Row>
@@ -203,9 +169,12 @@
 <script>
 export default {
   name: 'ownerForm',
+  props: {
+    owner: Object
+  },
   data () {
     return {
-      uploadFileUrl: '/system/upLoadFile.action',
+      uploadFileUrl: this.$store.state.app.baseUrl + '/system/upLoadFile.action',
       ownerDto: {
         bid: '',
         ownerType: 1,
@@ -228,6 +197,9 @@ export default {
         titleDeedAtt: [],
         elseAtt: []
       },
+      defaultOrgList: [],
+      defaultProList: [],
+      defaultOtherList: [],
       ownerRules: {
         ownerType: [{ required: true, type: 'number', message: '请选择业主类型', trigger: 'change' }],
         ownerName: [
@@ -259,82 +231,107 @@ export default {
     }
   },
   methods: {
+    validateForm () {
+      this.$refs['ownerForm'].validate((valid) => {
+        if (valid) {
+          this.buildAtt()
+          this.$emit('success', this.ownerDto)
+        } else {
+          this.$emit('error')
+        }
+      })
+    },
+    buildAtt () {
+      this.ownerDto.organizationCodeAtt = []
+      this.ownerDto.titleDeedAtt = []
+      this.ownerDto.elseAtt = []
+      this.syncFile(this.ownerDto.organizationCodeAtt, this.$refs.orgUpload.fileList)
+      this.syncFile(this.ownerDto.titleDeedAtt, this.$refs.proUpload.fileList)
+      this.syncFile(this.ownerDto.elseAtt, this.$refs.otherUpload.fileList)
+    },
+    syncFile (target, source) {
+      if (source) {
+        source.forEach(item => {
+          if (item.response) {
+            target.push(item.response.body)
+          } else {
+            target.push({
+              attachmentImgUrl: item.url,
+              attachmentName: item.name
+            })
+          }
+        })
+      }
+    },
     addContractNo () {
       this.ownerDto.contractList.push({ ownerContractNo: '' })
     },
     deleteContractNo (i) {
       this.ownerDto.contractList.splice(i, 1)
     },
-    beforeUpload (file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$Message.warning('大小超过了 2MB')
+    handleOrgSuccess (response, file, fileList) {
+      if (response.code !== 200) {
+        this.$Message.error(response.message)
+        const list = this.$refs.orgUpload.fileList
+        this.$refs.orgUpload.fileList.splice(list.indexOf(file), 1)
       }
-      return isLt2M
     },
-    handleExceed (files, fileList) {
-      this.$Message.warning('一次最多上传 10 个文件')
+    handleProSuccess (response, file, fileList) {
+      if (response.code !== 200) {
+        this.$Message.error(response.message)
+        const list = this.$refs.proUpload.fileList
+        this.$refs.proUpload.fileList.splice(list.indexOf(file), 1)
+      }
+    },
+    handleOtherSuccess (response, file, fileList) {
+      if (response.code !== 200) {
+        this.$Message.error(response.message)
+        const list = this.$refs.otherUpload.fileList
+        this.$refs.otherUpload.fileList.splice(list.indexOf(file), 1)
+      }
     },
     handleError (err, file, fileList) {
       this.$Message.error('文件上传失败')
       console.info(err)
     },
-    handleOrgSuccess (response, file, fileList) {
-      if (response.code === 200) {
-        this.ownerDto.organizationCodeAtt.push(response.body)
-      } else {
-        this.$Message.error(response.message)
-      }
-    },
-    handleOrgRemove (file, fileList) {
-      if (!file.response) {
-        return
-      }
-      const url = file.response.body.url
-      this.ownerDto.organizationFile.forEach((item, index) => {
-        if (url === item.url) {
-          this.ownerDto.organizationCodeAtt.splice(index, 1)
-        }
-      })
-    },
-    handleProSuccess (response, file, fileList) {
-      if (response.code === 200) {
-        this.ownerDto.titleDeedAtt.push(response.body)
-      } else {
-        this.$Message.error(response.message)
-      }
-    },
-    handleProRemove (file, fileList) {
-      if (!file.response) {
-        return
-      }
-      const url = file.response.body.url
-      this.ownerDto.titleDeedAtt.forEach((item, index) => {
-        if (url === item.url) {
-          this.ownerDto.propertyFile.splice(index, 1)
-        }
-      })
-    },
-    handleOtherSuccess (response, file, fileList) {
-      if (response.code === 200) {
-        this.ownerDto.elseAtt.push(response.body)
-      } else {
-        this.$Message.error(response.message)
-      }
-    },
-    handleOtherRemove (file, fileList) {
-      if (!file.response) {
-        return
-      }
-      const url = file.response.body.url
-      this.ownerDto.elseAtt.forEach((item, index) => {
-        if (url === item.url) {
-          this.ownerDto.otherFile.splice(index, 1)
-        }
-      })
-    },
-    previewFile (url) {
+    previewFile (file) {
+      let url = file.url ? file.url : file.response.body.attachmentImgUrl
       window.open(url, '_blank')
+    }
+  },
+  created () {
+    if (this.owner) {
+      this.ownerDto = this.owner
+      if (this.ownerDto.organizationCodeAtt) {
+        this.ownerDto.organizationCodeAtt.forEach(item => {
+          this.defaultOrgList.push(
+            {
+              url: item.attachmentImgUrl,
+              name: item.attachmentName
+            }
+          )
+        })
+      }
+      if (this.ownerDto.titleDeedAtt) {
+        this.ownerDto.titleDeedAtt.forEach(item => {
+          this.defaultProList.push(
+            {
+              url: item.attachmentImgUrl,
+              name: item.attachmentName
+            }
+          )
+        })
+      }
+      if (this.ownerDto.elseAtt) {
+        this.ownerDto.elseAtt.forEach(item => {
+          this.defaultOtherList.push(
+            {
+              url: item.attachmentImgUrl,
+              name: item.attachmentName
+            }
+          )
+        })
+      }
     }
   }
 }

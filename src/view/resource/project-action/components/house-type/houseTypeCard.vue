@@ -16,8 +16,8 @@
           <template v-if="houseTypeDto.bid">
             <Col :span="6">
               <FormItem label="当前状态">
-                <Tag v-if="houseTypeDto.isShow" type="success">在App端展示</Tag>
-                <Tag v-else type="info">在App端隐藏</Tag>
+                <Tag v-if="houseTypeDto.isShow" color="success">在App端展示</Tag>
+                <Tag v-else color="default">在App端隐藏</Tag>
               </FormItem>
             </Col>
             <Col :span="6" style="text-align: right">
@@ -210,7 +210,8 @@ export default {
         }],
         originalPrice: '',
         usualPrice: '',
-        priceList: []
+        priceList: [],
+        isShow: ''
       },
       houseTypeRules: {
         houseTypeParentBid: [
@@ -225,10 +226,10 @@ export default {
           { pattern: /^\d{1,4}(\.\d{0,2})?$/, message: '请输入1万以内的两位小数或整数', trigger: 'blur' }
         ],
         isBathroom: [
-          { required: true, message: '请选择卫生间类型', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择卫生间类型', trigger: 'change' }
         ],
         isBath: [
-          { required: true, message: '请选择洗浴间类型', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择洗浴间类型', trigger: 'change' }
         ],
         introduction: [
           { required: true, message: '请输入房型描述', trigger: 'blur' },

@@ -43,8 +43,22 @@ class HttpRequest {
     instance.interceptors.response.use(resp => {
       this.destroy(url, true)
       if (resp.data.code !== 200) {
-        let message = resp.data.message ? resp.data.message : '系统异常'
-        Message.warning(message)
+        if (resp.data.code === 401) {
+          setTimeout(() => {
+            Modal.warning({
+              title: '通知',
+              content: '登录已失效，传送至登录页面···',
+              onOk: () => {
+                delToken()
+                store.dispatch('handleLogout')
+                router.push({ name: 'login' })
+              }
+            })
+          }, 500)
+        } else {
+          let message = resp.data.message ? resp.data.message : '系统异常'
+          Message.warning(message)
+        }
       }
       return resp.data
     }, error => {
@@ -57,30 +71,24 @@ class HttpRequest {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
     this.interceptors(instance, options.url)
+    if (!store.state.app.baseUrl) {
+      store.commit('setBaseUrl', this.baseUrl)
+    }
     return instance(options)
   }
   catchError (error) {
+    console.info('err ', error)
     if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          Modal.info({
-            title: '通知',
-            content: '登录已失效，传送至登录页面···',
-            onOk: () => {
-              delToken()
-              store.dispatch('handleLogout')
-              router.push({ name: 'login' })
-            }
-          })
-          break
-        case 403:
-          Message.error('无访问权限，请联系企业管理员')
-          break
-        case 404:
-          Message.error('请求资源不存在')
-          break
-        default:
-          Message.error('服务异常，请稍后重试')
+      const status = error.response.status
+      if (status === 403) {
+        Message.error('无访问权限，请联系企业管理员')
+        router.push({ name: 'error_401' })
+      } else if (status === 404) {
+        Message.error('请求资源不存在')
+        router.push({ name: 'error_404' })
+      } else {
+        Message.error('服务异常，请稍后重试')
+        router.push({ name: 'error_500' })
       }
     } else if (error.message === 'Network Error') {
       Message.error('网络错误')

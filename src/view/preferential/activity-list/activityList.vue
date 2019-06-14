@@ -19,12 +19,13 @@
         <div v-else>-</div>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
 import activityForm from './activityForm.vue'
+import { listActivity } from '@/api/activity'
 export default {
   name: 'activityList',
   components: {
@@ -33,69 +34,17 @@ export default {
   data () {
     return {
       paramDto: {
-        page: 1,
-        limit: 10
+        pageIndex: 1,
+        pageSize: 10
       },
       loading: false,
-      activityList: [
-        {
-          'activityBid': '361e026b8ab746a8a1c0bcf4e22c5b71',
-          'activityNumber': 'S16082402',
-          'activityName': '免费体验券',
-          'status': 0,
-          'activityContent': '免费体验券',
-          'startDate': 20160824,
-          'endDate': 20201024,
-          'activityCondition': '限北京CBD自如驿(8人间、12人间)可用',
-          'projectName': null,
-          'houseTypeName': null,
-          'showDate': '2016-08-24至2020-10-24'
-        },
-        {
-          'activityBid': '361e026b8ab746a8a1c0bcf4e22c5b71',
-          'activityNumber': 'S16082402',
-          'activityName': '免费体验券',
-          'status': 1,
-          'activityContent': '免费体验券',
-          'startDate': 20160824,
-          'endDate': 20201024,
-          'activityCondition': '限北京CBD自如驿(8人间、12人间)可用',
-          'projectName': null,
-          'houseTypeName': null,
-          'showDate': '2016-08-24至2020-10-24'
-        },
-        {
-          'activityBid': '361e026b8ab746a8a1c0bcf4e22c5b71',
-          'activityNumber': 'S16082402',
-          'activityName': '免费体验券',
-          'status': 2,
-          'activityContent': '免费体验券',
-          'startDate': 20160824,
-          'endDate': 20201024,
-          'activityCondition': '限北京CBD自如驿(8人间、12人间)可用',
-          'projectName': null,
-          'houseTypeName': null,
-          'showDate': '2016-08-24至2020-10-24'
-        },
-        {
-          'activityBid': '361e026b8ab746a8a1c0bcf4e22c5b71',
-          'activityNumber': 'S16082402',
-          'activityName': '免费体验券',
-          'status': 3,
-          'activityContent': '免费体验券',
-          'startDate': 20160824,
-          'endDate': 20201024,
-          'activityCondition': '限北京CBD自如驿(8人间、12人间)可用',
-          'projectName': null,
-          'houseTypeName': null,
-          'showDate': '2016-08-24至2020-10-24'
-        }
-      ],
+      activityList: [],
       total: 0,
       columns: [
         {
           title: '优惠活动编号',
-          slot: 'activityNumber'
+          slot: 'activityNumber',
+          width: 130
         },
         {
           title: '活动名称',
@@ -103,8 +52,7 @@ export default {
         },
         {
           title: '活动状态',
-          slot: 'status',
-          width: 100
+          slot: 'status'
         },
         {
           title: '活动时间',
@@ -117,7 +65,8 @@ export default {
         },
         {
           title: '活动内容',
-          key: 'activityContent'
+          key: 'activityContent',
+          tooltip: true
         },
         {
           title: '操作',
@@ -130,17 +79,26 @@ export default {
   methods: {
     listActivity (dto) {
       Object.assign(this.paramDto, dto)
-      this.paramDto.page = 1
+      this.$delete(this.paramDto, 'dateRange')
+      this.paramDto.activityStatus = this.paramDto.activityStatus.join(',')
+      this.paramDto.pageIndex = 1
       this.handlePageChange()
     },
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      listActivity(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.activityList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     createActivity () {
       const route = {
-        name: 'createActivity'
+        name: 'couponList'
       }
       this.$router.push(route)
     },
@@ -167,9 +125,6 @@ export default {
       }
     },
     updateActivity (activityBid, activityStatus) {}
-  },
-  created () {
-    this.listActivity()
   },
   filters: {
     statusFilter (val) {

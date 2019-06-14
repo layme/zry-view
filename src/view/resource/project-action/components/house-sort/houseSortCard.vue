@@ -1,8 +1,8 @@
 <template>
   <div>
     <Card dis-hover>
-      <Form ref="houseSortForm" :model="houseSortDto" :rules="houseSortRules" :label-width="100" class="my-top">
-        <Spin size="large" fix v-if="loading">加载中...</Spin>
+      <Form ref="houseSortForm" :model="houseSortDto" :rules="houseSortRules" :label-width="100" class="my-top full-top">
+        <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
         <Row :gutter="10">
           <Col :span="8">
             <FormItem label="房型分类名称" prop="houseName">
@@ -13,8 +13,8 @@
           <template v-if="houseSortDto.bid">
             <Col :span="8">
               <FormItem label="当前状态">
-                <Tag v-if="houseSortDto.isShow" type="success">在App端展示</Tag>
-                <Tag v-else type="info">在App端隐藏</Tag>
+                <Tag v-if="houseSortDto.isShow" color="success">在App端展示</Tag>
+                <Tag v-else color="default">在App端隐藏</Tag>
               </FormItem>
             </Col>
             <Col :span="8" style="text-align: right">
@@ -67,7 +67,8 @@ export default {
       houseSortDto: {
         projectBid: this.projectBid,
         houseName: '',
-        houseTypeDesc: ''
+        houseTypeDesc: '',
+        isShow: ''
       },
       houseSortRules: {
         houseName: [
@@ -162,5 +163,14 @@ export default {
   }
   .my-btn {
     margin-left: 20px;
+  }
+
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

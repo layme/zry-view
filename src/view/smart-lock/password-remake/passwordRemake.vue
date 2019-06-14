@@ -2,7 +2,7 @@
   <div>
     <Form :model="paramDto" :label-width="60" inline>
       <FormItem label="订单号" prop="orderNumber">
-        <Input type="text" v-model.trim="paramDto.orderNumber" clearable :style="{ width: '200px' }"></Input>
+        <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '200px' }"></Input>
       </FormItem>
       <FormItem>
         <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>
@@ -15,66 +15,26 @@
         <Tag color="default" v-else>未知</Tag>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a @click="remakePassword(row)">密码重制</a>
+        <a @click="remakeConfirm(row)">密码重制</a>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageNum"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
+import { getPwdRemakeList, resetOrderPassword } from '@/api/smartLock'
 export default {
   name: 'passwordRemake',
   data () {
     return {
       paramDto: {
-        projectBid: '',
-        orderNumber: '',
-        page: 1,
-        limit: 10
+        orderCode: '',
+        pageNum: 1,
+        pageSize: 10
       },
       loading: false,
-      passwordList: [
-        {
-          'orderBid': 'afc09761eee642eeb365ce665a96b311',
-          'areaBids': null,
-          'orderCode': 'BJ101190522083',
-          'projectBid': '63615afa5a344153a047aca1ea32cc51',
-          'pswStatus': 1,
-          'areaName': 'Q房间',
-          'areaBid': '66772984bc85454f8a7647e1a42df3b1',
-          'pageNum': 0,
-          'pageSize': 0,
-          'applyer': null,
-          'operator': null
-        },
-        {
-          'orderBid': 'f68e5b0bbeb54892a6d9b5d8a2dbd592',
-          'areaBids': null,
-          'orderCode': 'BJ101190521099',
-          'projectBid': '63615afa5a344153a047aca1ea32cc51',
-          'pswStatus': 2,
-          'areaName': 'Q房间',
-          'areaBid': '66772984bc85454f8a7647e1a42df3b1',
-          'pageNum': 0,
-          'pageSize': 0,
-          'applyer': null,
-          'operator': null
-        },
-        {
-          'orderBid': 'f68e5b0bbeb54892a6d9b5d8a2dbd591',
-          'areaBids': null,
-          'orderCode': 'BJ101190521098',
-          'projectBid': '63615afa5a344153a047aca1ea32cc51',
-          'pswStatus': 0,
-          'areaName': 'Q房间',
-          'areaBid': '66772984bc85454f8a7647e1a42df3b1',
-          'pageNum': 0,
-          'pageSize': 0,
-          'applyer': null,
-          'operator': null
-        }
-      ],
+      passwordList: [],
       total: 0,
       columns: [
         {
@@ -106,16 +66,44 @@ export default {
   },
   methods: {
     getList () {
-      this.paramDto.page = 1
+      this.paramDto.pageNum = 1
       this.handlePageChange()
     },
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      getPwdRemakeList(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.passwordList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
-    remakePassword () {
-      this.$Message.success('password remark')
+    remakeConfirm (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>确定重制该订单的密码吗？</p>',
+        onOk: () => {
+          this.remakePassword(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    remakePassword (row) {
+      let dto = {
+        orderBid: row.orderBid,
+        projectBid: row.projectBid,
+        areaBid: row.areaBid
+      }
+      resetOrderPassword(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('密码重制成功')
+          this.handlePageChange()
+        }
+      })
     }
   },
   created () {

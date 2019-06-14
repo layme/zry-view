@@ -1,10 +1,10 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 export const getOwners = (data) => {
   return axios.request({
     url: '/owner/ownerPageList.action',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 

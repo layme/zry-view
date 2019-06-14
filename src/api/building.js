@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 // 获取列表
 export const getBuildings = (data) => {

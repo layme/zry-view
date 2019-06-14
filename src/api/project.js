@@ -1,11 +1,11 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 // 获取列表
 export const getProjects = (data) => {
   return axios.request({
     url: '/project/getProjectList',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 
@@ -13,6 +13,17 @@ export const getProjects = (data) => {
 export const getBaseInfo = (data) => {
   return axios.request({
     url: '/project/getProjectDetail',
+    method: 'get',
+    params: {
+      projectBid: data
+    }
+  })
+}
+
+// 获取项目发布的进度信息
+export const getProjectProgress = (data) => {
+  return axios.request({
+    url: '/project/getProjectProgress',
     method: 'get',
     params: {
       projectBid: data
@@ -70,6 +81,17 @@ export const canOrderOrNot = (bid, val) => {
     data: {
       bid: bid,
       isValid: val
+    }
+  })
+}
+
+// 获取订单数据
+export const getOrderInfoForSmartLock = (data) => {
+  return axios.request({
+    url: '/project/getOrderInfoForSmartLock',
+    method: 'get',
+    params: {
+      orderNumber: data
     }
   })
 }

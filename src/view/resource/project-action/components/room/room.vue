@@ -58,27 +58,33 @@
       </template>
       <template slot-scope="{ row }" slot="action">
         <a class="my-btn" @click="editRoom(row)">编辑</a>
-        <a @click="deleteRoomConfirm(row)">删除</a>
+        <a @click="deleteRoomConfirm(row)" style="color: #ed4014;">删除</a>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="roomParamDto.page"
           :page-size="roomParamDto.limit" @on-change="handlePageChange"/>
-    <Modal :title="title" v-model="roomDialogVisible" width="50">
-      <room-form v-if="roomDialogVisible" :projectBid="projectBid" :buildingOptions="buildingOptions"
+    <Modal
+      :title="title"
+      v-model="roomVisible"
+      :loading="roomLoading"
+      width="800"
+      @on-ok="saveOrUpRoom">
+      <room-form v-if="roomVisible" ref="roomForm" :projectBid="projectBid" :buildingOptions="buildingOptions"
                  :parentHouseTypeOptions="parentHouseTypeOptions" :room="roomData"
-                 @success="handleSuccess"></room-form>
+                 @success="handleSuccess" @error="handleError"></room-form>
     </Modal>
-    <Modal title="配置空检报告" v-model="airDialogVisible" width="30">
+    <Modal
+      title="配置空检报告"
+      v-model="airVisible"
+      :loading="airLoading"
+      width="30"
+      @on-ok="saveRoomAirReport">
       <Form ref="roomAirForm" :model="roomAirDto" :label-width="80">
         <FormItem label="空检报告" prop="airReportUrl">
           <Input type="textarea" v-model.trim="roomAirDto.airQualityReportUrl" :rows="3" :maxlength="400"
                  placeholder=""></Input>
         </FormItem>
       </Form>
-      <span slot="footer" class="dialog-footer">
-        <Button @click="airDialogVisible = false">取 消</Button>
-        <Button type="primary" @click="saveRoomAirReport">保 存</Button>
-      </span>
     </Modal>
   </div>
 </template>
@@ -88,7 +94,7 @@ import roomForm from './roomForm.vue'
 import { getBuildings } from '@/api/building'
 import { getHouseSorts } from '@/api/houseSort'
 import { getHouseTypesByHouseSort } from '@/api/houseType'
-import { getRooms, deleteRoom, updateRoom } from '@/api/room'
+import { getRooms, deleteRoom, saveRoom, updateRoom } from '@/api/room'
 
 export default {
   name: 'room',
@@ -152,17 +158,20 @@ export default {
         },
         {
           title: '空检报告',
-          slot: ''
+          slot: 'period'
         },
         {
           title: '操作',
-          slot: ''
+          slot: 'action',
+          width: 100
         }
       ],
-      roomDialogVisible: false,
+      roomVisible: false,
+      roomLoading: true,
       title: '',
       roomData: {},
-      airDialogVisible: false,
+      airVisible: false,
+      airLoading: true,
       roomAirDto: {
         bid: '',
         airQualityReportUrl: '',
@@ -198,20 +207,62 @@ export default {
       }
     },
     handlePageChange () {
+      this.loading = true
       getRooms(this.roomParamDto).then(res => {
-        this.roomList = res.body.list
-        this.total = res.body.total
+        if (res.code === 200) {
+          this.roomList = res.body.list
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     addRoom () {
-      this.roomDialogVisible = true
+      this.roomVisible = true
       this.roomData = {}
       this.title = '新增房间'
     },
-    editRoom (index, row) {
-      this.roomDialogVisible = true
+    editRoom (row) {
+      this.roomVisible = true
       this.roomData = row
       this.title = '编辑房间'
+    },
+    saveOrUpRoom () {
+      this.$refs.roomForm.validateForm()
+    },
+    handleSuccess (dto) {
+      if (dto.bid) {
+        this.updateRoom(dto)
+      } else {
+        this.saveRoom(dto)
+      }
+      this.roomVisible = false
+      this.handlePageChange()
+    },
+    handleError () {
+      setTimeout(() => {
+        this.roomLoading = false
+        this.$nextTick(() => {
+          this.roomLoading = true
+        })
+      }, 500)
+    },
+    saveRoom (dto) {
+      saveRoom(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    updateRoom (dto) {
+      updateRoom(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('修改成功')
+          this.handlePageChange()
+        }
+      })
     },
     deleteRoomConfirm (row) {
       this.$Modal.confirm({
@@ -232,29 +283,35 @@ export default {
         }
       })
     },
-    editAirReport (index, row) {
+    editAirReport (row) {
       this.roomAirDto.bid = row.bid
       this.roomAirDto.airQualityReportUrl = row.airQualityReportUrl
       this.roomAirDto.airQualityReportUrlBak = row.airQualityReportUrl
-      this.airDialogVisible = true
+      this.airVisible = true
     },
     saveRoomAirReport () {
       if (this.roomAirDto.airQualityReportUrl === this.roomAirDto.airQualityReportUrlBak) {
         this.$Message.info('数据没有更新')
-        this.airDialogVisible = false
+        this.airVisible = false
       } else {
         updateRoom(this.roomAirDto).then(res => {
           if (res.code === 200) {
             this.$Message.success('保存成功')
-            this.airDialogVisible = false
+            this.airVisible = false
             this.handlePageChange()
+          } else {
+            this.airSaveError()
           }
+        }).catch(() => {
+          this.airSaveError()
         })
       }
     },
-    handleSuccess () {
-      this.roomDialogVisible = false
-      this.handlePageChange()
+    airSaveError () {
+      this.airLoading = false
+      this.$nextTick(() => {
+        this.airLoading = true
+      })
     }
   },
   computed: {

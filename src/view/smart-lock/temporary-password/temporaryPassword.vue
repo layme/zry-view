@@ -1,37 +1,38 @@
 <template>
   <div>
-    <Button type="primary" @click="visible = true">申请临时密码</Button>
+    <Button type="primary" @click="openApply">申请临时密码</Button>
     <Table stripe :columns="columns" :data="passwordList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="applyTime">
         <div>{{ row.date | dateFilter }}</div>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       title="申请临时密码"
       :loading="modalLoading"
       @on-ok="validForm">
-      <Form :model="applyDto" :rules="applyRules" ref="applyForm" :label-width="60" v-if="visible">
-        <FormItem label="订单号" prop="orderNumber">
-          <Input type="text" v-model.trim="applyDto.orderNumber" clearable></Input>
+      <Form :model="applyDto" :rules="applyRules" ref="applyForm" :label-width="60">
+        <FormItem label="订单号" prop="orderCode">
+          <Input type="text" v-model.trim="applyDto.orderCode" placeholder="" clearable
+                 @on-blur="getOrderInfo" @on-clear="handleClear"></Input>
         </FormItem>
         <FormItem label="项目" prop="projectName">
-          <Input type="text" v-model="applyDto.projectName" disabled></Input>
+          <Input type="text" v-model="applyDto.projectName" placeholder="" disabled></Input>
         </FormItem>
         <FormItem label="房间" prop="areaBid">
-          <Select v-model="applyDto.areaBid">
+          <Select v-model="applyDto.areaBid" placeholder="">
             <Option
               v-for="item in roomOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.bid"
+              :label="item.area_name"
+              :value="item.bid + ',' + item.area_name">
             </Option>
           </Select>
         </FormItem>
-        <FormItem label="备注" prop="remark">
-          <Input :rows="4" type="textarea" v-model.trim="applyDto.remark"
+        <FormItem label="备注" prop="memo">
+          <Input :rows="4" type="textarea" v-model.trim="applyDto.memo"
                  :maxlength="200" placeholder="此处最多输入200个字符"></Input>
         </FormItem>
       </Form>
@@ -39,14 +40,15 @@
   </div>
 </template>
 <script>
+import { getApplyPwd, savePwd } from '@/api/smartLock'
+import { getOrderInfoForSmartLock } from '@/api/project'
 export default {
   name: 'temporaryPassword',
   data () {
     return {
       paramDto: {
-        projectBid: '',
-        page: 1,
-        limit: 10
+        pageIndex: 1,
+        pageSize: 10
       },
       loading: false,
       passwordList: [],
@@ -84,22 +86,24 @@ export default {
       visible: false,
       modalLoading: true,
       applyDto: {
-        orderNumber: '',
+        orderBid: '',
+        orderCode: '',
+        projectBid: '',
         projectName: '',
         areaBid: '',
-        remark: ''
+        memo: ''
       },
       applyRules: {
-        orderNumber: [
-          { required: true, type: 'number', message: '请输入订单号', trigger: 'blur' }
+        orderCode: [
+          { required: true, message: '请输入订单号', trigger: 'blur' }
         ],
         projectName: [
-          { required: true, type: 'date', message: '输入订单号自动显示项目名', trigger: 'blur' }
+          { required: true, message: '输入订单号自动显示项目名', trigger: 'blur' }
         ],
         areaBid: [
-          { required: true, type: 'date', message: '请选择房间', trigger: 'change' }
+          { required: true, message: '请选择房间', trigger: 'blur' }
         ],
-        remark: [
+        memo: [
           { required: true, message: '请输入内容', trigger: 'blur' },
           { max: 200, message: '长度在200个字符以内', trigger: 'blur' }
         ]
@@ -110,24 +114,73 @@ export default {
   methods: {
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      getApplyPwd(this.paramDto).then(res => {
+        if (code === 200) {
+          this.passwordList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    openApply () {
+      this.handleClear()
+      this.visible = true
+    },
+    handleClear () {
+      this.applyDto.orderBid = ''
+      this.applyDto.orderCode = ''
+      this.applyDto.projectBid = ''
+      this.applyDto.projectName = ''
+      this.applyDto.areaBid = ''
+      this.applyDto.memo = ''
+      this.roomOptions = []
+    },
+    getOrderInfo () {
+      if (this.applyDto.orderCode) {
+        getOrderInfoForSmartLock(this.applyDto.orderCode).then(res => {
+          if (res.code === 200) {
+            this.applyDto.projectName = res.body.projectName
+            this.applyDto.projectBid = res.body.projectBid
+            this.applyDto.orderBid = res.body.orderBid
+            this.roomOptions = res.body.list
+            if (this.roomOptions) {
+              this.applyDto.areaBid = this.roomOptions[0].bid + ',' + this.roomOptions[0].area_name
+            }
+          }
+        })
+      }
     },
     validForm () {
       this.$refs['applyForm'].validate((valid) => {
         if (valid) {
           this.save()
         } else {
-          setTimeout(() => {
-            this.modalLoading = false
-            this.$nextTick(() => {
-              this.modalLoading = true
-            })
-          }, 500)
+          this.handleError()
         }
       })
     },
-    save () {}
+    handleError () {
+      setTimeout(() => {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      }, 500)
+    },
+    save () {
+      savePwd(this.applyDto).then(res => {
+        if (res.code === 200) {
+          this.visible = false
+          this.handlePageChange()
+        } else {
+          this.handleError()
+        }
+      }).catch(() => {
+        this.handleError()
+      })
+    }
   },
   created () {
     this.handlePageChange()

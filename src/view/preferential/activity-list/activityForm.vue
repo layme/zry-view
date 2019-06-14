@@ -106,6 +106,9 @@ export default {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

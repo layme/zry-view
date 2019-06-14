@@ -5,7 +5,7 @@
     </FormItem>
     <FormItem prop="password">
       <Input prefix="md-lock" type="password" v-model.trim="form.password" size="large" placeholder="请输入密码"
-             @keydown.enter="handleSubmit" clearable></Input>
+             @on-enter="handleSubmit" clearable></Input>
     </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" size="large" long>登 录</Button>

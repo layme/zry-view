@@ -402,3 +402,26 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${pageTitle} - ${title}` : title
   window.document.title = resTitle
 }
+
+export function getBaseUrl () {
+  var baseUrl
+  switch (location.host) {
+    case 'zyu.d.ziroom.com':
+      baseUrl = '//zyu.d.ziroom.com'
+      break
+    case 'zyu.q.ziroom.com':
+      baseUrl = '//zyu.q.ziroom.com'
+      break
+    case 'zyu.t.ziroom.com':
+      baseUrl = '//zyu.t.ziroom.com'
+      break
+    case 'zyu.ziroom.com':
+      baseUrl = 'https://zyu.ziroom.com'
+      break
+    default:
+      baseUrl = '//zyu.t.ziroom.com'
+      // baseUrl = "//10.30.14.24:8080/sojourn-web-zyu-0.0.1-SNAPSHOT"
+      break
+  }
+  return baseUrl
+}

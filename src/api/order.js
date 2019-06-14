@@ -1,10 +1,10 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 export const getOrders = (data) => {
   return axios.request({
     url: '/order/listOrder.action',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 

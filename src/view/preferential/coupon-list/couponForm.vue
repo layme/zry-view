@@ -82,14 +82,18 @@ import { getDate } from '@/libs/tools'
 
 export default {
   name: 'couponForm',
+  props: {
+    batchNumber: String,
+    activityNumber: String
+  },
   data () {
     return {
       paramDto: {
         phone: '',
         ticketNumber: '',
-        batchNumber: '',
+        batchNumber: this.batchNumber,
         projectBid: '',
-        activityNumber: '',
+        activityNumber: this.activityNumber,
         activityName: '',
         dateRange: [],
         startDate: '',
@@ -148,6 +152,9 @@ export default {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

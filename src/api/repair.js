@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 // 查询维修单列表
 export const getRepair = data => {

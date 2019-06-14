@@ -91,9 +91,18 @@ const stayPersonStatusFilter = val => {
   }
 }
 
+const nullFilter = val => {
+  if (val) {
+    return val
+  } else {
+    return '-'
+  }
+}
+
 Vue.filter('orderStatusFilter', orderStatusFilter)
 Vue.filter('dateTimeFilter', dateTimeFilter)
 Vue.filter('dateFilter', dateFilter)
 Vue.filter('timeFilter', timeFilter)
 Vue.filter('payMethodFilter', payMethodFilter)
 Vue.filter('stayPersonStatusFilter', stayPersonStatusFilter)
+Vue.filter('nullFilter', nullFilter)

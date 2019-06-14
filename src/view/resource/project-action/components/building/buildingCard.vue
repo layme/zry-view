@@ -1,11 +1,11 @@
 <template>
   <Card dis-hover>
-    <Form ref="buildingForm" :model="buildingDto" :rules="buildingRules" :label-width="80" class="my-top">
-      <Spin size="large" fix v-if="loading">加载中...</Spin>
+    <Form ref="buildingForm" :model="buildingDto" :rules="buildingRules" :label-width="80" class="my-top full-top">
+      <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
       <Row :gutter="10">
         <Col :span="8">
           <FormItem label="楼栋名称" prop="buildingName">
-            <Input type="text" v-model.trim="buildingDto.buildingName" clearable></Input>
+            <Input type="text" v-model.trim="buildingDto.buildingName" placeholder="" clearable></Input>
           </FormItem>
         </Col>
         <Col :span="8">
@@ -24,7 +24,7 @@
       <Row :gutter="10">
         <Col :span="8">
           <FormItem label="建筑面积" prop="buildingArea">
-            <Input type="text" v-model.trim="buildingDto.buildingArea"
+            <Input type="text" v-model.trim="buildingDto.buildingArea" placeholder=""
                       clearable>
               <template slot="append">㎡</template>
             </Input>
@@ -32,7 +32,7 @@
         </Col>
         <Col :span="8">
           <FormItem label="外墙面积" prop="buildingOutsidearea">
-            <Input type="text" v-model.trim="buildingDto.buildingOutsidearea"
+            <Input type="text" v-model.trim="buildingDto.buildingOutsidearea" placeholder=""
                       clearable>
               <template slot="append">㎡</template>
             </Input>
@@ -40,7 +40,7 @@
         </Col>
         <Col :span="8">
           <FormItem label="电梯数" prop="buildingElevatornumber">
-            <Input type="text" v-model.trim="buildingDto.buildingElevatornumber"
+            <Input type="text" v-model.trim="buildingDto.buildingElevatornumber" placeholder=""
                    clearable></Input>
           </FormItem>
         </Col>
@@ -82,6 +82,7 @@
 </template>
 <script>
 import { saveBuilding, updateBuilding } from '@/api/building'
+import { getDate } from '@/libs/tools'
 export default {
   name: 'buildingCard',
   props: {
@@ -177,6 +178,7 @@ export default {
         return a - b
       })
       this.buildingDto.buildingRentablefloor = this.buildingDto.rentableFloor.join(',')
+      this.buildingDto.buildingFinishYear = getDate(this.buildingDto.buildingFinishYear, 'year')
       saveBuilding(this.buildingDto).then(res => {
         if (res.code === 200) {
           this.buildingDto.fid = res.body
@@ -190,6 +192,11 @@ export default {
     },
     updateBuilding () {
       this.loading = true
+      this.buildingDto.rentableFloor.sort((a, b) => {
+        return a - b
+      })
+      this.buildingDto.buildingRentablefloor = this.buildingDto.rentableFloor.join(',')
+      this.buildingDto.buildingFinishYear = getDate(this.buildingDto.buildingFinishYear, 'year')
       updateBuilding(this.buildingDto).then(res => {
         if (res.code === 200) {
           this.$Message.success('修改成功')
@@ -198,6 +205,22 @@ export default {
       }).catch(() => {
         this.loading = false
       })
+    },
+    syncData () {
+      if (Object.keys(this.building).length) {
+        this.buildingDto.projectFid = this.projectBid
+        this.buildingDto.fid = this.building.fid
+        this.buildingDto.buildingName = this.building.buildingName
+        this.buildingDto.buildingFinishYear = this.building.buildingFinishYear.toString()
+        this.buildingDto.buildingArea = this.building.buildingArea.toString()
+        this.buildingDto.buildingOutsidearea = this.building.buildingOutsidearea.toString()
+        this.buildingDto.buildingElevatornumber = this.building.buildingElevatornumber.toString()
+        this.buildingDto.buildingStairnumber = this.building.buildingStairnumber.toString()
+        this.buildingDto.buildingFloornumber = this.building.buildingFloornumber.toString()
+        this.buildingDto.lowestFloor = this.building.lowestFloor.toString()
+        this.buildingDto.buildingRentablefloor = this.building.buildingRentablefloor
+        this.buildingDto.rentableFloor = this.building.buildingRentablefloor ? this.building.buildingRentablefloor.split(',') : []
+      }
     }
   },
   computed: {
@@ -215,28 +238,11 @@ export default {
   },
   watch: {
     building: function (newVal, oldVal) {
-      if (Object.keys(newVal).length) {
-        this.buildingDto = newVal
-        this.buildingDto.buildingFinishYear = this.buildingDto.buildingFinishYear.toString()
-        this.buildingDto.rentableFloor = this.buildingDto.buildingRentablefloor.split(',')
-      }
+      this.syncData()
     }
   },
   mounted () {
-    if (Object.keys(this.building).length) {
-      this.buildingDto.projectFid = this.projectBid
-      this.buildingDto.fid = this.building.fid
-      this.buildingDto.buildingName = this.building.buildingName
-      this.buildingDto.buildingFinishYear = this.building.buildingFinishYear.toString()
-      this.buildingDto.buildingArea = this.building.buildingArea
-      this.buildingDto.buildingOutsidearea = this.building.buildingOutsidearea
-      this.buildingDto.buildingElevatornumber = this.building.buildingElevatornumber
-      this.buildingDto.buildingStairnumber = this.building.buildingStairnumber
-      this.buildingDto.buildingFloornumber = this.building.buildingFloornumber
-      this.buildingDto.lowestFloor = this.building.lowestFloor
-      this.buildingDto.buildingRentablefloor = this.building.buildingRentablefloor
-      this.buildingDto.rentableFloor = this.building.buildingRentablefloor.split(',')
-    }
+    this.syncData()
   }
 }
 </script>
@@ -246,5 +252,14 @@ export default {
   }
   .my-btn {
     margin-left: 20px;
+  }
+
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

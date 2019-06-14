@@ -1,14 +1,14 @@
 <template>
-  <Form ref="roomForm" :model="roomDto" :rules="roomRules" label-width="80px">
-    <Row :gutter="10">
-      <Col :span="11">
+  <Form ref="roomForm" :model="roomDto" :rules="roomRules" :label-width="80">
+    <Row>
+      <Col :span="12">
         <FormItem label="房间名称" prop="areaName">
           <Input type="text" v-model.trim="roomDto.areaName" placeholder="" clearable></Input>
         </FormItem>
       </Col>
     </Row>
-    <Row :gutter="10">
-      <Col :span="11">
+    <Row>
+      <Col :span="12">
         <FormItem label="楼栋" prop="houseBuildingFid">
           <Select v-model="roomDto.houseBuildingFid" placeholder="请选择" clearable>
             <Option v-for="item in buildingOptions" :key="item.fid" :label="item.buildingName"
@@ -16,7 +16,7 @@
           </Select>
         </FormItem>
       </Col>
-      <Col :span="11" :offset="1">
+      <Col :span="12">
         <FormItem label="楼层" prop="floorNumber">
           <Select v-model="roomDto.floorNumber" placeholder="请选择" clearable
                      no-data-text="请先选择楼栋">
@@ -26,8 +26,8 @@
         </FormItem>
       </Col>
     </Row>
-    <Row :gutter="10">
-      <Col :span="11">
+    <Row>
+      <Col :span="12">
         <FormItem label="房型分类" prop="houseTypeParentBid">
           <Select v-model="roomDto.houseTypeParentBid" placeholder="请选择" clearable>
             <Option v-for="item in parentHouseTypeOptions" :key="item.bid"
@@ -36,7 +36,7 @@
           </Select>
         </FormItem>
       </Col>
-      <Col :span="11" :offset="1">
+      <Col :span="12">
         <FormItem label="房型名称" prop="houseTypeBid">
           <Select v-model="roomDto.houseTypeBid" placeholder="请选择" clearable
                      no-data-text="请先选择房型分类">
@@ -46,15 +46,15 @@
         </FormItem>
       </Col>
     </Row>
-    <Row :gutter="10">
-      <Col :span="11">
+    <Row>
+      <Col :span="12">
         <FormItem label="面积" prop="acreage">
           <Input type="text" v-model.trim="roomDto.acreage" placeholder="" clearable>
             <template slot="append">㎡</template>
           </Input>
         </FormItem>
       </Col>
-      <Col :span="11" :offset="1">
+      <Col :span="12">
         <FormItem label="朝向" prop="windowToward">
           <Select v-model="roomDto.windowToward" placeholder="请选择" clearable>
             <Option v-for="item in windowTowardOptions" :key="item.value" :label="item.label"
@@ -63,15 +63,10 @@
         </FormItem>
       </Col>
     </Row>
-    <FormItem style="text-align: right">
-      <Button type="primary" @click="validateForm('roomForm')">保 存</Button>
-      <Button @click="resetForm('roomForm')">重 置</Button>
-    </FormItem>
   </Form>
 </template>
 <script>
 import { getHouseTypesByHouseSort } from '@/api/houseType'
-import { updateRoom, saveRoom } from '@/api/room'
 
 export default {
   name: 'roomForm',
@@ -142,7 +137,7 @@ export default {
           { required: true, message: '请选择楼栋', trigger: 'change' }
         ],
         floorNumber: [
-          { required: true, message: '请选择楼层', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择楼层', trigger: 'change' }
         ],
         houseTypeParentBid: [
           { required: true, message: '请选择房型分类', trigger: 'change' }
@@ -155,7 +150,7 @@ export default {
           { pattern: /^\d{1,4}(\.\d{0,2})?$/, message: '请输入1万以内的两位小数或整数', trigger: 'blur' }
         ],
         windowToward: [
-          { required: true, message: '请选择朝向', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择朝向', trigger: 'change' }
         ]
       },
       canClear: false,
@@ -174,17 +169,17 @@ export default {
     }
   },
   methods: {
-    validateForm (formName) {
-      this.$refs[formName].validate((valid) => {
+    validateForm () {
+      this.$refs['roomForm'].validate((valid) => {
         if (valid) {
-          this.saveOrUpRoom()
+          this.$emit('success', this.roomDto)
         } else {
-          return false
+          this.$emit('error')
         }
       })
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    resetForm () {
+      this.$refs['roomForm'].resetFields()
     },
     handleCounted () {
       this.resetForm('roomForm')
@@ -205,29 +200,6 @@ export default {
     getHouseTypeOptions (data) {
       getHouseTypesByHouseSort(data).then(res => {
         this.houseTypeOptions = res.body
-      })
-    },
-    saveOrUpRoom () {
-      if (this.roomDto.bid) {
-        this.updateRoom()
-      } else {
-        this.saveRoom()
-      }
-    },
-    saveRoom () {
-      saveRoom(this.roomDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.$emit('success')
-        }
-      })
-    },
-    updateRoom () {
-      updateRoom(this.roomDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-          this.$emit('success')
-        }
       })
     }
   },

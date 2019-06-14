@@ -27,8 +27,7 @@ export default {
     messageTrashList: [],
     messageContentStore: {},
     projectList: [],
-    currentProject: {},
-    baseUrl: '123'
+    currentProject: {}
   },
   mutations: {
     setName (state, name) {

@@ -1,5 +1,6 @@
 <template>
-  <Row>
+  <Row class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Col :span="20">
       <Form :model="activity" :label-width="100">
         <Row :gutter="20">
@@ -17,9 +18,9 @@
         <Row :gutter="20">
           <Col :span="12">
             <FormItem label="活动时间：">
-              <span>{{ activity.startDate }}</span>
+              <span>{{ activity.activityStartDateStr }}</span>
               至
-              <span>{{ activity.endDate }}</span>
+              <span>{{ activity.activityEndDateStr }}</span>
             </FormItem>
           </Col>
           <Col :span="12">
@@ -29,29 +30,34 @@
           </Col>
         </Row>
         <FormItem label="使用条件：">
-          <span>{{ activity.condition }}</span>
+          <span>{{ activity | conditionFilter }}</span>
         </FormItem>
         <FormItem label="优惠券：">
           <Table stripe :columns="columns" :data="activity.tickBatchDto" size="small">
             <template slot-scope="{ row }" slot="action">
-              <a @click="showTicketDetail(row)">详情</a>
+              <a v-if="row.createTicketTime" @click="showTicketDetail(row)">详情</a>
+              <a v-else @click="removeTicket(row)" style="color: #ed4014">移除</a>
             </template>
           </Table>
-          <a v-if="activity.tickBatchDto.length < 99" @click="visible = true">追加优惠券</a>
+          <a v-if="activity.tickBatchDto" @click="visible = true">追加优惠券</a>
+        </FormItem>
+        <FormItem v-if="ticket.length">
+          <Button type="primary" @click="saveTicket">保存优惠券</Button>
         </FormItem>
       </Form>
     </Col>
     <Modal
       v-model="visible"
       title="追加优惠券"
-      :loading="loading"
-      @on-ok="saveTicket">
+      :loading="modalLoading"
+      @on-ok="addTicket">
       <ticket-form ref="ticketForm" :batch-number="activity.tickBatchDto.length + 1" v-if="visible" @push="handlePush"></ticket-form>
     </Modal>
   </Row>
 </template>
 <script>
 import ticketForm from '../components/ticketForm.vue'
+import { getActivityDetail, saveActivity } from '@/api/activity'
 export default {
   name: 'activityDetail',
   components: {
@@ -59,24 +65,9 @@ export default {
   },
   data () {
     return {
+      loading: false,
       activityBid: '',
-      activity: {
-        activityNumber: 'S19052102',
-        activityName: '巨幕电影',
-        startDate: '2019-05-21',
-        endDate: '2019-05-25',
-        activityContent: '淡淡淡淡地地道道的多多多',
-        condition: '满500.0可用',
-        tickBatchDto: [
-          {
-            batchNumber: '01',
-            createTicketUser: '60006896',
-            createTicketTime: '2019-05-24 10:16:34',
-            countTicket: 1,
-            amount: 10
-          }
-        ]
-      },
+      activity: {},
       columns: [
         {
           title: '批次号',
@@ -105,30 +96,78 @@ export default {
         }
       ],
       visible: false,
-      loading: true,
+      modalLoading: true,
       datePickerOptions: {
         disabledDate (date) {
           return date && date.valueOf() < Date.now() - 86400000
         }
-      }
+      },
+      ticket: []
     }
   },
   methods: {
     getActivityDetail () {
+      this.loading = true
       this.activityBid = this.$route.query.activityBid
+      getActivityDetail(this.activityBid).then(res => {
+        if (res.code === 200) {
+          this.activity = res.body
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
-    saveTicket () {
+    addTicket () {
       this.$refs.ticketForm.validForm()
       setTimeout(() => {
-        this.loading = false
+        this.modalLoading = false
         this.$nextTick(() => {
-          this.loading = true
+          this.modalLoading = true
         })
       }, 500)
     },
-    showTicketDetail (row) {},
+    showTicketDetail (row) {
+      const batchNumber = row.batchNumber
+      const activityNumber = this.activity.activityNumber
+      const route = {
+        name: 'couponList',
+        query: {
+          batchNumber,
+          activityNumber
+        }
+      }
+      this.$router.push(route)
+    },
     handlePush (val) {
+      this.ticket.push(val)
+      this.activity.tickBatchDto.push(
+        {
+          amount: val.amount,
+          batchNumber: val.batchNumber,
+          countTicket: val.quantity,
+          createTicketTime: '',
+          createTicketUser: this.$store.state.user.username
+        }
+      )
       this.visible = false
+    },
+    removeTicket (row) {
+      this.ticket.splice(this.ticket.indexOf(this.ticket.find(item => item.batchNumber === row.batchNumber)), 1)
+      this.activity.tickBatchDto.splice(this.activity.tickBatchDto.indexOf(this.activity.tickBatchDto.find(item => item.batchNumber === row.batchNumber)), 1)
+    },
+    saveTicket () {
+      let dto = {
+        activityBid: this.activity.activityBid,
+        activityNumber: this.activity.activityNumber,
+        ticketInfo: this.ticket
+      }
+      saveActivity(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功')
+          this.getActivityDetail()
+        }
+      })
     }
   },
   watch: {
@@ -138,8 +177,31 @@ export default {
   },
   created () {
     this.getActivityDetail()
+  },
+  filters: {
+    conditionFilter (val) {
+      // 拼使用条件
+      let limitMoney = val.limitMoney
+      let activityCondition = val.activityCondition
+      let condition = ''
+      if (limitMoney) {
+        condition = condition + '满' + limitMoney + '可用'
+      }
+      if (activityCondition) {
+        condition = condition + '、' + activityCondition
+      }
+      return condition
+    }
   }
 }
 </script>
 <style lang="less" scoped>
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
+  }
 </style>

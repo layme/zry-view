@@ -30,21 +30,26 @@
       :loading="actionLoading"
       width="1200"
       @on-ok="validOwner">
-      <owner-form v-if="actionVisible"></owner-form>
+      <owner-form v-if="actionVisible" ref="ownerForm" :owner="ownerVo" @success="handleSuccess" @error="handleError"></owner-form>
     </Modal>
     <Modal
       v-model="detailVisible"
-      title="业主详情">
+      title="业主详情"
+      width="1200"
+      footer-hide>
+      <owner-detail v-if="detailVisible" :owner="ownerVo"></owner-detail>
     </Modal>
   </div>
 </template>
 <script>
 import { getOwners, saveOwner, updateOwner, removeOwner } from '@/api/owner'
 import ownerForm from './ownerForm.vue'
+import ownerDetail from './ownerDetail.vue'
 export default {
   name: 'ownerList',
   components: {
-    ownerForm
+    ownerForm,
+    ownerDetail
   },
   data () {
     return {
@@ -186,30 +191,47 @@ export default {
     },
     addOwner () {
       this.title = '新增业主'
-      this.isAdd = true
       this.actionVisible = true
     },
-    validOwner () {},
+    validOwner () {
+      this.$refs.ownerForm.validateForm()
+    },
+    handleSuccess (dto) {
+      if (dto.bid) {
+        this.updateOwner(dto)
+      } else {
+        this.saveOwner(dto)
+      }
+    },
+    handleError () {
+      setTimeout(() => {
+        this.actionLoading = false
+        this.$nextTick(() => {
+          this.actionLoading = true
+        })
+      }, 500)
+    },
     saveOwner (dto) {
       saveOwner(dto).then(res => {
         if (res.data.code === 200) {
           this.$Message.success('保存成功')
+          this.actionVisible = false
           this.listOwner()
         } else {
           this.$Message.warning(res.message)
         }
       })
     },
-    editOwner (index, row) {
+    editOwner (row) {
       this.title = '编辑业主'
-      this.isAdd = false
-      this.rowBak = row
+      this.ownerVo = row
       this.actionVisible = true
     },
     updateOwner (dto) {
       updateOwner(dto).then(res => {
-        if (res.data.code === 200) {
+        if (res.code === 200) {
           this.$Message.success('保存成功')
+          this.actionVisible = false
           this.listOwner()
         } else {
           this.$Message.warning(res.message)

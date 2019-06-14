@@ -11,8 +11,8 @@
         <Tag color="default" v-else>未知</Tag>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       title="申请内务密码"
@@ -20,17 +20,17 @@
       @on-ok="validForm">
       <Form :model="applyDto" :rules="applyRules" ref="applyForm" :label-width="80" v-if="visible">
         <FormItem label="项目名称" prop="projectBid">
-          <Select v-model="applyDto.projectBid">
+          <Select v-model="applyDto.projectBid" placeholder="" clearable>
             <Option
-              v-for="item in projectOptions"
-              :key="item.projectBid"
+              v-for="item in $store.state.user.projectList"
+              :key="item.bid"
               :label="item.projectName"
-              :value="item.projectBid">
+              :value="item.bid">
             </Option>
           </Select>
         </FormItem>
-        <FormItem label="密码类型" prop="pswType">
-          <Select v-model="applyDto.pswType">
+        <FormItem label="密码类型" prop="passWordType">
+          <Select v-model="applyDto.passWordType">
             <Option
               v-for="item in pswTypeOptions"
               :key="item.value"
@@ -44,36 +44,17 @@
   </div>
 </template>
 <script>
+import { getWorkPassword, applyWorkPassword } from '@/api/smartLock'
 export default {
   name: 'workPassword',
   data () {
     return {
       paramDto: {
-        projectBid: '',
-        page: 1,
-        limit: 10
+        pageIndex: 1,
+        pageSize: 10
       },
       visible: false,
-      passwordList: [
-        {
-          'psw_status': 1,
-          'psw_type': 1,
-          'project_bid': 'a3f1411cec184434ae15fa661d434787',
-          'project_name': '三里屯团结自如驿'
-        },
-        {
-          'psw_status': 1,
-          'psw_type': 1,
-          'project_bid': '63615afa5a344153a047aca1ea32cc51',
-          'project_name': '北京CBD自如驿'
-        },
-        {
-          'psw_status': 1,
-          'psw_type': 1,
-          'project_bid': '0c4a4238a98e48c582c425c1851b7979',
-          'project_name': '武汉大陆坊自如驿'
-        }
-      ],
+      passwordList: [],
       total: 0,
       loading: false,
       columns: [
@@ -92,22 +73,22 @@ export default {
       ],
       applyDto: {
         projectBid: '',
-        pswType: 1
+        passWordType: '1'
       },
       projectOptions: [],
       pswTypeOptions: [
         {
           label: '保洁密码',
-          value: 1
+          value: '1'
         },
         {
           label: '维修密码',
-          value: 2
+          value: '2'
         }
       ],
       applyRules: {
-        projectBid: [{ required: true, type: 'date', message: '请选择项目', trigger: 'change' }],
-        pswType: [{ required: true, type: 'date', message: '请选择密码类型', trigger: 'change' }]
+        projectBid: [{ required: true, message: '请选择项目', trigger: 'change' }],
+        passWordType: [{ required: true, message: '请选择密码类型', trigger: 'change' }]
       },
       modalLoading: true
     }
@@ -115,24 +96,49 @@ export default {
   methods: {
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      getWorkPassword(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.passwordList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     validForm () {
       this.$refs['applyForm'].validate((valid) => {
         if (valid) {
           this.save()
         } else {
-          setTimeout(() => {
-            this.modalLoading = false
-            this.$nextTick(() => {
-              this.modalLoading = true
-            })
-          }, 500)
+          this.handleError()
         }
       })
     },
-    save () {}
+    handleError () {
+      setTimeout(() => {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      }, 500)
+    },
+    save () {
+      applyWorkPassword(this.applyDto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('内务密码申请成功')
+          this.visible = false
+          this.handlePageChange()
+        } else {
+          this.handleError()
+        }
+      }).catch(() => {
+        this.handleError()
+      })
+    }
+  },
+  created () {
+    this.handlePageChange()
   },
   filters: {
     pswTypeFilter (val) {

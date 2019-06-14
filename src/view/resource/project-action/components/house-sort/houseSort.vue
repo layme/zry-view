@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Button type="primary" @click="addHouseSort">添加房型分类</Button>
     <Row>
       <Col :span="18">
@@ -25,7 +26,8 @@ export default {
   },
   data () {
     return {
-      houseSorts: []
+      houseSorts: [],
+      loading: false
     }
   },
   methods: {
@@ -34,14 +36,17 @@ export default {
         this.houseSorts = [{}]
         return
       }
+      this.loading = true
       getHouseSorts(this.projectBid).then(res => {
         if (res.body.length > 0) {
           this.houseSorts = res.body
         } else {
           this.houseSorts.push({})
         }
+        this.loading = false
       }).catch(() => {
         this.houseSorts.push({})
+        this.loading = false
       })
     },
     addHouseSort () {
@@ -60,11 +65,15 @@ export default {
     },
     removeHouseSort (index) {
       if (this.houseSorts[index].bid) {
+        this.loading = true
         deleteHouseSort(this.houseSorts[index].bid).then(res => {
           if (res.code === 200) {
             this.$Message.success('删除成功')
             this.houseSorts.splice(index, 1)
           }
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
         })
       } else {
         this.houseSorts.splice(index, 1)
@@ -74,7 +83,7 @@ export default {
       let text = val === 1 ? '展示' : '隐藏'
       this.$Modal.confirm({
         title: '通知',
-        content: '<p>确定在App上' + text + '该房型分类吗?</p>',
+        content: `<p>确定在App上${text}该房型分类吗?</p>`,
         onOk: () => {
           this.showHouseSort(bid, val)
         },
@@ -83,11 +92,15 @@ export default {
       })
     },
     showHouseSort (bid, val) {
+      this.loading = true
       showOrNot(bid, val).then(res => {
         if (res.code === 200) {
           this.$Message.success('操作成功')
           this.getHouseSorts()
         }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     }
   },
@@ -105,5 +118,12 @@ export default {
 <style scoped>
   .house-sort {
     margin-top: 20px;
+  }
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+  .full-spin {
+    height: 100%;
   }
 </style>

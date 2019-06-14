@@ -1,11 +1,11 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
 
 //
 export const getGuests = data => {
   return axios.request({
     url: '/guest/listGuest.action',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 

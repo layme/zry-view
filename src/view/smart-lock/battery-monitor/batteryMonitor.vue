@@ -1,16 +1,6 @@
 <template>
   <div>
     <Form :model="paramDto" :label-width="60" inline>
-      <FormItem label="项目名称">
-        <Select v-model="paramDto.projectBid" :style="{ width: '200px' }">
-          <Option
-            v-for="item in $store.state.user.projectList"
-            :key="item.bid"
-            :label="item.projectName"
-            :value="item.bid">
-          </Option>
-        </Select>
-      </FormItem>
       <FormItem label="电量区间">
         <Slider v-model="paramDto.battery" :step="10" show-stops range :style="{ width: '200px' }"></Slider>
       </FormItem>
@@ -23,84 +13,23 @@
         <Tag :color="powerColor(row.power)">{{ row.power }}</Tag>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
+import { getPowerInfo } from '@/api/smartLock'
 export default {
   name: 'batteryMonitor',
   data () {
     return {
       paramDto: {
-        projectBid: '',
-        battery: [20, 70],
-        page: 1,
-        limit: 10
+        battery: [0, 100],
+        pageIndex: 1,
+        pageSize: 10
       },
       loading: false,
-      batteryList: [
-        {
-          'create_time': 1558504800000,
-          'area_code': 'A房间',
-          'project_bid': 'a3f1411cec184434ae15fa661d434787',
-          'battery_msg_id': '89b874fb74154113b738c29a353ca6cf',
-          'device_type': 'room_lock',
-          'area_id': '816a4629c4ea4bc1abf9b3466d87f762',
-          'project_name': '三里屯团结自如驿',
-          'uuid': 'e27560275eefcc556b61ce659534bb6e',
-          'last_update_time': 1558504800000,
-          'extra': 'sn:lkjl0007170700298934;mac:A87F61988AF7;',
-          'is_del': 0,
-          'onoff_line': 1,
-          'id': 1152,
-          'power': 65,
-          'manufactory_id': '2259',
-          'power_refreshtime': 1558497348000,
-          'bind_time': 1503375350000,
-          'gateway': '630a5b45cd618b3ec44dfb7d2ff63007'
-        },
-        {
-          'create_time': 1558504800000,
-          'area_code': 'B房间',
-          'project_bid': 'a3f1411cec184434ae15fa661d434787',
-          'battery_msg_id': '89b874fb74154113b738c29a353ca6cf',
-          'device_type': 'room_lock',
-          'area_id': '816a4629c4ea4bc1abf9b3466d87f762',
-          'project_name': '三里屯团结自如驿',
-          'uuid': 'e27560275eefcc556b61ce659534bb6e',
-          'last_update_time': 1558504800000,
-          'extra': 'sn:lkjl0007170700298934;mac:A87F61988AF7;',
-          'is_del': 0,
-          'onoff_line': 1,
-          'id': 1152,
-          'power': 17,
-          'manufactory_id': '2259',
-          'power_refreshtime': 1558497348000,
-          'bind_time': 1503375350000,
-          'gateway': '630a5b45cd618b3ec44dfb7d2ff63007'
-        },
-        {
-          'create_time': 1558504800000,
-          'area_code': 'C房间',
-          'project_bid': 'a3f1411cec184434ae15fa661d434787',
-          'battery_msg_id': '89b874fb74154113b738c29a353ca6cf',
-          'device_type': 'room_lock',
-          'area_id': '816a4629c4ea4bc1abf9b3466d87f762',
-          'project_name': '三里屯团结自如驿',
-          'uuid': 'e27560275eefcc556b61ce659534bb6e',
-          'last_update_time': 1558504800000,
-          'extra': 'sn:lkjl0007170700298934;mac:A87F61988AF7;',
-          'is_del': 0,
-          'onoff_line': 1,
-          'id': 1152,
-          'power': 6,
-          'manufactory_id': '2259',
-          'power_refreshtime': 1558497348000,
-          'bind_time': 1503375350000,
-          'gateway': '630a5b45cd618b3ec44dfb7d2ff63007'
-        }
-      ],
+      batteryList: [],
       total: 0,
       columns: [
         {
@@ -129,13 +58,26 @@ export default {
   },
   methods: {
     getList () {
-      this.paramDto.page = 1
+      this.paramDto.pageIndex = 1
       this.handlePageChange()
     },
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      let dto = {
+        pageIndex: this.paramDto.pageIndex,
+        pageSize: this.paramDto.pageSize,
+        minPower: this.paramDto.battery[0],
+        maxPower: this.paramDto.battery[1]
+      }
+      getPowerInfo(dto).then(res => {
+        if (res.code === 200) {
+          this.batteryList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     powerColor (val) {
       if (val > 20) {
@@ -146,6 +88,9 @@ export default {
         return 'error'
       }
     }
+  },
+  created () {
+    this.getList()
   }
 }
 </script>

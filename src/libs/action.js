@@ -8,3 +8,7 @@ export const isHave = (actionName) => {
   }
   return have
 }
+
+export const cacheUrl = (url) => {
+  store.commit('setBaseUrl', url)
+}

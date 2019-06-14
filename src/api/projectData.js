@@ -1,4 +1,5 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
+import { getToken } from '@/libs/util'
 
 // 获取列表
 export const getData = (data) => {
@@ -25,7 +26,7 @@ export const deleteData = (data) => {
   return axios.request({
     url: '/project/delProjectAtt',
     method: 'post',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       attBid: data
     }

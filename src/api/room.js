@@ -1,11 +1,12 @@
-import axios from '@/libs/api.request'
+import axios from '@/libs/request'
+import { getToken } from '@/libs/util'
 
 // 获取列表
 export const getRooms = (data) => {
   return axios.request({
     url: '/room/getListRoomPage.action',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 
@@ -32,7 +33,7 @@ export const deleteRoom = (data) => {
   return axios.request({
     url: '/room/deleteByBid.action',
     method: 'post',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       bid: data
     }

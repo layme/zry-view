@@ -1,5 +1,6 @@
 <template>
-  <Form ref="baseForm" :model="baseDto" :rules="baseRules" :label-width="120">
+  <Form ref="baseForm" :model="baseDto" :rules="baseRules" :label-width="120" class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Row>
       <Col :span="8">
         <FormItem label="项目名称" prop="projectName">
@@ -164,7 +165,7 @@
       </Col>
     </Row>
     <Modal title="选取经纬坐标" v-model="mapVisible" width="900" footer-hide>
-      <map-card class="map-cls" :search-style="searchStyle" :location="location" @click="handleMapClick"></map-card>
+      <map-card v-if="mapVisible" class="map-cls" :search-style="searchStyle" :location="location" @click="handleMapClick"></map-card>
     </Modal>
   </Form>
 </template>
@@ -273,10 +274,10 @@ export default {
           { required: true, type: 'number', max: 99, message: '请输入1百以内的整数', trigger: 'blur' }
         ],
         projectType: [
-          { required: true, message: '请选择合作类型', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择合作类型', trigger: 'change' }
         ],
         period: [
-          { required: true, message: '请选择项目阶段', trigger: 'change' }
+          { required: true, type: 'number', message: '请选择项目阶段', trigger: 'change' }
         ],
         signDate: [
           { required: true, type: 'date', message: '请选择签约日期', trigger: 'change' }
@@ -349,13 +350,21 @@ export default {
       })
     },
     getBaseInfo () {
+      if (!this.projectBid) {
+        return
+      }
       this.loading = true
       getBaseInfo(this.projectBid).then(res => {
-        this.baseDto = res.body
-        // this.getSimpleAddress()
-        this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
-        this.loading = false
-        this.canClear = false
+        if (res.code === 200) {
+          this.baseDto = res.body
+          this.baseDto.projectArea = this.baseDto.projectArea.toString()
+          this.baseDto.signDate = new Date(this.baseDto.signDate)
+          this.baseDto.endlineDate = new Date(this.baseDto.endlineDate)
+          this.baseDto.openDate = new Date(this.baseDto.openDate)
+          this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
+          this.loading = false
+          this.canClear = false
+        }
       }).catch(() => {
         this.loading = false
       })
@@ -404,7 +413,7 @@ export default {
           this.$Message.success('保存成功')
           this.proBid = res.body
           this.$store.commit('upStep', 2)
-          this.$emit('success', this.proBid)
+          this.$emit('success', this.proBid, dto.projectName)
         }
         this.loading = false
       }).catch(() => {
@@ -418,6 +427,7 @@ export default {
           this.$Message.success('修改成功')
           this.proBid = res.body
           this.$store.commit('upStep', 2)
+          this.$emit('success', this.proBid, dto.projectName)
         }
         this.loading = false
       }).catch(() => {
@@ -436,6 +446,9 @@ export default {
     }
   },
   watch: {
+    projectBid () {
+      this.getBaseInfo()
+    },
     'baseDto.cityCode': function (newVal, oldVal) {
       if (this.canClear) {
         this.baseDto.areaCode = ''
@@ -451,9 +464,7 @@ export default {
   created () {
     this.getCity()
     this.getOwner()
-    if (this.projectBid) {
-      this.getBaseInfo()
-    }
+    this.getBaseInfo()
   }
 }
 </script>
@@ -469,5 +480,12 @@ export default {
   }
   .my-date-picker {
     width: 100%;
+  }
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+  .full-spin {
+    height: 100%;
   }
 </style>

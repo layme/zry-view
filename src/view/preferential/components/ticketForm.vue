@@ -44,7 +44,6 @@ export default {
         startDate: '',
         endDate: '',
         limitDate: '',
-        creator: '',
         createTime: ''
       },
       day: false,

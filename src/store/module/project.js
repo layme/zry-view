@@ -1,6 +1,6 @@
 export default {
   state: {
-    step: 7,
+    step: 1,
     activeName: '1'
   },
   mutations: {

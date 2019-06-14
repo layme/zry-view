@@ -48,16 +48,21 @@
         <div>{{ row.isValid === 1 ? '启用' : '停用' }}</div>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a class="my-btn" @click="openArea(row)">{{ row.isValid === 1 ? '停用' : '启用' }}</a>
+        <a class="my-btn" @click="openConfirm(row)">{{ row.isValid === 1 ? '停用' : '启用' }}</a>
         <a class="my-btn" @click="editArea(row)">编辑</a>
-        <a @click="deleteAreaConfirm(row)">删除</a>
+        <a @click="deleteAreaConfirm(row)" style="color: #ed4014;">删除</a>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="areaParamDto.page"
           :page-size="areaParamDto.limit" @on-change="handlePageChange"/>
-    <Modal :title="title" :visible.sync="dialogVisible" width="35">
-      <public-area-form v-if="dialogVisible" :projectBid="projectBid" :buildingOptions="buildingOptions"
-                        :area="areaData" @success="handleSuccess"></public-area-form>
+    <Modal
+      :title="title"
+      v-model="areaVisible"
+      :loading="areaLoading"
+      width="500"
+      @on-ok="saveOrUpArea">
+      <public-area-form ref="areaForm" v-if="areaVisible" :projectBid="projectBid" :buildingOptions="buildingOptions"
+                        :area="areaData" @success="handleSuccess" @error="handleError"></public-area-form>
     </Modal>
   </div>
 </template>
@@ -65,7 +70,7 @@
 <script>
 import publicAreaForm from './publicAreaForm.vue'
 import { getBuildings } from '@/api/building'
-import { getAreas, deleteArea, validOrNot } from '@/api/publicArea'
+import { getAreas, deleteArea, validOrNot, saveArea, updateArea } from '@/api/publicArea'
 
 export default {
   name: 'publicArea',
@@ -128,10 +133,12 @@ export default {
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          width: 130
         }
       ],
-      dialogVisible: false,
+      areaVisible: false,
+      areaLoading: true,
       title: '',
       areaData: {}
     }
@@ -149,30 +156,76 @@ export default {
   },
   methods: {
     getBuildOptions () {
-      getBuildings(this.projectBid).then(res => {
-        this.buildingOptions = res.body
-      })
+      if (this.projectBid) {
+        getBuildings(this.projectBid).then(res => {
+          this.buildingOptions = res.body
+        })
+      }
     },
     listArea () {
-      this.areaParamDto.projectFid = this.projectBid
-      this.areaParamDto.page = 1
-      this.handlePageChange()
+      if (this.projectBid) {
+        this.areaParamDto.projectFid = this.projectBid
+        this.areaParamDto.page = 1
+        this.handlePageChange()
+      }
     },
     handlePageChange () {
+      this.loading = true
       getAreas(this.areaParamDto).then(res => {
-        this.areaList = res.body.list
-        this.total = res.body.total
+        if (res.code === 200) {
+          this.areaList = res.body.list
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     addArea () {
-      this.dialogVisible = true
+      this.areaVisible = true
       this.areaData = {}
       this.title = '新增区域'
     },
-    editArea (index, row) {
-      this.dialogVisible = true
+    editArea (row) {
+      this.areaVisible = true
       this.areaData = row
       this.title = '编辑区域'
+    },
+    saveOrUpArea () {
+      this.$refs.areaForm.validateForm()
+    },
+    handleSuccess (dto) {
+      if (dto.bid) {
+        this.updateArea(dto)
+      } else {
+        this.saveArea(dto)
+      }
+      this.areaVisible = false
+      this.handlePageChange()
+    },
+    handleError () {
+      setTimeout(() => {
+        this.areaLoading = false
+        this.$nextTick(() => {
+          this.areaLoading = true
+        })
+      }, 500)
+    },
+    saveArea (dto) {
+      saveArea(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    updateArea (dto) {
+      updateArea(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('修改成功')
+          this.handlePageChange()
+        }
+      })
     },
     deleteAreaConfirm (row) {
       this.$Modal.confirm({
@@ -193,7 +246,7 @@ export default {
         }
       })
     },
-    openArea (row) {
+    openConfirm (row) {
       let val = 0
       let msg = ''
       if (row.isValid === 1) {
@@ -203,34 +256,37 @@ export default {
         val = 1
         msg = '启用'
       }
-      validOrNot(row.bid, val).then(res => {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定${msg}该区域吗？</p>`,
+        onOk: () => {
+          this.openArea(msg, row.bid, val)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    openArea (msg, bid, val) {
+      validOrNot(bid, val).then(res => {
         if (res.code === 200) {
           this.$Message.success(msg + '成功')
           this.handlePageChange()
         }
       })
-    },
-    handleSuccess () {
-      this.dialogVisible = false
-      this.handlePageChange()
     }
   },
   watch: {
     projectBid (val) {
-      if (val) {
-        this.getBuildOptions()
-        this.listArea()
-      }
+      this.getBuildOptions()
+      this.listArea()
     },
     'areaParamDto.houseBuildingFid': function (newVal, oldVal) {
       this.areaParamDto.floorNum = ''
     }
   },
   created () {
-    if (this.projectBid) {
-      this.getBuildOptions()
-      this.listArea()
-    }
+    this.getBuildOptions()
+    this.listArea()
   }
 }
 </script>
