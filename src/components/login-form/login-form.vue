@@ -5,10 +5,10 @@
     </FormItem>
     <FormItem prop="password">
       <Input prefix="md-lock" type="password" v-model.trim="form.password" size="large" placeholder="请输入密码"
-             @on-enter="handleSubmit" clearable></Input>
+             clearable></Input>
     </FormItem>
     <FormItem>
-      <Button @click="handleSubmit" type="primary" size="large" long>登 录</Button>
+      <Button @click="handleSubmit" type="primary" size="large" long shape="circle">登 录</Button>
     </FormItem>
   </Form>
 </template>
@@ -63,3 +63,5 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+</style>
