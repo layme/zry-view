@@ -10,11 +10,11 @@
         <a v-if="row.isOnline === 1" class="my-btn">下线</a>
         <a v-else class="my-btn">上线</a>
         <a class="my-btn" @click="updateActivity(row)">修改</a>
-        <a @click="confirmRemove(row)">删除</a>
+        <a @click="confirmRemove(row)" style="color: #ed4014">删除</a>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageNum"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       :title="title"
@@ -29,6 +29,7 @@
 <script>
 import marketingActivitySearchForm from './marketingActivitySearchForm'
 import marketingActivityForm from './marketingActivityForm'
+import { getMarketingActivities } from '@/api/marketingActivity'
 
 export default {
   name: 'marketingActivityList',
@@ -39,8 +40,8 @@ export default {
   data () {
     return {
       paramDto: {
-        page: 1,
-        limit: 10
+        pageNum: 1,
+        pageSize: 10
       },
       statusOptions: [
         {
@@ -53,48 +54,7 @@ export default {
         }
       ],
       loading: false,
-      activityList: [
-        {
-          'id': null,
-          'bid': '073c33e4a6434d2fa277b2d0ad036a49',
-          'projectBid': '63615afa5a344153a047aca1ea32cc51',
-          'projectName': '北京CBD自如驿',
-          'title': '自如驿的周年庆，这次我们玩了点不一样的（内有彩蛋）',
-          'subTitle': '海洋球大作战',
-          'jumpLink': 'http://mp.weixin.qq.com/s/g8hxAqbVOX_6AYTvk6dwNA',
-          'imgIndex': 0,
-          'imgUrl': 'http://image.ziroom.com/g2/M00/35/5D/ChAFfVlfYOCAOG9iAAHtNkwmxew028.jpg',
-          'createId': null,
-          'createDate': null,
-          'lastModifyDate': null,
-          'isDel': 0,
-          'isValid': 1,
-          'isJump': 1,
-          'isOnline': 1,
-          'startDate': '2017-07-07',
-          'endDate': '2017-07-07'
-        },
-        {
-          'id': null,
-          'bid': '49a532c154284722ad2d93fa85e88e9c',
-          'projectBid': '63615afa5a344153a047aca1ea32cc51',
-          'projectName': '北京CBD自如驿',
-          'title': '驿起嗨 | 看！自如驿里有一大波巨婴出没！',
-          'subTitle': '0',
-          'jumpLink': 'http://mp.weixin.qq.com/s/4c7dOoXcQGmXay64heGWuQ',
-          'imgIndex': 1,
-          'imgUrl': 'http://image.ziroom.com/g2/M00/1F/20/ChAFD1k6XJeAO1LtAAJfV0qjq3Y398.jpg',
-          'createId': null,
-          'createDate': null,
-          'lastModifyDate': null,
-          'isDel': 0,
-          'isValid': 1,
-          'isJump': 1,
-          'isOnline': 0,
-          'startDate': '2017-06-27',
-          'endDate': '2017-06-28'
-        }
-      ],
+      activityList: [],
       total: 0,
       columns: [
         {
@@ -132,7 +92,7 @@ export default {
         }
       ],
       visible: false,
-      title: '123412',
+      title: '',
       modalLoading: true,
       row: {}
     }
@@ -140,13 +100,20 @@ export default {
   methods: {
     listActivity (dto) {
       Object.assign(this.paramDto, dto)
-      this.paramDto.page = 1
+      this.paramDto.pageNum = 1
       this.handlePageChange()
     },
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      getMarketingActivities(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.activityList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     createActivity () {
       this.title = '新增营销活动'

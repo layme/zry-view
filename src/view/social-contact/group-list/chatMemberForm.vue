@@ -32,7 +32,7 @@
       </Col>
       <Col :span="8">
         <FormItem label="用户状态">
-          <Select v-model="paramDto.memberStatu" placeholder="请选择" clearable>
+          <Select v-model="paramDto.memberStatus" placeholder="请选择" clearable>
             <Option v-for="x in memberStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
         </FormItem>
@@ -61,7 +61,7 @@ export default {
         customerMobile: '',
         opFid: '',
         memberRole: '',
-        memberStatu: ''
+        memberStatus: ''
       },
       memberRoleOptions: [
         {

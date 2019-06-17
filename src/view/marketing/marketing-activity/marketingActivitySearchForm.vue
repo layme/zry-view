@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="活动项目">
-          <Select v-model="paramDto.projectBid" placeholder="">
+          <Select v-model="paramDto.projectBid" placeholder="" clearable>
             <Option
               v-for="item in $store.state.user.projectList"
               :key="item.bid"
@@ -70,6 +70,9 @@ export default {
     create () {
       this.$emit('create')
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

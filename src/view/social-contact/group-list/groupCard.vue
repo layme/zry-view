@@ -2,7 +2,7 @@
   <Card>
     <Layout style="background-color: #ffffff;">
       <Sider hide-trigger style="background-color: #ffffff;" width="55">
-        <Avatar :src="group.description.headUrl" shape="square" icon="ios-person" class="my-avatar"/>
+        <Avatar :src="JSON.parse(group.description).headUrl" shape="square" icon="ios-people" class="my-avatar"/>
       </Sider>
       <Content style="margin-left: 20px">
         <span class="my-name">{{ group.name }}</span>
@@ -60,6 +60,8 @@ export default {
   .my-avatar {
     width: 55px;
     height: 55px;
+    line-height: 50px !important;
+    background-color: #2db7f5
   }
 
   .my-name {

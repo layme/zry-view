@@ -380,11 +380,11 @@ export default [
     ]
   },
   {
-    path: '/chat',
-    name: 'chat',
+    path: '/socialContact',
+    name: 'socialContact',
     meta: {
       icon: 'ios-book',
-      title: '聊天'
+      title: '社交'
     },
     component: Main,
     children: [
@@ -395,7 +395,7 @@ export default [
           icon: '_qq',
           title: '群聊'
         },
-        component: () => import('@/view/chat/group-list/groupList.vue')
+        component: () => import('@/view/social-contact/group-list/groupList.vue')
       },
       {
         path: 'chat',
@@ -406,7 +406,7 @@ export default [
           hideInMenu: true,
           notCache: true
         },
-        component: () => import('@/view/chat/group-list/chatMemberList.vue')
+        component: () => import('@/view/social-contact/group-list/chatMemberList.vue')
       }
     ]
   },

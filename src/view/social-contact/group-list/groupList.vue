@@ -38,6 +38,7 @@
 <script>
 import groupCard from './groupCard.vue'
 import groupForm from './groupForm.vue'
+import { getGroups, updateGroup, createGroup, removeGroup } from '@/api/socialContact'
 
 export default {
   name: 'groupList',
@@ -53,33 +54,7 @@ export default {
         page: 1,
         limit: 5
       },
-      groupList: [
-        {
-          id: 19,
-          groupId: '25780968030209',
-          name: '北京CBD自如驿',
-          description: {
-            headUrl: 'http://image.ziroom.com/g2/M00/60/4E/ChAFfVmk_h6AZRCyAABnJrv7xzE869.jpg',
-            noticeUrl: '',
-            projectBid: '63615afa5a344153a047aca1ea32cc51',
-            projectName: '北京CBD自如驿'
-          },
-          isPublic: 0,
-          membersonly: 1,
-          allowinvites: 0,
-          maxusers: 500,
-          affiliationsCount: 1,
-          inviteNeedConfirm: 1,
-          owner: '5809d2d1-6c63-28a4-7e89-33cb6dffec37',
-          createDate: 1503985090000,
-          lastModifyDate: 1503985090000,
-          isDel: 0,
-          projectBid: '63615afa5a344153a047aca1ea32cc51',
-          opBid: '60002160',
-          opType: 2,
-          isDefault: 0
-        }
-      ],
+      groupList: [],
       total: 0,
       visible: false,
       loading: true,
@@ -93,7 +68,13 @@ export default {
       this.handlePageChange()
     },
     handlePageChange () {
-      console.info('paramDto', this.paramDto)
+      getGroups(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.groupList = res.body.rows
+          this.total = res.body.total
+        }
+      }).catch(() => {
+      })
     },
     addGroup () {
       this.visible = true
@@ -120,7 +101,7 @@ export default {
     handleRemove (index) {
       this.$Modal.confirm({
         title: '通知',
-        content: '<p>确定删除该群聊吗？</p>',
+        content: '<p>确定解散该群聊吗，本操作无法回滚？</p>',
         onOk: () => {
           this.removeGroup(index)
         },
@@ -129,13 +110,63 @@ export default {
       })
     },
     removeGroup (index) {
-      this.$Message.success('remove success')
+      let data = {
+        groupId: this.groupList[index].groupId,
+        owner: this.groupList[index].owner
+      }
+      removeGroup(data).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('解散群聊成功')
+          this.visible = false
+          this.listGroup()
+        }
+      })
     },
     saveGroup () {
       this.$refs.groupForm.validForm()
     },
     handleSubmit (dto) {
-      this.visible = false
+      if (dto.groupId) {
+        this.handleUpdateGroup(dto)
+      } else {
+        this.handleSaveGroup(dto)
+      }
+    },
+    handleUpdateGroup (dto) {
+      let data = {
+        groupId: dto.groupId,
+        groupname: dto.groupname,
+        description: JSON.stringify({ headUrl: dto.headUrl })
+      }
+      updateGroup(data).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('更新群聊成功')
+          this.visible = false
+          this.listGroup()
+        } else {
+          this.handleError()
+        }
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    handleSaveGroup (dto) {
+      let data = {
+        groupname: dto.groupname,
+        mobile: dto.mobile,
+        desc: JSON.stringify({ headUrl: dto.headUrl })
+      }
+      createGroup(data).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('创建群聊成功')
+          this.visible = false
+          this.listGroup()
+        } else {
+          this.handleError()
+        }
+      }).catch(() => {
+        this.handleError()
+      })
     },
     handleError () {
       setTimeout(() => {
@@ -145,6 +176,9 @@ export default {
         })
       }, 500)
     }
+  },
+  created () {
+    this.listGroup()
   }
 }
 </script>

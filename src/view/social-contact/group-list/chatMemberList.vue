@@ -1,6 +1,6 @@
 <template>
   <div>
-    <chat-member-form :groupName="groupName" @click="listChatMember" @join="handleJoin"></chat-member-form>
+    <chat-member-form :groupName="groupName" @search="listChatMember" @join="handleJoin"></chat-member-form>
     <Table stripe :columns="columns" :data="chatList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="userInfo">
         <a @click="openGuest(row)">查看</a>
@@ -50,6 +50,7 @@
 <script>
 import chatMemberForm from './chatMemberForm.vue'
 import guestTabs from '@/components/guest/guestTabs'
+import { getMembers } from '@/api/socialContact'
 
 export default {
   name: 'chatMemberList',
@@ -88,26 +89,7 @@ export default {
           slot: 'action'
         }
       ],
-      chatList: [
-        {
-          'id': 135,
-          'fid': '8a90a3665e12590e015e2c7e96b62307',
-          'groupId': '25780968030209',
-          'member': '5809d2d1-6c63-28a4-7e89-33cb6dffec37',
-          'memberRole': 0,
-          'opFid': '20223709',
-          'opType': 2,
-          'remark': null,
-          'isDel': 0,
-          'createDate': 1503985090000,
-          'lastModifyDate': 1553480220000,
-          'memberStatu': 0,
-          'recoveryGagTime': 1503985090000,
-          'memberRoleShow': null,
-          'memberNickName': 'Jerry',
-          'memberMobile': null
-        }
-      ],
+      chatList: [],
       total: 0,
       joinVisible: false,
       joinLoading: true,
@@ -142,9 +124,18 @@ export default {
       this.handlePageChange()
     },
     handlePageChange () {
+      this.loading = true
       this.groupName = this.$route.query.groupName
       this.paramDto.groupId = this.$route.query.groupId
-      console.info('paramDto', this.paramDto)
+      getMembers(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.chatList = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     handleJoin () {
       this.joinDto.groupId = this.$route.query.groupId
