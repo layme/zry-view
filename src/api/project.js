@@ -95,3 +95,11 @@ export const getOrderInfoForSmartLock = (data) => {
     }
   })
 }
+
+// 获取订单数据
+export const getProjectListAll = (data) => {
+  return axios.request({
+    url: '/project/getProjectListAll',
+    method: 'get'
+  })
+}

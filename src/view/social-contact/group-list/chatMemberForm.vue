@@ -38,7 +38,7 @@
         </FormItem>
       </Col>
     </Row>
-    <Row :gutter="20">
+    <Row>
       <Col span="12">
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
@@ -96,6 +96,9 @@ export default {
     join () {
       this.$emit('join')
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

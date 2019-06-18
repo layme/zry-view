@@ -45,12 +45,14 @@ export default {
       Object.assign(this.paramDto, dto)
       this.paramDto.page = 1
       this.handlePageChange()
+      this.projectScore()
     },
     handlePageChange () {
+      this.$delete(this.paramDto, 'evaluateTime')
       getLowEvaluate(this.paramDto).then(res => {
-        if (res.data.status === 200) {
-          this.evaluateList = res.data.rows
-          this.total = res.data.total
+        if (res.code === 200) {
+          this.evaluateList = res.body.rows
+          this.total = res.body.total
           this.haveData = this.total > 0
         } else {
           this.$Message.warning(res.message)
@@ -59,11 +61,9 @@ export default {
       })
     },
     projectScore () {
-      getProjectScore().then(res => {
-        if (res.data.status === 200) {
-          this.totalScore = res.data
-        } else {
-          console.log('查询项目评分失败')
+      getProjectScore(this.$store.state.user.currentProject.bid).then(res => {
+        if (res.code === 200) {
+          this.totalScore = res.body
         }
       })
     },

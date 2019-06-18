@@ -4,7 +4,7 @@
       <Input type="textarea" :rows="6" v-model="paramDto.content" :maxlength="200"
              placeholder="此处最多输入200个字符"></Input>
     </FormItem>
-    <FormItem style="text-align: center">
+    <FormItem>
       <Button type="primary" @click="valid" class="my-btn">提 交</Button>
       <Button type="success" v-action="btnAccess" @click="finish">完 结</Button>
     </FormItem>
@@ -19,7 +19,7 @@ export default {
   data () {
     return {
       paramDto: {
-        lowEvaluateBid: '',
+        lowEvaluateBid: this.lowEvaluateBid,
         content: '',
         followUpStatus: null
       },
@@ -33,14 +33,17 @@ export default {
   },
   methods: {
     valid () {
-      this.$refs.replyForm.validate((valid) => {
+      this.$refs.evalFollowUpForm.validate((valid) => {
         if (valid) {
           this.$emit('submit', this.paramDto)
         }
       })
     },
+    reset () {
+      this.$refs.evalFollowUpForm.resetFields()
+    },
     finish () {
-      this.$emit('finish', this.paramDto.lowEvaluateBid)
+      this.$emit('finish', this.paramDto)
     }
   },
   watch: {

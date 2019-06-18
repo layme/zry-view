@@ -73,7 +73,6 @@ export default {
   data () {
     return {
       paramDto: {
-        projectBid: this.$store.state.user.currentProject.bid,
         orderNumber: '',
         evaluateTime: [],
         startDate: '',
@@ -120,6 +119,9 @@ export default {
     '$store.state.user.currentProject' (to, from) {
       this.paramDto.projectBid = to.bid
     }
+  },
+  created () {
+    this.search()
   }
 }
 </script>

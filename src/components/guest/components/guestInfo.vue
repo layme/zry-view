@@ -117,7 +117,7 @@ export default {
       this.guestBlackDto.currentStatus = this.guestInfo.isBlack
       addORemoveBlack(this.guestBlackDto).then(res => {
         if (res.code === 200) {
-          this.guestInfo.isBlack = res.data.body
+          this.guestInfo.isBlack = res.body
           this.$Message.success('操作成功')
         }
       })
@@ -129,44 +129,6 @@ export default {
   filters: {
     genderFilter (val) {
       return val === 2 ? '男' : val === 1 ? '女' : '未知'
-    },
-    idTypeFilter (val) {
-      switch (val) {
-        case 0:
-          return '其他'
-        case 1:
-          return '身份证'
-        case 2:
-          return '护照'
-        case 3:
-          return '军官证'
-        case 4:
-          return '通行证'
-        case 5:
-          return '驾驶证'
-        case 6:
-          return '台胞证'
-        case 7:
-          return '社保卡'
-        case 8:
-          return '省份证'
-        case 9:
-          return '社保卡'
-        case 10:
-          return '学生证'
-        case 11:
-          return '回乡证'
-        case 12:
-          return '营业执照'
-        case 13:
-          return '港澳通行证'
-        case 14:
-          return '户口本'
-        case 15:
-          return '居住证'
-        case 16:
-          return '营业执照'
-      }
     },
     isBlackBtnFilter (val) {
       return val === 1 ? '转为正常用户' : '转为特殊用户'

@@ -9,7 +9,9 @@
         <Icon type="ios-phone-portrait" />
         {{ evaluate.evaluatePersonPhone }}
       </span>
-      <Tag style="margin-left: 30px" color="volcano">{{ evaluate.followUpStatus | statusFilter }}</Tag>
+      <Tag v-if="evaluate.followUpStatus === 1" style="margin-left: 30px" color="volcano">低评已提醒</Tag>
+      <Tag v-else-if="evaluate.followUpStatus === 2" style="margin-left: 30px" color="blue">低评跟进中</Tag>
+      <Tag v-else style="margin-left: 30px" color="green">低评已完结</Tag>
     </Row>
     <Row class="evaluate-list">
       <Col :span="3">

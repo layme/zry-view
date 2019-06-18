@@ -12,12 +12,19 @@
         <div>{{ row.memberStatu | userStatusFilter }}</div>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a class="my-btn" v-if="row.memberStatu === 0" @click="confirmShutUp(row, 1)">禁言</a>
-        <a class="my-btn" v-else @click="confirmShutUp(row, 0)">解禁</a>
-        <a class="my-btn" :style="{ color: '#ed4014' }">踢出</a>
-        <a v-if="row.memberRole === 0">设为管理员</a>
-        <a v-else>取消管理员</a>
-        <a v-if="row.memberRole === 1">设为群主</a>
+        <template v-if="row.memberRole === 0">
+          <a class="my-btn" v-if="row.memberStatu === 0" @click="confirmAddGagMember(row)">禁言</a>
+          <a class="my-btn" v-else @click="confirmRemoveGagMember(row)">解禁</a>
+          <a class="my-btn" :style="{ color: '#ed4014' }" @click="confirmRemoveMember(row)">踢出</a>
+          <a v-if="row.memberRole === 0 && row.memberStatu === 0" @click="confirmAddAdminMember(row)">设为管理员</a>
+        </template>
+        <template v-else-if="row.memberRole === 1">
+          <a class="my-btn" @click="confirmDeleteAdminMember(row)">取消管理员</a>
+          <a @click="confirmTransferGroup(row)">成为群主</a>
+        </template>
+        <template v-else>
+          <span>-</span>
+        </template>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
@@ -50,7 +57,8 @@
 <script>
 import chatMemberForm from './chatMemberForm.vue'
 import guestTabs from '@/components/guest/guestTabs'
-import { getMembers } from '@/api/socialContact'
+import { getMembers, addGagMember, removeGagMember, removeMember, addAdminMember, deleteAdminMember, transferGroup } from '@/api/socialContact'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'chatMemberList',
@@ -86,7 +94,8 @@ export default {
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          width: 200
         }
       ],
       chatList: [],
@@ -118,6 +127,14 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'closeTag'
+    ]),
+    handleCloseTag () {
+      this.closeTag({
+        name: 'chatMemberList'
+      })
+    },
     listChatMember (dto) {
       Object.assign(this.paramDto, dto)
       this.paramDto.page = 1
@@ -127,6 +144,12 @@ export default {
       this.loading = true
       this.groupName = this.$route.query.groupName
       this.paramDto.groupId = this.$route.query.groupId
+      if (!this.groupName || !this.paramDto.groupId) {
+        this.loading = false
+        this.$Message.warning('请通过群列表访问群聊成员页面')
+        this.handleCloseTag()
+        this.$router.push({ name: 'home' })
+      }
       getMembers(this.paramDto).then(res => {
         if (res.code === 200) {
           this.chatList = res.body.rows
@@ -157,24 +180,145 @@ export default {
         }
       })
     },
-    confirmShutUp (row, val) {
-      let ti = ''
-      if (val) {
-        ti = `确定要禁言 ${row.memberNickName} 吗？`
-      } else {
-        ti = `确定要解除 ${row.memberNickName} 的禁言吗？`
-      }
+    confirmAddGagMember (row) {
       this.$Modal.confirm({
         title: '通知',
-        content: '<p>' + ti + '</p>',
+        content: `<p>确定要禁言 ${row.memberNickName} 吗？</p>`,
         onOk: () => {
-          this.shutUp(row, val)
+          this.addGagMember(row)
         },
         onCancel: () => {
         }
       })
     },
-    shutUp (row, val) {},
+    addGagMember (row) {
+      let dto = {
+        groupId: row.groupId,
+        members: [row.member]
+      }
+      addGagMember(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('禁言成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    confirmRemoveGagMember (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要解除 ${row.memberNickName} 的禁言吗？</p>`,
+        onOk: () => {
+          this.removeGagMember(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    removeGagMember (row) {
+      let dto = {
+        groupId: row.groupId,
+        members: [row.member]
+      }
+      removeGagMember(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('解禁成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    confirmRemoveMember (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要将 ${row.memberNickName} 踢出群聊吗？</p>`,
+        onOk: () => {
+          this.removeMember(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    removeMember (row) {
+      let dto = {
+        groupId: row.groupId,
+        members: [row.member]
+      }
+      removeMember(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('踢出群聊成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    confirmAddAdminMember (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要将 ${row.memberNickName} 设为管理员吗？</p>`,
+        onOk: () => {
+          this.addAdminMember(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    addAdminMember (row) {
+      let dto = {
+        groupId: row.groupId,
+        members: [row.member],
+        memberRole: 1
+      }
+      addAdminMember(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('管理员设置成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    confirmDeleteAdminMember (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要取消 ${row.memberNickName} 的管理员身份吗？</p>`,
+        onOk: () => {
+          this.deleteAdminMember(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    deleteAdminMember (row) {
+      let dto = {
+        groupId: row.groupId,
+        members: [row.member]
+      }
+      deleteAdminMember(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('管理员取消成功')
+          this.handlePageChange()
+        }
+      })
+    },
+    confirmTransferGroup (row) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要将 ${row.memberNickName} 设为群主吗？</p><p>老群主将会变成普通成员</p>`,
+        onOk: () => {
+          this.transferGroup(row)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    transferGroup (row) {
+      let dto = {
+        groupId: row.groupId,
+        owner: row.member
+      }
+      transferGroup(dto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('群主转移成功')
+          this.handlePageChange()
+        }
+      })
+    },
     openGuest (row) {
       this.idNumber = row.member
       this.guestVisible = true
@@ -187,9 +331,6 @@ export default {
     '$route' (to, from) {
       this.handlePageChange()
     }
-  },
-  created () {
-    this.handlePageChange()
   },
   filters: {
     roleFilter (val) {

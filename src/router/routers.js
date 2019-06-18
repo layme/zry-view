@@ -213,24 +213,6 @@ export default [
     component: Main,
     children: [
       {
-        path: 'occupancyRate',
-        name: 'occupancyRate',
-        meta: {
-          icon: '_qq',
-          title: '入住率'
-        },
-        component: () => import('@/view/report/occupancy-rate/occupancyRate.vue')
-      },
-      {
-        path: 'profitLoss',
-        name: 'profitLoss',
-        meta: {
-          icon: '_qq',
-          title: '盈亏报表'
-        },
-        component: () => import('@/view/report/profit-loss/profitLoss.vue')
-      },
-      {
         path: 'operationIndex',
         name: 'operationIndex',
         meta: {

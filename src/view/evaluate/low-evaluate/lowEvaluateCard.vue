@@ -3,7 +3,9 @@
     <Row>
       <Col :span="10">
         <a @click="link">{{ row.businessCode }}</a>
-        <Tag style="margin-left: 30px" color="volcano">{{ row.followUpStatus | statusFilter }}</Tag>
+        <Tag v-if="row.followUpStatus === 1" style="margin-left: 30px" color="volcano">已提醒</Tag>
+        <Tag v-else-if="row.followUpStatus === 2" style="margin-left: 30px" color="blue">跟进中</Tag>
+        <Tag v-else style="margin-left: 30px" color="green">已完结</Tag>
       </Col>
       <Col :span="14" :style="{ textAlign: 'right' }">
         <a @click="follow">{{ row.followUpStatus === 3 ? '处理结果' : '跟进处理' }}</a>
@@ -54,18 +56,6 @@ export default {
     },
     follow () {
       this.$emit('follow', this.row.businessCode)
-    }
-  },
-  filters: {
-    // 状态转文字
-    statusFilter (val) {
-      if (val === 1) {
-        return '已提醒'
-      } else if (val === 2) {
-        return '跟进中'
-      } else {
-        return '已完结'
-      }
     }
   }
 }

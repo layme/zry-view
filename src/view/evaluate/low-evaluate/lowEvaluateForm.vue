@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <Col :span="8">
         <FormItem label="订单编号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="" :maxlength="20"></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="" :maxlength="20" clearable></Input>
         </FormItem>
       </Col>
       <Col :span="8">
@@ -69,7 +69,6 @@ export default {
   data () {
     return {
       paramDto: {
-        projectBid: this.$store.state.user.currentProject.bid,
         orderNumber: '',
         evaluateTime: [],
         startDate: '',
@@ -125,6 +124,9 @@ export default {
     '$store.state.user.currentProject' (to, from) {
       this.paramDto.projectBid = to.bid
     }
+  },
+  created () {
+    this.search()
   }
 }
 </script>

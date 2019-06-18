@@ -57,10 +57,10 @@ export default {
   }
   .login {
     position: absolute;
-    top: 130px;
-    right: 280px;
-    bottom: 130px;
-    left: 280px;
+    top: 20%;
+    right: 25%;
+    bottom: 20%;
+    left: 25%;
     border-radius: 10px;
     overflow: hidden;
     -webkit-box-shadow: #808695 0 0 20px;

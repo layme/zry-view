@@ -8,11 +8,10 @@ import tdTheme from './theme.json'
 import { on, off } from '@/libs/tools'
 echarts.registerTheme('tdTheme', tdTheme)
 export default {
-  name: 'ChartPie',
+  name: 'ChartLine',
   props: {
-    value: Array,
-    text: String,
-    subtext: String
+    lineData: Object,
+    text: String
   },
   data () {
     return {
@@ -26,59 +25,64 @@ export default {
     initChart () {
       this.dom = echarts.init(this.$refs.dom, 'tdTheme')
     },
-    drawPie () {
-      let legend = this.value.map(_ => _.name)
+    drawLine () {
       let option = {
         title: {
-          text: this.text,
-          subtext: this.subtext,
-          x: 'center'
+          text: this.text
         },
         tooltip: {
-          trigger: 'item',
-          formatter: '{b} : {c} ({d}%)'
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: legend
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: this.value,
-            itemStyle: {
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#6a7985'
             }
           }
-        ]
+        },
+        legend: {
+          data: this.lineData.legendData
+        },
+        grid: {
+          top: '12%',
+          left: '1.2%',
+          right: '1%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            boundaryGap: false,
+            data: this.lineData.xAxis
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: this.lineData.orderSeries
       }
-      this.dom.setOption(option, true)
+      this.dom.setOption(option)
       on(window, 'resize', this.resize)
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.initChart()
-      this.drawPie()
+      this.drawLine()
     })
   },
   beforeDestroy () {
     off(window, 'resize', this.resize)
   },
   watch: {
-    value: {
+    lineData: {
       immediate: true,
       deep: true,
       handler (val) {
         if (this.dom && val) {
-          this.drawPie()
+          this.drawLine()
         }
       }
     }

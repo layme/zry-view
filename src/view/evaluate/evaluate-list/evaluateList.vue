@@ -23,7 +23,7 @@
         </FormItem>
       </Form>
       <div style="margin-top: 20px" v-if="replyDto.lowEvaluateManagerFeedbackTime">
-        <span>发表于：{{ replyDto.lowEvaluateManagerFeedbackTime | dateTimeFilter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>回复时间：{{ replyDto.lowEvaluateManagerFeedbackTime | dateTimeFilter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
         <span>回复员工：{{ replyDto.feedbackerName }}</span>
       </div>
     </Modal>
@@ -48,7 +48,7 @@ export default {
         pageSize: 5
       },
       loading: false,
-      delay: 1500,
+      delay: 1000,
       replyVisible: false,
       replyLoading: true,
       replyTitle: '',
@@ -58,10 +58,6 @@ export default {
       replyDto: {
         lowEvaluateRecordCode: 0,
         feedbackRemark: ''
-      },
-      evalShieldDto: {
-        recordId: 0,
-        isValid: 0
       },
       replyRules: {
         feedbackRemark: [
@@ -81,7 +77,7 @@ export default {
       this.$delete(this.paramDto, 'evaluateTime')
       getEvaluate(this.paramDto).then(res => {
         if (res.code === 200) {
-          this.evaluateList = res.body.list
+          this.evaluateList = res.body.rows
           this.total = res.body.total
           this.haveData = this.total > 0
         } else {
@@ -89,9 +85,9 @@ export default {
         }
       })
     },
-    projectScore (projectBid) {
-      getProjectScore(projectBid).then(res => {
-        if (res.data.status === 200) {
+    projectScore () {
+      getProjectScore(this.$store.state.user.currentProject.bid).then(res => {
+        if (res.code === 200) {
           this.totalScore = res.data
         } else {
           console.log('查询项目评分失败')
@@ -138,56 +134,55 @@ export default {
     },
     reply () {
       reply(this.replyDto).then(res => {
-        if (res.data.status === 200) {
-          this.$Message.success('回复成功')
-          setTimeout(function () {
+        if (res.code === 200) {
+          this.$Message.success('回复成功，数据稍后刷新')
+          setTimeout(() => {
             this.handlePageChange()
           }, this.delay)
           this.replyVisible = false
         } else {
           this.handleError()
         }
+      }).catch(() => {
+        this.handleError()
       })
     },
     confirmShieldEvaluate (row) {
       let ti = ''
+      let action = ''
       let val = 0
       if (row.evaluateStatus === 1) {
         ti = '屏蔽后，用户将无法在APP中查看到该评价，'
+        action = '屏蔽'
         val = 0
       } else {
         ti = '展示后，用户可以在APP中查看到该评价，'
+        action = '展示'
         val = 1
       }
       this.$Modal.confirm({
         title: '通知',
         content: `<p>${ti}</p><p>继续吗？</p>`,
         onOk: () => {
-          this.shieldValuate(row, val)
+          this.shieldValuate(row, val, action)
         },
         onCancel: () => {
         }
       })
     },
-    shieldValuate (row, val) {
-      this.evalShieldDto.recordId = row.logicCode
-      this.evalShieldDto.isValid = val
-      shieldValuate(this.evalShieldDto).then(res => {
+    shieldValuate (row, val, action) {
+      let evalShieldDto = {
+        recordId: row.logicCode,
+        isValid: val
+      }
+      shieldValuate(evalShieldDto).then(res => {
         if (res.code === 200) {
-          this.$Message.success('操作成功')
-          setTimeout(function () {
+          this.$Message.success(`${action}成功`)
+          setTimeout(() => {
             this.handlePageChange()
           }, this.delay)
         }
       })
-    },
-    validateTextarea () {
-      var vm = this
-      if (vm.replyDto.feedbackRemark === null || vm.replyDto.feedbackRemark === '') {
-        this.$Message.warning('请先填写回复内容')
-        return false
-      }
-      return true
     }
   },
   watch: {
@@ -196,10 +191,6 @@ export default {
         // this.replyDto.feedbackRemark = val.replace(/[\"\<\>\;\:\\]/g, ' ')
       }
     }
-  },
-  created () {
-    this.projectScore()
-    this.handlePageChange()
   }
 }
 </script>

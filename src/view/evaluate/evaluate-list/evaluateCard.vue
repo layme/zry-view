@@ -1,9 +1,12 @@
 <template>
   <Card>
+    <div v-if="row.evaluateStatus === 0" class="discard">
+    </div>
     <Row>
       <Col :span="10">
         <a @click="link">{{ row.businessCode }}</a>
-        <Tag style="margin-left: 30px" color="volcano">{{ row.lowEvaluateManagerFeedbackStatus | statusFilter }}</Tag>
+        <Tag v-if="row.lowEvaluateManagerFeedbackStatus" style="margin-left: 30px" color="volcano">已回复</Tag>
+        <Tag v-else style="margin-left: 30px" color="volcano">未回复</Tag>
       </Col>
       <Col :span="14" :style="{ textAlign: 'right' }">
         <a class="my-btn" @click="reply">回复</a>
@@ -85,6 +88,8 @@ export default {
   .cover {
     height: 100px;
     overflow: hidden;
+    border: 1px solid #dcdee2;
+
   }
   .img-class {
     width: 100%;
@@ -97,5 +102,17 @@ export default {
   }
   .my-content {
     color: #17233d;
+  }
+  .discard {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #c5c8ce;
+    border-radius: 4px;
+    opacity: 0.2;
   }
 </style>

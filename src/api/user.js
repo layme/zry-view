@@ -87,3 +87,40 @@ export const restoreTrash = msg_id => {
     }
   })
 }
+
+export const getUser = userName => {
+  return axios.request({
+    url: '/projectZO/getUser.action',
+    method: 'get',
+    params: {
+      userName: userName
+    }
+  })
+}
+
+export const savePermission = data => {
+  return axios.request({
+    url: '/projectZO/save.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const getPermission = data => {
+  return axios.request({
+    url: '/projectZO/getProjectZOList.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const delPermission = data => {
+  return axios.request({
+    url: '/projectZO/delete.action',
+    method: 'post',
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: {
+      id: data
+    }
+  })
+}

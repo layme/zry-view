@@ -135,7 +135,8 @@ export default {
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          width: 100
         }
       ],
       visible: false,

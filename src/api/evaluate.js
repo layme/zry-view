@@ -33,7 +33,7 @@ export const shieldValuate = data => {
 export const reply = data => {
   return axios.request({
     url: `/evaluate/${data.lowEvaluateRecordCode}.action`,
-    method: 'post',
+    method: 'put',
     data: data
   })
 }
@@ -57,7 +57,7 @@ export const getFollowUp = data => {
 export const saveFollowUp = data => {
   return axios.request({
     url: `/lowEvaluate/${data.lowEvaluateBid}.action`,
-    method: 'post',
-    params: data
+    method: 'put',
+    data: data
   })
 }
