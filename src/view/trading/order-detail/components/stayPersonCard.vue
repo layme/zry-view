@@ -42,6 +42,7 @@
                 </Col>
                 <Col :span="8">
                   <FormItem v-if="item.credentialType === 1" label="证件号" :prop="'stayPersonList.' + index + '.credentialNumber'" :rules="[
+                  { required: true, message: '请输入身份证号', trigger: 'blur' },
                   { pattern: /^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|30|31)|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/,
                   message: '身份证号码格式不对', trigger: 'blur' }]">
                     <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
@@ -122,6 +123,7 @@ export default {
   },
   methods: {
     initData () {
+      this.stayPersonDto.stayPersonList = []
       this.stayPersonDto.orderId = this.orderBid
       this.stayList.forEach(item => {
         this.stayPersonDto.stayPersonList.push({
@@ -151,7 +153,9 @@ export default {
       this.$refs.stayPersonForm.validate((valid) => {
         if (valid) {
           this.save()
+          console.info('true')
         } else {
+          console.info('false')
           return false
         }
       })

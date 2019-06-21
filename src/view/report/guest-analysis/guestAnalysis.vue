@@ -50,7 +50,7 @@
 </template>
 <script>
 import { ChartPie } from '_c/charts'
-import { getReport } from '@/api/guestReport'
+import { getReport } from '@/api/reportGuest'
 import { getDate } from '@/libs/tools'
 
 export default {

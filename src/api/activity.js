@@ -1,5 +1,5 @@
 import axios from '@/libs/request'
-// import { getToken } from '@/libs/util'
+import { getToken } from '@/libs/util'
 
 // 获取活动列表
 export const listActivity = (data) => {
@@ -21,11 +21,24 @@ export const getActivityDetail = (data) => {
   })
 }
 
-// 保存优惠券
+// 保存优惠活动
 export const saveActivity = (data) => {
   return axios.request({
     url: '/activity/saveActivity.action',
     method: 'post',
     data: data
+  })
+}
+
+// 更新优惠活动
+export const updateActivity = (activityBid, activityStatus) => {
+  return axios.request({
+    url: '/activity/updateActivity.action',
+    method: 'post',
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: {
+      activityBid: activityBid,
+      activityStatus: activityStatus
+    }
   })
 }
