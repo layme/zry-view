@@ -11,3 +11,12 @@ export const getHouseTypeList = (data) => {
     }
   })
 }
+
+// 获取列表
+export const getStock = (data) => {
+  return axios.request({
+    url: '/stock/listStock.action',
+    method: 'get',
+    params: data
+  })
+}

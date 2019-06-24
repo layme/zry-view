@@ -43,3 +43,11 @@ export const saveStayPerson = (data) => {
     data: data
   })
 }
+
+export const unbindBed = (data) => {
+  return axios.request({
+    url: '/order/unbindBed.action',
+    method: 'post',
+    data: data
+  })
+}

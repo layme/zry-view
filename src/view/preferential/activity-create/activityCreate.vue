@@ -211,13 +211,15 @@ export default {
       }
     },
     handleIsLimitProjectChange (val) {
-      if (!val) {
+      if (val) {
         this.activityDto.limitProjectInfo = [
           {
             projectBid: '',
             houseTypeBid: ''
           }
         ]
+      } else {
+        this.activityDto.limitProjectInfo.length = 0
       }
     },
     addLimitProject () {
@@ -262,6 +264,9 @@ export default {
     },
     saveActivity () {
       this.loading = true
+      if (!this.activityDto.limitProjectInfo.length) {
+        this.activityDto.limitProjectInfo = null
+      }
       saveActivity(this.activityDto).then(res => {
         if (res.code === 200) {
           this.$Message.success('保存成功，跳转回优惠活动列表')

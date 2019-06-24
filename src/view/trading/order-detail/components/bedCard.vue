@@ -25,7 +25,7 @@
       </Col>
       <Col :span="4">
         床位号：
-        <span v-if="item.bedCode">{{ item.bedCode.substring(item.bedCode.length - 2) }}</span>
+        <span v-if="item.bedCode">{{ item.bedCode | bedCodeFilter }}</span>
         <template v-else>
           <span v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" style="color: #ed4014;">已解绑床位</span>
           <span v-else>暂未排床</span>
@@ -37,7 +37,7 @@
           <Tag v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" color="blue">
             {{ item.stayPersonStatus | stayPersonStatusFilter }}
           </Tag>
-          <a v-else>选择床位</a>
+          <a v-else @click="selectBed(item.houseTypeBid)">选择床位</a>
         </div>
       </Col>
       <Col :span="1" style="text-align: center">
@@ -74,6 +74,7 @@ export default {
   },
   methods: {
     initData () {
+      this.bedDto.stayPersonList = []
       this.bedDto.orderId = this.orderBid
       this.bedDto.startDate = getDate(this.startDate, 'date')
       this.bedDto.endDate = getDate(this.endDate, 'date')
@@ -156,11 +157,69 @@ export default {
         })
       }
     },
-    checkIn () {},
-    changeBed () {}
+    selectBed (houseTypeBid) {
+      let startDate = ''
+      let st = new Date(this.bedDto.startDate)
+      let et = new Date(this.bedDto.endDate)
+      let now = new Date(getDate(new Date(), 'date'))
+      if (now.getTime() <= st.getTime()) {
+        startDate = this.bedDto.startDate
+      } else {
+        if (now.getTime() < et.getTime()) {
+          startDate = getDate(now, 'date')
+        } else if (now.getTime() === et.getTime()) {
+          now.setDate(now.getDate() - 1)
+          startDate = getDate(now, 'date')
+        } else {
+          this.$Message.warning('订单已经结束')
+          return
+        }
+      }
+      this.$emit('selectBed', {
+        checkInTime: startDate,
+        checkOutTime: this.bedDto.endDate,
+        houseTypeBid: houseTypeBid
+      })
+    },
+    unbindBed () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (!selected.length) {
+        this.$Message.warning('请至少选择一个床位')
+      } else {
+        let dto = {
+          orderBid: this.orderBid,
+          stayPersonBidList: [],
+          bedBidList: [],
+          areaBidList: []
+        }
+        selected.forEach(item => {
+          dto.stayPersonBidList.push(item.bid)
+          dto.bedBidList.push(item.areaBedBid)
+          dto.areaBidList.push(item.areaBid)
+        })
+        this.$emit('unbindBed', dto)
+      }
+    },
+    changeBed () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (!selected.length) {
+        this.$Message.warning('请选择一个床位')
+      } else if (selected.length > 1) {
+        this.$Message.warning('只能选择一个床位')
+      } else {
+        let stay = selected[0]
+        if (stay.stayPersonStatus === 4) {
+          this.$Message.warning('已退租床位不能调换床位')
+        } else if (!stay.areaBedBid && (stay.stayPersonStatus === 1 || stay.stayPersonStatus === 6)) {
+          this.$Message.warning('当前入住人还未排床，请先排床')
+        } else {
+          this.selectBed(stay.houseTypeBid)
+        }
+      }
+    }
   },
   watch: {
-    order () {
+    bedList () {
       this.initData()
     }
   },

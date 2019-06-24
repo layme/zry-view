@@ -54,7 +54,7 @@ importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
 // 按钮权限指令
 Vue.directive('action', {
-  bind: function (el, binding) {
+  inserted: function (el, binding) {
     if (!isHave(binding.value)) {
       el.parentNode.removeChild(el)
     }

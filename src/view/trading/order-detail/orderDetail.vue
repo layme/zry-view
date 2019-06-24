@@ -38,6 +38,7 @@
                        :lock-pwd-list="lockPwdList"
                        :lock-pwd-have1="lockPwdHave1"
                        :lock-pwd-have2="lockPwdHave2"
+                       @refresh="getOrderDetail"
                        class="card-cls" style="margin-bottom: 20px">
     </order-action-card>
     <Modal

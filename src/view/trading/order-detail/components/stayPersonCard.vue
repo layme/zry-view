@@ -4,7 +4,7 @@
       <p slot="title">
         入住人信息
       </p>
-      <Form ref="stayPersonForm" :model="stayPersonDto" :label-width="100">
+      <Form ref="stayPersonForm" :rules="rules" :model="stayPersonDto" :label-width="100">
         <div v-for="(item, index) in stayPersonDto.stayPersonList" :key="index" class="con-stay">
           <div class="subscript-stay" v-if="guestTypeFormat(item.bid)">
             {{ guestTypeFormat(item.bid) }}
@@ -13,12 +13,12 @@
             <Col :span="22">
               <Row>
                 <Col :span="8">
-                  <FormItem label="姓名">
+                  <FormItem label="姓名" prop="name">
                     <Input type="text" v-model.trim="item.name" placeholder="" clearable></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem label="性别">
+                  <FormItem label="性别" prop="sex">
                     <RadioGroup v-model="item.sex">
                       <Radio :label="1">男</Radio>
                       <Radio :label="2">女</Radio>
@@ -33,7 +33,7 @@
               </Row>
               <Row>
                 <Col :span="8">
-                  <FormItem label="证件类型">
+                  <FormItem label="证件类型" prop="credentialType">
                     <Select v-model="item.credentialType" placeholder="" transfer>
                       <Option v-for="card in cardTypeOptions" :value="card.value" :key="card.value">{{ card.label }}
                       </Option>
@@ -41,15 +41,18 @@
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem v-if="item.credentialType === 1" label="证件号" :prop="'stayPersonList.' + index + '.credentialNumber'" :rules="[
+                  <FormItem v-if="item.credentialType === 1" label="证件号"
+                            :prop="'stayPersonList.' + index + '.credentialNumber'" :rules="[
                   { required: true, message: '请输入身份证号', trigger: 'blur' },
                   { pattern: /^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|30|31)|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}([0-9]|x|X)$/,
                   message: '身份证号码格式不对', trigger: 'blur' }]">
                     <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
                   </FormItem>
-                  <FormItem v-else label="证件号">
-                    <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
-                  </FormItem>
+                  <div>
+                    <FormItem v-if="item.credentialType !== 1" label="证件号">
+                      <Input type="text" v-model.trim="item.credentialNumber" placeholder="" clearable></Input>
+                    </FormItem>
+                  </div>
                 </Col>
                 <Col :span="8">
                   <FormItem label="手机号">
@@ -118,7 +121,8 @@ export default {
       title: '',
       visible: false,
       guestFid: '',
-      active: 'record'
+      active: 'record',
+      rules: {}
     }
   },
   methods: {
@@ -150,12 +154,10 @@ export default {
       return this.guestType[val]
     },
     validateForm () {
-      this.$refs.stayPersonForm.validate((valid) => {
+      this.$refs['stayPersonForm'].validate((valid) => {
         if (valid) {
           this.save()
-          console.info('true')
         } else {
-          console.info('false')
           return false
         }
       })

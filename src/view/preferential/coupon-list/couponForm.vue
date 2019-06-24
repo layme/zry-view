@@ -151,6 +151,12 @@ export default {
     'paramDto.dateRange' (val) {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
+    },
+    batchNumber (val) {
+      this.paramDto.batchNumber = val
+    },
+    activityNumber (val) {
+      this.paramDto.activityNumber = val
     }
   },
   created () {

@@ -61,7 +61,10 @@ export default {
         {
           title: '活动范围',
           key: 'activityCondition',
-          tooltip: true
+          tooltip: true,
+          render: (h, params) => {
+            return h('div', params.row.activityCondition ? params.row.activityCondition : '全部项目')
+          }
         },
         {
           title: '活动内容',

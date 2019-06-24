@@ -4,7 +4,7 @@
                  @search="listCoupon" @export="exportData"></coupon-form>
     <Table stripe :columns="columns" :data="couponList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="ticketNumber">
-        <a @click="toCouponDetail(row)">{{ row.ticketNumber }}</a>
+        <a @click="openCouponDetail(row)">{{ row.ticketNumber }}</a>
       </template>
       <template slot-scope="{ row }" slot="activityNumber">
         <a @click="toActivityDetail(row)">{{ row.activityNumber }}</a>
@@ -21,6 +21,17 @@
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.size" @on-change="handlePageChange"/>
     <Modal
+      title="优惠券详情"
+      v-model="couponVisible"
+      width="600"
+      footer-hide>
+      <div class="full-top">
+        <Spin size="large" fix v-if="couponLoading" class="full-spin"></Spin>
+        <coupon-detail-form v-if="Object.keys(coupon).length" :coupon="coupon"></coupon-detail-form>
+        <div v-else class="no-data">暂无数据</div>
+      </div>
+    </Modal>
+    <Modal
       title="文件导出"
       v-model="visible"
       :closable="false"
@@ -34,13 +45,15 @@
 </template>
 <script>
 import couponForm from './couponForm.vue'
-import { listCoupon } from '@/api/coupon'
+import couponDetailForm from '../coupon-detail/couponDetailForm.vue'
+import { listCoupon, getTicketDetail } from '@/api/coupon'
 import { requestExportFile, getExportProcess } from '@/api/common'
 
 export default {
   name: 'couponList',
   components: {
-    couponForm
+    couponForm,
+    couponDetailForm
   },
   data () {
     return {
@@ -86,7 +99,8 @@ export default {
         },
         {
           title: '使用条件',
-          key: 'conditions'
+          key: 'conditions',
+          tooltip: true
         },
         {
           title: '活动内容',
@@ -95,6 +109,9 @@ export default {
         }
       ],
       loading: false,
+      coupon: {},
+      couponLoading: false,
+      couponVisible: false,
       visible: false,
       percent: 0,
       interval: ''
@@ -139,15 +156,18 @@ export default {
         this.requestExportFile(dto)
       }
     },
-    toCouponDetail (row) {
-      const couponBid = row.couponBid
-      const route = {
-        name: 'couponDetail',
-        query: {
-          couponBid
+    openCouponDetail (row) {
+      this.coupon = {}
+      this.couponVisible = true
+      this.couponLoading = true
+      getTicketDetail(row.couponBid).then(res => {
+        if (res.code === 200) {
+          this.coupon = res.body
         }
-      }
-      this.$router.push(route)
+        this.couponLoading = false
+      }).catch(() => {
+        this.couponLoading = false
+      })
     },
     toActivityDetail (row) {
       const activityBid = row.activityBid
@@ -219,5 +239,19 @@ export default {
   .my-page {
     text-align: right;
     margin-top: 20px
+  }
+  .no-data {
+    height: 100px;
+    text-align: center;
+    padding-top: 40px;
+    color: #909399;
+  }
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

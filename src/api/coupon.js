@@ -16,7 +16,7 @@ export const getTicketDetail = (data) => {
     url: '/coupon/getTicketDetail',
     method: 'get',
     params: {
-      activityBid: data
+      ticketBid: data
     }
   })
 }

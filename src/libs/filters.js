@@ -138,6 +138,10 @@ const idTypeFilter = val => {
   }
 }
 
+const bedCodeFilter = val => {
+  return val.substring(val.length - 2)
+}
+
 Vue.filter('orderStatusFilter', orderStatusFilter)
 Vue.filter('dateTimeFilter', dateTimeFilter)
 Vue.filter('dateFilter', dateFilter)
@@ -146,3 +150,4 @@ Vue.filter('payMethodFilter', payMethodFilter)
 Vue.filter('stayPersonStatusFilter', stayPersonStatusFilter)
 Vue.filter('nullFilter', nullFilter)
 Vue.filter('idTypeFilter', idTypeFilter)
+Vue.filter('bedCodeFilter', bedCodeFilter)
