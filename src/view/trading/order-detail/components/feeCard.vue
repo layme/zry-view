@@ -47,7 +47,14 @@ export default {
   },
   data () {
     return {
-      feeList: [],
+      feeList: [
+        {
+          orderBid: '',
+          depPaymentType: '',
+          depositSum: '',
+          depositStatus: ''
+        }
+      ],
       feeDto: {
         depPaymentType: 1,
         depositSum: ''

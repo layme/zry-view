@@ -18,8 +18,8 @@
         </ButtonGroup>
       </Col>
     </Row>
-    <base-info-card v-if="Object.keys(orderInfo).length" :order="orderInfo" :channel="firstChannel"
-                    class="card-cls"></base-info-card>
+    <base-info-card v-if="Object.keys(orderInfo).length" :order="orderInfo" :coupon="ticketInfo" :channel="firstChannel"
+                    class="card-cls" @updatePhone="updatePhone"></base-info-card>
     <Row :gutter="20">
       <Col :span="18">
         <stay-person-card v-if="Object.keys(orderInfo).length" :stay-list="orderInfo.stayPersonDtoList"
@@ -32,7 +32,7 @@
                            @save="saveOrderRemark"></order-remark-card>
       </Col>
     </Row>
-    <order-action-card v-if="Object.keys(orderInfo).length"
+    <order-action-card v-if="Object.keys(orderInfo).length && orderInfo.orderStatus !== 5 && orderInfo.orderStatus !== 7 "
                        :order="orderInfo"
                        :has-check-in="hasCheckInStayPerson"
                        :lock-pwd-list="lockPwdList"
@@ -44,9 +44,10 @@
     <Modal
       v-model="logVisible"
       title="订单日志"
+      width="800"
       footer-hide>
       <div :style="{ paddingLeft: '20px' }">
-        <order-log v-if="logVisible" :order-bid="orderInfo.bid"></order-log>
+        <order-log v-if="logVisible" :order-bid="orderInfo.orderBid"></order-log>
       </div>
     </Modal>
     <Modal
@@ -55,8 +56,22 @@
       width="60"
       footer-hide>
       <div :style="{ paddingLeft: '20px' }">
-        <payment-detail v-if="paymentVisible" :order-bid="orderInfo.bid"></payment-detail>
+        <payment-detail v-if="paymentVisible" :order-bid="orderInfo.orderBid"></payment-detail>
       </div>
+    </Modal>
+    <Modal
+      v-model="phoneVisible"
+      :loading="phoneLoading"
+      title="修改预定手机号"
+      width="500"
+      @on-ok="validPhone">
+      <Form ref="cusPhoneForm" :model="phoneDto" :label-width="100">
+        <FormItem label="预定手机号：" prop="phone" :rules="[
+                  { required: true, message: '请输入预定手机号', trigger: 'blur' },
+                  { pattern: /^1\d{10}$/, message: '手机号格式不对', trigger: 'blur' }]">
+          <Input v-model.trim="phoneDto.phone" placeholder="" clearable></Input>
+        </FormItem>
+      </Form>
     </Modal>
   </div>
 </template>
@@ -67,7 +82,7 @@ import orderRemarkCard from './components/orderRemarkCard'
 import orderActionCard from './components/orderActionCard'
 import orderLog from './components/orderLog'
 import paymentDetail from './components/paymentDetail'
-import { orderDetail, saveOrderRemark, getOrderRemark, saveStayPerson } from '@/api/order'
+import { orderDetail, saveOrderRemark, getOrderRemark, saveStayPerson, updateOrderPhone } from '@/api/order'
 
 export default {
   name: 'orderDetail',
@@ -96,7 +111,15 @@ export default {
       firstChannel: [],
       logVisible: false,
       paymentVisible: false,
-      email: ''
+      email: '',
+      newCusPhone: '',
+      phoneDto: {
+        orderBid: '',
+        phone: '',
+        oldPhone: ''
+      },
+      phoneVisible: false,
+      phoneLoading: true
     }
   },
   computed: {
@@ -182,6 +205,46 @@ export default {
     },
     saveBed (dto) {
       console.info('saveBed ', dto)
+    },
+    updatePhone () {
+      this.phoneDto.orderBid = this.orderInfo.orderBid
+      this.phoneDto.phone = this.orderInfo.cusPhone
+      this.phoneDto.oldPhone = this.orderInfo.cusPhone
+      this.phoneVisible = true
+    },
+    validPhone () {
+      this.$refs['cusPhoneForm'].validate((valid) => {
+        if (valid) {
+          if (this.phoneDto.phone !== this.phoneDto.oldPhone) {
+            this.updateOrderPhone()
+          } else {
+            this.phoneVisible = false
+          }
+        } else {
+          this.handleError()
+        }
+      })
+    },
+    updateOrderPhone () {
+      updateOrderPhone(this.phoneDto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('预定手机号修改成功')
+          this.phoneVisible = false
+          this.getOrderDetail()
+        } else {
+          this.handleError()
+        }
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    handleError () {
+      setTimeout(() => {
+        this.phoneLoading = false
+        this.$nextTick(() => {
+          this.phoneLoading = true
+        })
+      }, 500)
     }
   },
   watch: {

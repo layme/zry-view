@@ -1,29 +1,21 @@
 <template>
   <div>
-    <guest-form @search="listData" @exportList="requestExportFile"></guest-form>
+    <guest-form @search="listData" @exportList="exportFile"></guest-form>
     <Table stripe :columns="columns" :data="guestData" :loading="loading" class="my-table"></Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageNum"
           :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
-    <Modal
-      title="文件导出"
-      v-model="visible"
-      :closable="false"
-      :mask-closable="false">
-      <Progress :percent="percent" />
-      <div slot="footer">
-        <Button type="text" @click="cancelExport">取消</Button>
-      </div>
-    </Modal>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import guestForm from './guestForm.vue'
-import { requestExportFile, getExportProcess } from '@/api/common'
 import { getGuestDataReport } from '@/api/reportGuest'
+import ExportFile from '_c/export-file/ExportFile'
 export default {
   name: 'guestData',
   components: {
-    guestForm
+    guestForm,
+    ExportFile
   },
   data () {
     return {
@@ -110,10 +102,7 @@ export default {
           key: 'suggestion',
           tooltip: true
         }
-      ],
-      visible: false,
-      percent: 0,
-      interval: ''
+      ]
     }
   },
   methods: {
@@ -155,56 +144,13 @@ export default {
         dto.actualEndDate = null
       }
     },
-    requestExportFile (dto) {
-      this.percent = 0
+    exportFile (dto) {
       this.flushData(dto)
       let data = {
         type: 1001,
         jsonParam: JSON.stringify(dto)
       }
-      requestExportFile(data).then(res => {
-        if (res.code === 200) {
-          this.visible = true
-          this.interval = setInterval(() => this.getExportProcess(res.body), 300)
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    getExportProcess (key) {
-      getExportProcess(key).then(res => {
-        if (res.code === 200) {
-          if (res.body.finish) {
-            this.percent = 100
-            setTimeout(() => { this.visible = false }, 800)
-            this.$Message.success('文件已生成，开始下载')
-            clearInterval(this.interval)
-            this.download(res.body.fileUrl)
-          } else {
-            this.percent = res.body.percent
-          }
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    download (url) {
-      const link = document.createElement('a')
-      link.href = url
-      link.style = 'visibility: hidden'
-      link.download = `${Date.now()}.xls`
-      document.body.appendChild(link)
-      link.click()
-      this.$forceUpdate()
-      setTimeout(() => { document.body.removeChild(link) }, 1000)
-    },
-    cancelExport () {
-      this.visible = false
-      clearInterval(this.interval)
+      this.$refs.exportFile.requestExportFile(data)
     }
   }
 }

@@ -37,7 +37,7 @@
           <Tag v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" color="blue">
             {{ item.stayPersonStatus | stayPersonStatusFilter }}
           </Tag>
-          <a v-else @click="selectBed(item.houseTypeBid)">选择床位</a>
+          <a v-else @click="selectBed(item)">选择床位</a>
         </div>
       </Col>
       <Col :span="1" style="text-align: center">
@@ -157,7 +157,7 @@ export default {
         })
       }
     },
-    selectBed (houseTypeBid) {
+    selectBed (item) {
       let startDate = ''
       let st = new Date(this.bedDto.startDate)
       let et = new Date(this.bedDto.endDate)
@@ -178,8 +178,9 @@ export default {
       this.$emit('selectBed', {
         checkInTime: startDate,
         checkOutTime: this.bedDto.endDate,
-        houseTypeBid: houseTypeBid
-      })
+        houseTypeBid: item.houseTypeBid
+      },
+      item)
     },
     unbindBed () {
       let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
@@ -213,8 +214,87 @@ export default {
         } else if (!stay.areaBedBid && (stay.stayPersonStatus === 1 || stay.stayPersonStatus === 6)) {
           this.$Message.warning('当前入住人还未排床，请先排床')
         } else {
-          this.selectBed(stay.houseTypeBid)
+          this.selectBed(stay)
         }
+      }
+    },
+    cancelBookBed () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (!selected.length) {
+        this.$Message.warning('请至少选择一个床位')
+      } else {
+        let warn = selected.filter(item => item.stayPersonStatus === 2 || item.stayPersonStatus === 8 || item.stayPersonStatus === 9 || item.stayPersonStatus === 10)
+        if (warn.length) {
+          this.$Message.warning('已取消 或 已入住 的床位不能退订')
+          return
+        }
+        let dto = {
+          orderBid: this.orderBid,
+          stayPersonBidList: []
+        }
+        selected.forEach(item => {
+          dto.stayPersonBidList.push(item.bid)
+        })
+        this.$emit('cancelBookBed', dto)
+      }
+    },
+    checkIn () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (!selected.length) {
+        this.$Message.warning('请至少选择一个床位')
+      } else {
+        let warnA = selected.filter(item => item.stayPersonStatus === 8 || item.stayPersonStatus === 9 || item.stayPersonStatus === 10)
+        if (warnA.length) {
+          this.$Message.warning('退订床位不能办理入住')
+          return
+        }
+        let warnB = selected.filter(item => !item.areaBedBid)
+        if (warnB.length) {
+          this.$Message.warning('入住床位不能为空，请先排床')
+          return
+        }
+        let dto = {
+          orderBid: this.orderBid,
+          stayPersonBidList: [],
+          customerPhone: ''
+        }
+        selected.forEach(item => {
+          dto.stayPersonBidList.push(item.bid)
+        })
+        this.$emit('checkIn', dto)
+      }
+    },
+    checkOut () {
+      let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
+      if (!selected.length) {
+        this.$Message.warning('请至少选择一个床位')
+      } else {
+        let warnA = selected.filter(item => item.stayPersonStatus === 4)
+        if (warnA.length) {
+          this.$Message.warning('已退租床位不能再次退租')
+          return
+        }
+        let warnB = selected.filter(item => item.stayPersonStatus === 8 || item.stayPersonStatus === 9 || item.stayPersonStatus === 10)
+        if (warnB.length) {
+          this.$Message.warning('退订床位不能办理退租')
+          return
+        }
+        let warnC = selected.filter(item => !item.areaBedBid)
+        if (warnC.length) {
+          this.$Message.warning('入住床位不能为空，请先排')
+          return
+        }
+        let dto = {
+          orderBid: this.orderBid,
+          stayPersonBidList: [],
+          areaBedBidList: [],
+          customerPhone: ''
+        }
+        selected.forEach(item => {
+          dto.stayPersonBidList.push(item.bid)
+          dto.areaBedBidList.push(item.areaBedBid)
+        })
+        this.$emit('checkOut', dto)
       }
     }
   },

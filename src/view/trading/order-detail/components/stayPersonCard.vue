@@ -68,7 +68,7 @@
             </Col>
           </Row>
         </div>
-        <Button type="primary" class="my-btn" @click="validateForm">保 存</Button>
+        <Button v-if="orderStatus === 1 || orderStatus === 2" type="primary" class="my-btn" @click="validateForm">保 存</Button>
         <Button v-if="orderStatus === 2" type="primary" class="my-btn" ghost>客史记录</Button>
       </Form>
     </Card>

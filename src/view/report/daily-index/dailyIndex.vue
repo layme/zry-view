@@ -23,7 +23,7 @@
         </Form>
       </Col>
       <Col :span="6" style="text-align: right">
-        <Button type="warning" icon="ios-cloud-download-outline" @click="requestExportFile"> 导 出</Button>
+        <Button type="warning" icon="ios-cloud-download-outline" @click="exportFile"> 导 出</Button>
       </Col>
     </Row>
     <Table :columns="columns" :data="listDate">
@@ -32,24 +32,18 @@
         <Tag v-else color="green">销售期</Tag>
       </template>
     </Table>
-    <Modal
-      title="文件导出"
-      v-model="visible"
-      :closable="false"
-      :mask-closable="false">
-      <Progress :percent="percent" />
-      <div slot="footer">
-        <Button type="text" @click="cancelExport">取消</Button>
-      </div>
-    </Modal>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import { getDate } from '@/libs/tools'
 import { getReportDaily } from '@/api/reportDaily'
-import { requestExportFile, getExportProcess } from '@/api/common'
+import ExportFile from '_c/export-file/ExportFile'
 export default {
   name: 'dailyIndex',
+  components: {
+    ExportFile
+  },
   data () {
     return {
       paramDto: {
@@ -116,7 +110,7 @@ export default {
         this.loading = false
       })
     },
-    requestExportFile () {
+    exportFile () {
       this.percent = 0
       let dto = {
         type: 1000,
@@ -126,49 +120,7 @@ export default {
           endCreateTime: getDate(this.paramDto.date[1], 'date')
         })
       }
-      requestExportFile(dto).then(res => {
-        if (res.code === 200) {
-          this.visible = true
-          this.interval = setInterval(() => this.getExportProcess(res.body), 300)
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    getExportProcess (key) {
-      getExportProcess(key).then(res => {
-        if (res.code === 200) {
-          if (res.body.finish) {
-            this.percent = 100
-            setTimeout(() => { this.visible = false }, 800)
-            this.$Message.success('文件已生成，开始下载')
-            clearInterval(this.interval)
-            this.download(res.body.fileUrl)
-          } else {
-            this.percent = res.body.percent
-          }
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    download (url) {
-      const link = document.createElement('a')
-      link.href = url
-      link.style = 'visibility: hidden'
-      link.download = `${Date.now()}.xls`
-      document.body.appendChild(link)
-      link.click()
-      this.$forceUpdate()
-      setTimeout(() => { document.body.removeChild(link) }, 1000)
-    },
-    cancelExport () {
-      this.visible = false
-      clearInterval(this.interval)
+      this.$refs.exportFile.requestExportFile(dto)
     }
   },
   created () {

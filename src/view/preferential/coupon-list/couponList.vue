@@ -31,29 +31,21 @@
         <div v-else class="no-data">暂无数据</div>
       </div>
     </Modal>
-    <Modal
-      title="文件导出"
-      v-model="visible"
-      :closable="false"
-      :mask-closable="false">
-      <Progress :percent="percent" />
-      <div slot="footer">
-        <Button type="text" @click="cancelExport">取消</Button>
-      </div>
-    </Modal>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import couponForm from './couponForm.vue'
 import couponDetailForm from '../coupon-detail/couponDetailForm.vue'
 import { listCoupon, getTicketDetail } from '@/api/coupon'
-import { requestExportFile, getExportProcess } from '@/api/common'
+import ExportFile from '_c/export-file/ExportFile'
 
 export default {
   name: 'couponList',
   components: {
     couponForm,
-    couponDetailForm
+    couponDetailForm,
+    ExportFile
   },
   data () {
     return {
@@ -153,7 +145,7 @@ export default {
         let dto = JSON.parse(JSON.stringify(data))
         this.$delete(dto, 'dateRange')
         this.flushData(dto)
-        this.requestExportFile(dto)
+        this.exportFile(dto)
       }
     },
     openCouponDetail (row) {
@@ -179,55 +171,13 @@ export default {
       }
       this.$router.push(route)
     },
-    requestExportFile (dto) {
+    exportFile (dto) {
       this.percent = 0
       let data = {
         type: 1002,
         jsonParam: JSON.stringify(dto)
       }
-      requestExportFile(data).then(res => {
-        if (res.code === 200) {
-          this.visible = true
-          this.interval = setInterval(() => this.getExportProcess(res.body), 300)
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    getExportProcess (key) {
-      getExportProcess(key).then(res => {
-        if (res.code === 200) {
-          if (res.body.finish) {
-            this.percent = 100
-            setTimeout(() => { this.visible = false }, 800)
-            this.$Message.success('文件已生成，开始下载')
-            clearInterval(this.interval)
-            this.download(res.body.fileUrl)
-          } else {
-            this.percent = res.body.percent
-          }
-        } else {
-          this.visible = false
-        }
-      }).catch(() => {
-        this.visible = false
-      })
-    },
-    download (url) {
-      const link = document.createElement('a')
-      link.href = url
-      link.style = 'visibility: hidden'
-      link.download = `${Date.now()}.xls`
-      document.body.appendChild(link)
-      link.click()
-      this.$forceUpdate()
-      setTimeout(() => { document.body.removeChild(link) }, 1000)
-    },
-    cancelExport () {
-      this.visible = false
-      clearInterval(this.interval)
+      this.$refs.exportFile.requestExportFile(data)
     }
   }
 }
