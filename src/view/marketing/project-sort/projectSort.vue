@@ -1,24 +1,25 @@
 <template>
   <div>
     <Row>
-      <Button type="primary" @click="sort">还 原</Button>
+      <Button type="primary" @click="reset">还 原</Button>
     </Row>
     <Row>
       <draggable tag="div" v-model="list" :options="dragOptions">
         <transition-group type="transition" name="flip-list">
-          <div class="list-group-item" v-for="item in list" :key="item.id">
-            {{ item.id }} - {{ item.name }}
+          <div class="list-group-item" v-for="item in list" :key="item.projectBid">
+            {{ item.projectName }}
           </div>
         </transition-group>
       </draggable>
     </Row>
     <Row>
-      <Button type="primary">保 存</Button>
+      <Button type="primary" @click="saveProjectSort">保 存</Button>
     </Row>
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
+import { getProjectSortList, saveProjectSort } from '@/api/project'
 
 export default {
   name: 'projectSort',
@@ -28,24 +29,9 @@ export default {
   },
   data () {
     return {
-      list: [
-        {
-          'name': 'CBD自如驿',
-          'id': 60
-        },
-        {
-          'name': '三里屯团结自如驿',
-          'id': 70
-        },
-        {
-          'name': '工体自如驿',
-          'id': 80
-        },
-        {
-          'name': '武汉大陆坊自如驿',
-          'id': 90
-        }
-      ],
+      list: [],
+      oldList: [],
+      projectBidList: [],
       dropConClass: {
         left: ['drop-box', 'left-drop-box'],
         right: ['drop-box', 'right-drop-box']
@@ -61,9 +47,26 @@ export default {
     }
   },
   methods: {
-    sort () {
-      this.list = this.list.sort((a, b) => a.id - b.id)
+    reset () {
+      this.list = this.oldList
+    },
+    saveProjectSort () {
+      this.projectBidList = this.list.map(item => item.projectBid)
+      saveProjectSort({ projectIds: this.projectBidList.toString() }).then(res => {
+        this.$Message.success('修改排序成功')
+      }).catch(() => {
+      })
+    },
+    getProjectSortList () {
+      getProjectSortList().then(res => {
+        this.list = res.body
+        this.oldList = res.body
+      }).catch(() => {
+      })
     }
+  },
+  created () {
+    this.getProjectSortList()
   },
   computed: {
     dragOptions () {

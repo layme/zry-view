@@ -8,14 +8,14 @@
       </Col>
       <Col span="8">
         <FormItem label="退款状态">
-          <Select v-model="paramDto.refundStatus" placeholder="请选择" clearable>
+          <Select v-model="paramDto.refoundStatus" placeholder="请选择" clearable>
             <Option v-for="x in refundStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="申请日期">
-          <DatePicker v-model="paramDto.refundTime" type="daterange" split-panels placeholder=""
+          <DatePicker v-model="applyRefundTime" type="daterange" split-panels placeholder=""
                       class="my-date-picker"></DatePicker>
         </FormItem>
       </Col>
@@ -23,17 +23,17 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="入住人">
-          <Input v-model.trim="paramDto.stayPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.checkinPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="入住日期">
-          <DatePicker v-model="paramDto.checkInTime" type="daterange" split-panels placeholder=""
+          <DatePicker v-model="checkInTime" type="daterange" split-panels placeholder=""
                       class="my-date-picker"></DatePicker>
         </FormItem>
       </Col>
@@ -56,16 +56,16 @@ export default {
     return {
       paramDto: {
         orderNumber: '',
-        refundStatus: '',
-        refundTime: [],
-        refundStartTime: '',
-        refundEndTime: '',
-        customer: '',
-        stayPerson: '',
-        checkInTime: [],
+        refoundStatus: '',
+        applyRefundStartTime: '',
+        applyRefundEndTime: '',
+        bookPerson: '',
+        checkinPerson: '',
         checkInStartTime: '',
         checkInEndTime: ''
       },
+      applyRefundTime: [],
+      checkInTime: [],
       refundStatusOptions: [
         {
           label: '待核实',
@@ -92,13 +92,13 @@ export default {
     }
   },
   watch: {
-    'paramDto.checkInTime' (val) {
+    checkInTime (val) {
       this.paramDto.checkInStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.checkInEndTime = val[1] ? getDate(val[1], 'date') : ''
     },
-    'paramDto.refundTime' (val) {
-      this.paramDto.refundStartTime = val[0] ? getDate(val[0], 'date') : ''
-      this.paramDto.refundEndTime = val[1] ? getDate(val[1], 'date') : ''
+    applyRefundTime (val) {
+      this.paramDto.applyRefundStartTime = val[0] ? getDate(val[0], 'date') : ''
+      this.paramDto.applyRefundEndTime = val[1] ? getDate(val[1], 'date') : ''
     }
   }
 }
