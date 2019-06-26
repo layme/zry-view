@@ -12,17 +12,27 @@
         </Col>
         <Col :span="6">
           <FormItem label="预定人手机号：">
-            <span>{{ order.cusPhone }}</span>
+            <span v-if="order.secondChannel > 1">
+              <a @click="updatePhone">{{ order.cusPhone }}</a>
+            </span>
+            <span v-else>{{ order.cusPhone }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="邮箱：">
-            <span>{{ order.cusMail }}</span>
+            <span>{{ order.cusMail | nullFilter }}</span>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="支付方式：">
-            <span>{{ order.payMethod | payMethodFilter }}</span>
+            <span>{{ order.payMethod | payMethodFilter | nullFilter }}</span>
+            <Tooltip theme="light" v-if="order.ticketBid && coupon">
+              <span>已使用 {{ coupon.amount }} 元优惠券</span>
+              <div slot="content">
+                <p>优惠券编码: {{ coupon.ticketNumber }}</p>
+                <p>优惠活动名: {{ coupon.activityName }}</p>
+              </div>
+            </Tooltip>
           </FormItem>
         </Col>
       </Row>
@@ -34,7 +44,7 @@
         </Col>
         <Col :span="6">
           <FormItem label="预定床位数：">
-            <Tag color="blue">{{ order.orderBedCount }}</Tag>
+            <Tag color="blue">{{ order.orderBedCount }} 个</Tag>
           </FormItem>
         </Col>
         <Col :span="6">
@@ -49,7 +59,9 @@
         </Col>
       </Row>
       <Button type="primary" class="my-btn" v-if="order.status === 5">支 付</Button>
-      <Button type="warning" class="my-btn" v-if="order.status === 1 || order.status === 5" @click.prevent="cancelOrder">取 消</Button>
+      <Button type="warning" class="my-btn" v-if="order.status === 1 || order.status === 5"
+              @click.prevent="cancelOrder">取 消
+      </Button>
     </Form>
   </Card>
 </template>
@@ -58,6 +70,7 @@ export default {
   name: 'baseInfoCard',
   props: {
     order: Object,
+    coupon: Object,
     channel: Array
   },
   data () {
@@ -77,6 +90,9 @@ export default {
     },
     channelFormat (val) {
       return val ? this.channel.find(item => item.code === val).text : '未知'
+    },
+    updatePhone () {
+      this.$emit('updatePhone')
     }
   }
 }

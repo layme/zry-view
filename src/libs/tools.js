@@ -108,6 +108,9 @@ export const getDate = (timeStamp, startType) => {
     case 'year':
       resStr = year
       break
+    case 'dateNumber':
+      resStr = year + '' + month + '' + date
+      break
   }
   return resStr
 }

@@ -4,11 +4,11 @@
       <p slot="title">
         费用项目
       </p>
-      <a v-if="!feeList.length" slot="extra" @click.prevent="visible = true">
+      <a v-if="!hasDep" slot="extra" @click.prevent="visible = true">
         <Icon type="ios-add-circle-outline"/>
         添加
       </a>
-      <Row :gutter="10" class="fee-row" v-for="(item, index) in feeList" :key="index" :class="feeRow(index)">
+      <Row :gutter="10" v-if="hasDep" class="fee-row" v-for="(item, index) in feeList" :key="index" :class="feeRow(index)">
         <Col :span="8">
           <Tag color="blue">{{ item.depPaymentType | paymentTypeFilter }}</Tag>
         </Col>
@@ -20,6 +20,7 @@
           <span v-else>已退还</span>
         </Col>
       </Row>
+      <div v-if="!hasDep" class="no-data">暂无数据</div>
     </Card>
     <Modal
       v-model="visible"
@@ -48,7 +49,6 @@ export default {
     return {
       feeList: [
         {
-          bid: '',
           orderBid: '',
           depPaymentType: '',
           depositSum: '',
@@ -75,12 +75,19 @@ export default {
       visible: false
     }
   },
+  computed: {
+    hasDep () {
+      return this.feeList.length > 0
+    }
+  },
   methods: {
     initData () {
-      this.feeList[0].orderBid = this.order.orderBid
-      this.feeList[0].depPaymentType = this.order.depPaymentType
-      this.feeList[0].depositSum = this.order.depositSum
-      this.feeList[0].depositStatus = this.order.depositStatus
+      if (this.order.depPaymentType) {
+        this.feeList[0].orderBid = this.order.orderBid
+        this.feeList[0].depPaymentType = this.order.depPaymentType
+        this.feeList[0].depositSum = this.order.depositSum
+        this.feeList[0].depositStatus = this.order.depositStatus
+      }
     },
     saveFee () {
     },
@@ -119,5 +126,11 @@ export default {
     &-not-first {
       margin-top: 15px;
     }
+  }
+  .no-data {
+    height: 40px;
+    text-align: center;
+    padding-top: 10px;
+    color: #909399;
   }
 </style>

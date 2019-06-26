@@ -1,6 +1,6 @@
 <template>
   <div>
-    <order-form @search="listOrder"></order-form>
+    <order-form @search="listOrder" @exportList="exportFile"></order-form>
     <Table stripe :columns="columns" :data="orderList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toOrderDetail(row)">{{ row.orderNumber }}</a>
@@ -23,16 +23,19 @@
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
           :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import orderForm from './orderForm'
 import { getOrders } from '@/api/order'
+import ExportFile from '_c/export-file/ExportFile'
 
 export default {
   name: 'orderList',
   components: {
-    orderForm
+    orderForm,
+    ExportFile
   },
   data () {
     return {
@@ -132,6 +135,13 @@ export default {
     },
     getProjectName (projectBid) {
       return this.$store.state.user.projectList.find(item => item.bid === projectBid).projectName
+    },
+    exportFile (dto) {
+      let data = {
+        type: 1004,
+        jsonParam: JSON.stringify(dto)
+      }
+      this.$refs.exportFile.requestExportFile(data)
     }
   }
 }

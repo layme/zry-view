@@ -2,17 +2,21 @@
   <div>
     <Table stripe :columns="columns" :data="paymentDetail" :loading="loading">
       <template slot-scope="{ row }" slot="paymentDate">
-        <div>{{ row.date | dateFilter }}</div>
+        <div>{{ row.orderDate }}</div>
+      </template>
+      <template slot-scope="{ row }" slot="bedCode">
+        <div>{{ row.bedCode | bedCodeFilter }}</div>
       </template>
       <template slot-scope="{ row }" slot="isConsume">
         <div>{{ row.isConsume | consumeFilter }}</div>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageNum"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
+import { getOrderPayDetail } from '@/api/order'
 export default {
   name: 'paymentDetail',
   props: {
@@ -22,8 +26,8 @@ export default {
     return {
       paramDto: {
         orderBid: this.orderBid,
-        page: 1,
-        limit: 10
+        pageNum: 1,
+        pageSize: 10
       },
       paymentDetail: [],
       total: 0,
@@ -44,11 +48,11 @@ export default {
         },
         {
           title: '床位号',
-          key: 'bedCoed'
+          slot: 'bedCode'
         },
         {
-          title: '支付价格',
-          key: 'amount'
+          title: '支付金额/元',
+          key: 'bedPrice'
         },
         {
           title: '是否消费',
@@ -60,11 +64,20 @@ export default {
   methods: {
     handlePageChange () {
       this.loading = true
-      console.info('paramDto', this.paramDto)
-      this.loading = false
+      getOrderPayDetail(this.paramDto).then(res => {
+        if (res.code === 200) {
+          this.paymentDetail = res.body.rows
+          this.total = res.body.total
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     }
   },
   created () {
+    this.paramDto.pageNum = 1
+    this.handlePageChange()
   },
   filters: {
     consumeFilter (val) {

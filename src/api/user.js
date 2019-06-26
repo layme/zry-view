@@ -34,10 +34,11 @@ export const logout = () => {
   })
 }
 
-export const getUnreadCount = () => {
+export const getUnreadCount = data => {
   return axios.request({
     url: '/remind/listRemind.action',
-    method: 'get'
+    method: 'get',
+    params: data
   })
 }
 

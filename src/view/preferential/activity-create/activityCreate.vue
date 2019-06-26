@@ -1,5 +1,6 @@
 <template>
-  <Row>
+  <Row class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Col :span="20">
       <Form ref="activityForm" :model="activityDto" :rules="activityRules" :label-width="100">
         <Row>
@@ -47,9 +48,11 @@
               <Row v-else v-for="(item, index) in activityDto.limitProjectInfo" :key="index" class="my-row"
                    :style="index > 0 ? { paddingLeft: '26px' } : ''">
                 <FormItem :prop="'limitProjectInfo.' + index + '.projectBid'" :label-width="0">
-                  <Checkbox v-model="isLimitProject" @on-change="handleIsLimitProjectChange" v-if="index === 0"></Checkbox>
+                  <Checkbox v-model="isLimitProject" @on-change="handleIsLimitProjectChange"
+                            v-if="index === 0"></Checkbox>
                   限
-                  <Select v-model="item.projectBid" class="my-select" :disabled="!isLimitProject">
+                  <Select v-model="item.projectBid" class="my-select" :disabled="!isLimitProject" placeholder=""
+                          @on-change="handleProjectChange(index)">
                     <Option
                       v-for="item in $store.state.user.projectList"
                       :key="item.bid"
@@ -57,11 +60,11 @@
                       :value="item.bid">
                     </Option>
                   </Select>
-                  <Select v-model="item.houseTypeBid" class="my-select" :disabled="!isLimitProject">
+                  <Select v-model="item.houseTypeBid" class="my-select" :disabled="!isLimitProject" placeholder="">
                     <Option
-                      v-for="item in $store.state.user.projectList"
+                      v-for="item in houseTypeBidGroup[index]"
                       :key="item.bid"
-                      :label="item.projectName"
+                      :label="item.houseTypeParentName + '·' + item.houseTypeName"
                       :value="item.bid">
                     </Option>
                   </Select>
@@ -101,9 +104,10 @@
     <Modal
       v-model="visible"
       title="新增优惠券"
-      :loading="loading"
+      :modalLoading="modalLoading"
       @on-ok="saveTicket">
-      <ticket-form ref="ticketForm" :batch-number="activityDto.ticketInfo.length + 1" v-if="visible" @push="handlePush"></ticket-form>
+      <ticket-form ref="ticketForm" :batch-number="activityDto.ticketInfo.length + 1" v-if="visible"
+                   @push="handlePush"></ticket-form>
     </Modal>
   </Row>
 </template>
@@ -111,6 +115,9 @@
 import ticketForm from '../components/ticketForm.vue'
 import { getDate } from '@/libs/tools'
 import { mapMutations } from 'vuex'
+import { saveActivity } from '@/api/activity'
+import { getHouseTypeList } from '@/api/stock'
+
 export default {
   name: 'activityCreate',
   components: {
@@ -125,27 +132,25 @@ export default {
         endDate: '',
         activityContent: '',
         limitMoney: '',
-        limitProjectInfo: [
-          {
-            projectBid: '',
-            houseTypeBid: ''
-          }
-        ],
+        limitProjectInfo: [],
         ticketInfo: []
       },
+      houseTypeBidGroup: [],
       activityRules: {
         activityName: [
           { required: true, message: '请输入优惠活动名称', trigger: 'blur' },
           { type: 'string', max: 50, message: '最多输入50字', trigger: 'blur' }
         ],
         dateRange: [
-          { required: true,
+          {
+            required: true,
             type: 'array',
             fields: {
               0: { type: 'date', required: true, message: '请选择活动时间' },
               1: { type: 'date', required: true, message: '请选择活动时间' }
             },
-            trigger: 'change' }
+            trigger: 'change'
+          }
         ],
         activityContent: [
           { required: true, message: '请输入活动内容', trigger: 'blur' },
@@ -186,8 +191,9 @@ export default {
           width: 60
         }
       ],
+      loading: false,
       visible: false,
-      loading: true,
+      modalLoading: true,
       datePickerOptions: {
         disabledDate (date) {
           return date && date.valueOf() < Date.now() - 86400000
@@ -205,13 +211,15 @@ export default {
       }
     },
     handleIsLimitProjectChange (val) {
-      if (!val) {
+      if (val) {
         this.activityDto.limitProjectInfo = [
           {
             projectBid: '',
             houseTypeBid: ''
           }
         ]
+      } else {
+        this.activityDto.limitProjectInfo.length = 0
       }
     },
     addLimitProject () {
@@ -221,20 +229,23 @@ export default {
           houseTypeBid: ''
         }
       )
+      this.houseTypeBidGroup.push([])
     },
     removeLimitProject (index) {
       this.activityDto.limitProjectInfo.splice(index, 1)
+      this.houseTypeBidGroup.splice(index, 1)
     },
     handlePush (val) {
+      this.$set(val, 'creator', this.$store.state.user.username)
       this.activityDto.ticketInfo.push(val)
       this.visible = false
     },
     saveTicket () {
       this.$refs.ticketForm.validForm()
       setTimeout(() => {
-        this.loading = false
+        this.modalLoading = false
         this.$nextTick(() => {
-          this.loading = true
+          this.modalLoading = true
         })
       }, 500)
     },
@@ -252,17 +263,34 @@ export default {
       })
     },
     saveActivity () {
-      this.$Message.success('save activity')
-      console.info('activityDto', this.activityDto)
-      this.closeTag({
-        name: 'createActivity'
+      this.loading = true
+      if (!this.activityDto.limitProjectInfo.length) {
+        this.activityDto.limitProjectInfo = null
+      }
+      saveActivity(this.activityDto).then(res => {
+        if (res.code === 200) {
+          this.$Message.success('保存成功，跳转回优惠活动列表')
+          this.closeTag({ name: 'createActivity' })
+          this.$router.push({ name: 'activityList' })
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    handleProjectChange (index) {
+      console.info('index ', index)
+      getHouseTypeList(this.activityDto.limitProjectInfo[index].projectBid).then(res => {
+        if (res.code === 200) {
+          this.houseTypeBidGroup.splice(index, 1, res.body)
+        }
       })
     }
   },
   watch: {
     'activityDto.dateRange' (val) {
-      this.activityDto.startDate = val[0] ? getDate(val[0], 'date') : ''
-      this.activityDto.endDate = val[1] ? getDate(val[1], 'date') : ''
+      this.activityDto.startDate = val[0] ? getDate(val[0], 'dateNumber') : ''
+      this.activityDto.endDate = val[1] ? getDate(val[1], 'dateNumber') : ''
     }
   }
 }
@@ -288,5 +316,13 @@ export default {
 
   .my-btn {
     margin-left: 10px;
+  }
+
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+  .full-spin {
+    height: 100%;
   }
 </style>

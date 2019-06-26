@@ -1,9 +1,16 @@
 <template>
-  <div>
-    <div v-for="(item, index) in orderLog" :key="index">{{ item }}</div>
+  <div class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
+    <Timeline>
+      <TimelineItem v-for="(item, index) in orderLog" :key="index">
+        <p class="content">{{ item.operContent }}</p>
+        <p class="time">{{ item.operator }} / {{ item.operTime }}</p>
+      </TimelineItem>
+    </Timeline>
   </div>
 </template>
 <script>
+import { getOrderRecord } from '@/api/order'
 export default {
   name: 'orderLog',
   props: {
@@ -11,17 +18,43 @@ export default {
   },
   data () {
     return {
-      orderLog: []
+      orderLog: [],
+      loading: false
     }
   },
   methods: {
-    getOrderLog () {
-      this.orderLog = ['time save order', 'time payment', 'time change bed', 'time check in', 'time check out', 'time over']
+    getOrderRecord () {
+      this.loading = true
+      getOrderRecord(this.orderBid).then(res => {
+        if (res.code === 200) {
+          this.orderLog = res.body
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     }
   },
   created () {
-    this.getOrderLog()
+    this.getOrderRecord()
   }
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .full-top {
+    position: relative;
+    min-height: 300px;
+  }
+
+  .full-spin {
+    height: 100%;
+  }
+
+  .content {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .time {
+    padding-left: 10px;
+  }
+</style>

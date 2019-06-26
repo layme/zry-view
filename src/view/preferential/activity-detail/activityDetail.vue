@@ -185,7 +185,7 @@ export default {
       let activityCondition = val.activityCondition
       let condition = ''
       if (limitMoney) {
-        condition = condition + '满' + limitMoney + '可用'
+        condition = condition + '消费满 ' + limitMoney + ' 元可用'
       }
       if (activityCondition) {
         condition = condition + '、' + activityCondition

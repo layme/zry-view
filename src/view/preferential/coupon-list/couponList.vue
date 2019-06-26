@@ -4,7 +4,7 @@
                  @search="listCoupon" @export="exportData"></coupon-form>
     <Table stripe :columns="columns" :data="couponList" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="ticketNumber">
-        <a @click="toCouponDetail(row)">{{ row.ticketNumber }}</a>
+        <a @click="openCouponDetail(row)">{{ row.ticketNumber }}</a>
       </template>
       <template slot-scope="{ row }" slot="activityNumber">
         <a @click="toActivityDetail(row)">{{ row.activityNumber }}</a>
@@ -20,16 +20,32 @@
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.size" @on-change="handlePageChange"/>
+    <Modal
+      title="优惠券详情"
+      v-model="couponVisible"
+      width="600"
+      footer-hide>
+      <div class="full-top">
+        <Spin size="large" fix v-if="couponLoading" class="full-spin"></Spin>
+        <coupon-detail-form v-if="Object.keys(coupon).length" :coupon="coupon"></coupon-detail-form>
+        <div v-else class="no-data">暂无数据</div>
+      </div>
+    </Modal>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import couponForm from './couponForm.vue'
-import { listCoupon } from '@/api/coupon'
+import couponDetailForm from '../coupon-detail/couponDetailForm.vue'
+import { listCoupon, getTicketDetail } from '@/api/coupon'
+import ExportFile from '_c/export-file/ExportFile'
 
 export default {
   name: 'couponList',
   components: {
-    couponForm
+    couponForm,
+    couponDetailForm,
+    ExportFile
   },
   data () {
     return {
@@ -75,7 +91,8 @@ export default {
         },
         {
           title: '使用条件',
-          key: 'conditions'
+          key: 'conditions',
+          tooltip: true
         },
         {
           title: '活动内容',
@@ -83,15 +100,21 @@ export default {
           tooltip: true
         }
       ],
-      loading: false
+      loading: false,
+      coupon: {},
+      couponLoading: false,
+      couponVisible: false,
+      visible: false,
+      percent: 0,
+      interval: ''
     }
   },
   methods: {
-    listCoupon (dto) {
+    listCoupon (data) {
+      let dto = JSON.parse(JSON.stringify(data))
+      this.$delete(dto, 'dateRange')
+      this.flushData(dto)
       Object.assign(this.paramDto, dto)
-      this.$delete(this.paramDto, 'dateRange')
-      this.paramDto.activityState = this.paramDto.activityState.join(',')
-      this.paramDto.couponState = this.paramDto.couponState.join(',')
       this.paramDto.page = 1
       this.handlePageChange()
     },
@@ -107,17 +130,36 @@ export default {
         this.loading = false
       })
     },
-    exportData (dto) {
-    },
-    toCouponDetail (row) {
-      const couponBid = row.couponBid
-      const route = {
-        name: 'couponDetail',
-        query: {
-          couponBid
-        }
+    flushData (dto) {
+      if (Array.isArray(dto.activityState)) {
+        dto.activityState = dto.activityState.join(',')
       }
-      this.$router.push(route)
+      if (Array.isArray(dto.couponState)) {
+        dto.couponState = dto.couponState.join(',')
+      }
+    },
+    exportData (data) {
+      if (!data.batchNumber || !data.activityNumber) {
+        this.$Message.warning('导出文件时 [批次号] 和 [优惠活动编号] 是必填条件')
+      } else {
+        let dto = JSON.parse(JSON.stringify(data))
+        this.$delete(dto, 'dateRange')
+        this.flushData(dto)
+        this.exportFile(dto)
+      }
+    },
+    openCouponDetail (row) {
+      this.coupon = {}
+      this.couponVisible = true
+      this.couponLoading = true
+      getTicketDetail(row.couponBid).then(res => {
+        if (res.code === 200) {
+          this.coupon = res.body
+        }
+        this.couponLoading = false
+      }).catch(() => {
+        this.couponLoading = false
+      })
     },
     toActivityDetail (row) {
       const activityBid = row.activityBid
@@ -128,6 +170,14 @@ export default {
         }
       }
       this.$router.push(route)
+    },
+    exportFile (dto) {
+      this.percent = 0
+      let data = {
+        type: 1002,
+        jsonParam: JSON.stringify(dto)
+      }
+      this.$refs.exportFile.requestExportFile(data)
     }
   }
 }
@@ -139,5 +189,19 @@ export default {
   .my-page {
     text-align: right;
     margin-top: 20px
+  }
+  .no-data {
+    height: 100px;
+    text-align: center;
+    padding-top: 40px;
+    color: #909399;
+  }
+  .full-top {
+    position: relative;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

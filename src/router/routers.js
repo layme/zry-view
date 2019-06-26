@@ -298,17 +298,6 @@ export default [
           title: '优惠券'
         },
         component: () => import('@/view/preferential/coupon-list/couponList.vue')
-      },
-      {
-        path: 'couponDetail',
-        name: 'couponDetail',
-        meta: {
-          icon: '_qq',
-          title: '优惠券详情',
-          hideInMenu: true,
-          notCache: true
-        },
-        component: () => import('@/view/preferential/coupon-detail/couponDetail.vue')
       }
     ]
   },

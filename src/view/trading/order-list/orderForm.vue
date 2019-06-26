@@ -43,7 +43,7 @@
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
+        <Button type="warning" icon="ios-cloud-download-outline" @click="exportList"> 导 出</Button>
       </Col>
     </Row>
   </Form>
@@ -117,6 +117,9 @@ export default {
   methods: {
     submit () {
       this.$emit('search', this.paramDto)
+    },
+    exportList () {
+      this.$emit('exportList', this.paramDto)
     }
   },
   watch: {

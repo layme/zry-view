@@ -19,6 +19,26 @@ export const getAreaList = (data) => {
   })
 }
 
+// 请求导出文件
+export const requestExportFile = data => {
+  return axios.request({
+    url: '/system/requestExportFile.action',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询导出文件进度
+export const getExportProcess = key => {
+  return axios.request({
+    url: '/system/getExportProcess',
+    method: 'get',
+    params: {
+      key: key
+    }
+  })
+}
+
 // 获取结算公司 暂时不用
 export const getCompanyList = () => {
   return axios.request({

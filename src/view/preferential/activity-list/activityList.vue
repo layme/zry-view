@@ -10,11 +10,11 @@
       </template>
       <template slot-scope="{ row }" slot="action">
         <div v-if="row.status === 0">
-          <a class="my-btn" @click="updateActivity(row.activityBid, 1)">开启</a>
-          <a @click="updateActivity(row.activityBid, 2)">关闭</a>
+          <a class="my-btn" @click="confirmUpdateActivity(row.activityBid, 1)">开启</a>
+          <a @click="confirmUpdateActivity(row.activityBid, 2)">关闭</a>
         </div>
         <div v-else-if="row.status === 1">
-          <a @click="updateActivity(row.activityBid, 2)">关闭</a>
+          <a @click="confirmUpdateActivity(row.activityBid, 2)">关闭</a>
         </div>
         <div v-else>-</div>
       </template>
@@ -25,7 +25,7 @@
 </template>
 <script>
 import activityForm from './activityForm.vue'
-import { listActivity } from '@/api/activity'
+import { listActivity, updateActivity } from '@/api/activity'
 export default {
   name: 'activityList',
   components: {
@@ -61,7 +61,10 @@ export default {
         {
           title: '活动范围',
           key: 'activityCondition',
-          tooltip: true
+          tooltip: true,
+          render: (h, params) => {
+            return h('div', params.row.activityCondition ? params.row.activityCondition : '全部项目')
+          }
         },
         {
           title: '活动内容',
@@ -98,7 +101,7 @@ export default {
     },
     createActivity () {
       const route = {
-        name: 'couponList'
+        name: 'createActivity'
       }
       this.$router.push(route)
     },
@@ -124,7 +127,32 @@ export default {
           return 'orange'
       }
     },
-    updateActivity (activityBid, activityStatus) {}
+    confirmUpdateActivity (activityBid, activityStatus) {
+      this.$Modal.confirm({
+        title: '通知',
+        content: `<p>确定要${activityStatus === 1 ? '开启' : '关闭'}该优惠活动吗？</p>`,
+        onOk: () => {
+          this.updateActivity(activityBid, activityStatus)
+        },
+        onCancel: () => {
+        }
+      })
+    },
+    updateActivity (activityBid, activityStatus) {
+      updateActivity(activityBid, activityStatus).then(res => {
+        if (res.code === 200) {
+          this.$Message.success(`${activityStatus === 1 ? '开启' : '关闭'}成功`)
+          this.handlePageChange()
+        }
+      })
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      if (from.name === 'createActivity') {
+        this.handlePageChange()
+      }
+    }
   },
   filters: {
     statusFilter (val) {
