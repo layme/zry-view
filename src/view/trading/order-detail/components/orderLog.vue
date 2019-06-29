@@ -4,7 +4,7 @@
     <Timeline>
       <TimelineItem v-for="(item, index) in orderLog" :key="index">
         <p class="content">{{ item.operContent }}</p>
-        <p class="time">{{ item.operator }} / {{ item.operTime }}</p>
+        <p class="time">{{ item.operator }} · {{ item.operTime }}</p>
       </TimelineItem>
     </Timeline>
   </div>

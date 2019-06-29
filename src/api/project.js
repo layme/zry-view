@@ -1,7 +1,7 @@
 import axios from '@/libs/request'
 
 // 获取列表
-export const getProjects = (data) => {
+export const getProjects = data => {
   return axios.request({
     url: '/project/getProjectList',
     method: 'post',
@@ -10,7 +10,7 @@ export const getProjects = (data) => {
 }
 
 // 获取详情
-export const getBaseInfo = (data) => {
+export const getBaseInfo = data => {
   return axios.request({
     url: '/project/getProjectDetail',
     method: 'get',
@@ -21,7 +21,7 @@ export const getBaseInfo = (data) => {
 }
 
 // 获取项目发布的进度信息
-export const getProjectProgress = (data) => {
+export const getProjectProgress = data => {
   return axios.request({
     url: '/project/getProjectProgress',
     method: 'get',
@@ -32,7 +32,7 @@ export const getProjectProgress = (data) => {
 }
 
 // 保存数据
-export const saveBase = (data) => {
+export const saveBase = data => {
   return axios.request({
     url: '/project/saveProject',
     method: 'post',
@@ -41,7 +41,7 @@ export const saveBase = (data) => {
 }
 
 // 修改数据
-export const updateBase = (data) => {
+export const updateBase = data => {
   return axios.request({
     url: '/project/updateProject',
     method: 'post',
@@ -86,7 +86,7 @@ export const canOrderOrNot = (bid, val) => {
 }
 
 // 获取订单数据
-export const getOrderInfoForSmartLock = (data) => {
+export const getOrderInfoForSmartLock = data => {
   return axios.request({
     url: '/project/getOrderInfoForSmartLock',
     method: 'get',
@@ -97,9 +97,25 @@ export const getOrderInfoForSmartLock = (data) => {
 }
 
 // 获取订单数据
-export const getProjectListAll = (data) => {
+export const getProjectListAll = () => {
   return axios.request({
     url: '/project/getProjectListAll',
+    method: 'get'
+  })
+}
+
+// 查询密码
+export const getPassword = () => {
+  return axios.request({
+    url: '/project/getPassword.action',
+    method: 'get'
+  })
+}
+
+// 查询待保洁床位数
+export const getBedCountByStatus = () => {
+  return axios.request({
+    url: '/project/getBedCountByStatus.action',
     method: 'get'
   })
 }

@@ -19,7 +19,7 @@
       </Col>
     </Row>
     <base-info-card v-if="Object.keys(orderInfo).length" :order="orderInfo" :coupon="ticketInfo" :channel="firstChannel"
-                    class="card-cls" @updatePhone="updatePhone"></base-info-card>
+                    class="card-cls" @updatePhone="updatePhone" @refresh="getOrderDetail"></base-info-card>
     <Row :gutter="20">
       <Col :span="18">
         <stay-person-card v-if="Object.keys(orderInfo).length" :stay-list="orderInfo.stayPersonDtoList"
@@ -66,7 +66,7 @@
       width="500"
       @on-ok="validPhone">
       <Form ref="cusPhoneForm" :model="phoneDto" :label-width="100">
-        <FormItem label="预定手机号：" prop="phone" :rules="[
+        <FormItem label="预定手机号: " prop="phone" :rules="[
                   { required: true, message: '请输入预定手机号', trigger: 'blur' },
                   { pattern: /^1\d{10}$/, message: '手机号格式不对', trigger: 'blur' }]">
           <Input v-model.trim="phoneDto.phone" placeholder="" clearable></Input>

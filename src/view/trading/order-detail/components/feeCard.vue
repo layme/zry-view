@@ -47,14 +47,7 @@ export default {
   },
   data () {
     return {
-      feeList: [
-        {
-          orderBid: '',
-          depPaymentType: '',
-          depositSum: '',
-          depositStatus: ''
-        }
-      ],
+      feeList: [],
       feeDto: {
         depPaymentType: 1,
         depositSum: ''
@@ -83,10 +76,13 @@ export default {
   methods: {
     initData () {
       if (this.order.depPaymentType) {
-        this.feeList[0].orderBid = this.order.orderBid
-        this.feeList[0].depPaymentType = this.order.depPaymentType
-        this.feeList[0].depositSum = this.order.depositSum
-        this.feeList[0].depositStatus = this.order.depositStatus
+        this.feeList = []
+        this.feeList.push({
+          orderBid: this.order.orderBid,
+          depPaymentType: this.order.depPaymentType,
+          depositSum: this.order.depositSum,
+          depositStatus: this.order.depositStatus
+        })
       }
     },
     saveFee () {

@@ -142,6 +142,14 @@ const bedCodeFilter = val => {
   return val.substring(val.length - 2)
 }
 
+const pswTypeFilter = val => {
+  if (val === 1) {
+    return '保洁密码'
+  } else if (val === 2) {
+    return '维修密码'
+  }
+}
+
 Vue.filter('orderStatusFilter', orderStatusFilter)
 Vue.filter('dateTimeFilter', dateTimeFilter)
 Vue.filter('dateFilter', dateFilter)
@@ -151,3 +159,4 @@ Vue.filter('stayPersonStatusFilter', stayPersonStatusFilter)
 Vue.filter('nullFilter', nullFilter)
 Vue.filter('idTypeFilter', idTypeFilter)
 Vue.filter('bedCodeFilter', bedCodeFilter)
+Vue.filter('pswTypeFilter', pswTypeFilter)
