@@ -6,6 +6,7 @@ import app from './module/app'
 import order from './module/order'
 import project from './module/project'
 import guest from './module/guest'
+import workbench from './module/workbench'
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     app,
     order,
     project,
-    guest
+    guest,
+    workbench
   }
 })

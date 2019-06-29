@@ -305,11 +305,6 @@ export default {
   },
   created () {
     this.initData()
-  },
-  filters: {
-    bedCodeFilter (val) {
-      return val ? val.substring(val.length - 2) : '-'
-    }
   }
 }
 </script>

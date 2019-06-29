@@ -1,4 +1,5 @@
 import axios from '@/libs/request'
+import { getToken } from '@/libs/util'
 
 export const getOrders = data => {
   return axios.request({
@@ -115,5 +116,54 @@ export const getOrderPayDetail = data => {
     url: '/order/getOrderPayDetail.action',
     method: 'get',
     params: data
+  })
+}
+
+export const getConfEnum = () => {
+  return axios.request({
+    url: '/order/getConfEnum',
+    method: 'get'
+  })
+}
+
+export const saveOrder = data => {
+  return axios.request({
+    url: '/order/createOrder.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const getFinSettle = () => {
+  return axios.request({
+    url: '/order/getFinSettle.action',
+    method: 'get'
+  })
+}
+
+export const cancelOrder = data => {
+  return axios.request({
+    url: '/order/cancelOrder.action',
+    method: 'post',
+    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: {
+      orderBid: data
+    }
+  })
+}
+
+export const pay = data => {
+  return axios.request({
+    url: '/order/pay.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const refundOrder = data => {
+  return axios.request({
+    url: '/order/refundOrder.action',
+    method: 'post',
+    data: data
   })
 }

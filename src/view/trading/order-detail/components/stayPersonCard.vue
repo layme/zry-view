@@ -154,7 +154,7 @@ export default {
       return this.guestType[val]
     },
     validateForm () {
-      this.$refs['stayPersonForm'].validate((valid) => {
+      this.$refs.stayPersonForm.validate((valid) => {
         if (valid) {
           this.save()
         } else {

@@ -1,5 +1,5 @@
 <template>
-  <Card :shadow="shadow" class="info-card-wrapper" :padding="0">
+  <Card :shadow="shadow" :dis-hover="disHover" class="info-card-wrapper" :padding="0">
     <div class="content-con">
       <div class="left-area" :style="{background: color, width: leftWidth}">
         <common-icon class="icon" :type="icon" :size="iconSize" color="#fff"/>
@@ -38,6 +38,10 @@ export default {
       default: 20
     },
     shadow: {
+      type: Boolean,
+      default: false
+    },
+    disHover: {
       type: Boolean,
       default: false
     }

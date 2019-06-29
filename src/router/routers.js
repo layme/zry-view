@@ -30,8 +30,8 @@ export default [
   },
   {
     path: '/',
-    name: '_home',
-    redirect: '/home',
+    name: '_workbench',
+    redirect: '/workbench',
     component: Main,
     meta: {
       hideInMenu: true,
@@ -39,15 +39,15 @@ export default [
     },
     children: [
       {
-        path: '/home',
-        name: 'home',
+        path: '/workbench',
+        name: 'workbench',
         meta: {
           hideInMenu: true,
-          title: '首页',
+          title: '工作台',
           notCache: true,
-          icon: 'md-home'
+          icon: 'md-speedometer'
         },
-        component: () => import('@/view/discard/single-page/home')
+        component: () => import('@/view/workbench/workbench')
       }
     ]
   },

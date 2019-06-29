@@ -146,8 +146,8 @@
                           :prop="'priceList.' + i + '.dateRange'"
                           :rules="[{ required: true, type: 'array',
                                       fields: {
-                                        0: { type: 'date', required: true, message: '请选择优惠券有效期' },
-                                        1: { type: 'date', required: true, message: '请选择优惠券有效期' }
+                                        0: { type: 'date', required: true, message: '请选择特殊时段' },
+                                        1: { type: 'date', required: true, message: '请选择特殊时段' }
                                       }, trigger: 'change' }]">
                   <DatePicker
                     style="width: 100%"
