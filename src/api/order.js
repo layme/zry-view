@@ -167,3 +167,21 @@ export const refundOrder = data => {
     data: data
   })
 }
+
+export const getRegistrationForm = data => {
+  return axios.request({
+    url: '/order/getRegistrationForm.action',
+    method: 'get',
+    params: {
+      orderBid: data
+    }
+  })
+}
+
+export const sendEmail = data => {
+  return axios.request({
+    url: '/order/sendEmail.action',
+    method: 'post',
+    data: data
+  })
+}

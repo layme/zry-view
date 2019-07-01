@@ -114,7 +114,7 @@ export default {
 <style lang="less" scoped>
   .calendar-top {
     width: 100%;
-    height: ~"calc(100vh - 255px)";
+    height: ~"calc(100vh - 282px)";
     overflow: auto;
   }
   .date-cell {
@@ -153,12 +153,14 @@ export default {
     left: 0;
     z-index: 2;
     width: 130px;
+    background-color: #ffffff;
   }
 
   .bed-cell {
     position: sticky;
     left: 130px;
     z-index: 2;
+    background-color: #ffffff;
   }
 
   th:first-child {

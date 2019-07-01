@@ -9,7 +9,10 @@ export default {
     cleanCount: 0,
     stockOrderCount: 0,
     unStockOrderCount: 0,
-    currentHouseTypeName: '全部房型',
+    currentHouseType: {
+      houseTypeName: '全部房型',
+      houseTypeBid: ''
+    },
     houseTypeList: [],
     stockData: [],
     workData: [],
@@ -29,8 +32,8 @@ export default {
     setUnStockOrderCount (state, unStockOrderCount) {
       state.unStockOrderCount = unStockOrderCount
     },
-    setCurrentHouseTypeName (state, currentHouseTypeName) {
-      state.currentHouseTypeName = currentHouseTypeName
+    setCurrentHouseType (state, currentHouseType) {
+      state.currentHouseType = currentHouseType
     },
     setHouseTypeList (state, houseTypeList) {
       state.houseTypeList = houseTypeList

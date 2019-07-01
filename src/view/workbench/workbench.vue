@@ -37,21 +37,30 @@
       </Col>
     </Row>
     <Row style="margin-bottom: 10px">
-      <Button type="primary" @click="orderVisible = true" ghost style="margin-right: 20px">新增订单</Button>
-      <Button type="primary" @click="lockVisible = true" ghost style="margin-right: 20px">锁定床位</Button>
-      <span>当前房型：</span>
-      <Dropdown @on-click="handleHouseType">
-        <a>
-          {{ $store.state.workbench.currentHouseTypeName }}
-          <Icon type="ios-arrow-down"></Icon>
-        </a>
-        <DropdownMenu slot="list">
-          <DropdownItem :name="-1">全部房型</DropdownItem>
-          <DropdownItem v-for="(item, index) in $store.state.workbench.houseTypeList" :name="index" :key="index">
-            {{ item.houseTypeParentName }} - {{ item.houseTypeName }}
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+      <Col span="18">
+        <Button type="primary" @click="orderVisible = true" ghost style="margin-right: 20px">新增订单</Button>
+        <Button type="primary" @click="lockVisible = true" ghost style="margin-right: 20px">锁定床位</Button>
+        <span>当前房型：</span>
+        <Dropdown @on-click="handleHouseType">
+          <a>
+            {{ $store.state.workbench.currentHouseType.houseTypeName }}
+            <Icon type="ios-arrow-down"></Icon>
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem :name="-1">全部房型</DropdownItem>
+            <DropdownItem v-for="(item, index) in $store.state.workbench.houseTypeList" :name="index" :key="index">
+              {{ item.houseTypeParentName }} - {{ item.houseTypeName }}
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Col>
+      <Col span="6" style="text-align: right">
+        图例:
+        <Tag color="#facb65">已支付</Tag>
+        <Tag color="#7ddca3">已入住</Tag>
+        <Tag color="#00b4f7">已退房</Tag>
+        <Tag color="#e8eaec">锁定</Tag>
+      </Col>
     </Row>
     <div class="full-top">
       <Spin size="large" fix v-if="$store.state.workbench.loading" class="full-spin"></Spin>
@@ -100,10 +109,11 @@ export default {
         fontSize: '20px'
       },
       todayStr: '',
+      currentHouseTypeName: '全部房型',
       workDto: {
         checkInTime: '',
         checkOutTime: '',
-        houseTypeBid: ''
+        houseTypeBid: this.$store.state.workbench.currentHouseType.houseTypeBid
       },
       orderVisible: false,
       orderLoading: true,
@@ -113,7 +123,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setCurrentHouseTypeName',
+      'setCurrentHouseType',
       'setStockData',
       'setWorkData'
     ]),
@@ -142,7 +152,11 @@ export default {
         houseTypeName = '全部房型'
       }
       if (this.workDto.houseTypeBid !== houseTypeBid) {
-        this.setCurrentHouseTypeName(houseTypeName)
+        this.setCurrentHouseType({
+          houseTypeName: houseTypeName,
+          houseTypeBid: houseTypeBid
+        })
+        this.currentHouseTypeName = houseTypeName
         this.workDto.houseTypeBid = houseTypeBid
       }
     },
@@ -206,6 +220,15 @@ export default {
     handleRefresh () {
       this.getStockOfPerDay(this.workDto)
       this.getStockWorkbench(this.workDto)
+    },
+    toRefundList (orderNumber) {
+      const route = {
+        name: 'refundList',
+        query: {
+          orderNumber
+        }
+      }
+      this.$router.push(route)
     }
   },
   watch: {

@@ -13,13 +13,13 @@
         <ButtonGroup>
           <Button type="primary" icon="ios-time-outline" ghost @click="logVisible = true">订单日志</Button>
           <Button type="primary" icon="ios-card" ghost @click="paymentVisible = true">支付明细</Button>
-          <Button type="primary" icon="ios-print-outline" ghost>打印</Button>
-          <Button type="primary" icon="ios-mail-outline" ghost @click="emailRender">发送邮件</Button>
+          <Button type="primary" icon="ios-print-outline" ghost @click="printRegistrationForm">打印</Button>
+          <Button type="primary" icon="ios-mail-outline" ghost @click="mailVisible = true">发送邮件</Button>
         </ButtonGroup>
       </Col>
     </Row>
     <base-info-card v-if="Object.keys(orderInfo).length" :order="orderInfo" :coupon="ticketInfo" :channel="firstChannel"
-                    class="card-cls" @updatePhone="updatePhone" @refresh="getOrderDetail"></base-info-card>
+                    class="card-cls" @updatePhone="updatePhone" @updateMail="updateMail" @refresh="getOrderDetail"></base-info-card>
     <Row :gutter="20">
       <Col :span="18">
         <stay-person-card v-if="Object.keys(orderInfo).length" :stay-list="orderInfo.stayPersonDtoList"
@@ -66,10 +66,24 @@
       width="500"
       @on-ok="validPhone">
       <Form ref="cusPhoneForm" :model="phoneDto" :label-width="100">
-        <FormItem label="预定手机号: " prop="phone" :rules="[
+        <FormItem label="预定手机号" prop="phone" :rules="[
                   { required: true, message: '请输入预定手机号', trigger: 'blur' },
-                  { pattern: /^1\d{10}$/, message: '手机号格式不对', trigger: 'blur' }]">
+                  { pattern: /^1\d{10}$/, message: '手机号格式有误', trigger: 'blur' }]">
           <Input v-model.trim="phoneDto.phone" placeholder="" clearable></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal
+      v-model="mailVisible"
+      :loading="phoneLoading"
+      title="发送邮件"
+      width="500"
+      @on-ok="validMail">
+      <Form ref="mailForm" :model="mailDto" :label-width="50">
+        <FormItem label="邮箱" prop="email" :rules="[
+                  { required: true, message: '请输入邮箱', trigger: 'blur' },
+                  { pattern: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/, message: '邮箱格式有误', trigger: 'blur' }]">
+          <Input v-model.trim="mailDto.email" placeholder="请输入邮箱" :maxlength="200" clearable></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -82,7 +96,7 @@ import orderRemarkCard from './components/orderRemarkCard'
 import orderActionCard from './components/orderActionCard'
 import orderLog from './components/orderLog'
 import paymentDetail from './components/paymentDetail'
-import { orderDetail, saveOrderRemark, getOrderRemark, saveStayPerson, updateOrderPhone } from '@/api/order'
+import { orderDetail, saveOrderRemark, getOrderRemark, saveStayPerson, updateOrderPhone, getRegistrationForm, sendEmail } from '@/api/order'
 
 export default {
   name: 'orderDetail',
@@ -111,7 +125,6 @@ export default {
       firstChannel: [],
       logVisible: false,
       paymentVisible: false,
-      email: '',
       newCusPhone: '',
       phoneDto: {
         orderBid: '',
@@ -119,7 +132,12 @@ export default {
         oldPhone: ''
       },
       phoneVisible: false,
-      phoneLoading: true
+      mailVisible: false,
+      phoneLoading: true,
+      mailDto: {
+        orderBid: '',
+        email: ''
+      }
     }
   },
   computed: {
@@ -159,24 +177,6 @@ export default {
         this.loading = false
       })
     },
-    emailRender () {
-      this.$Modal.confirm({
-        render: (h) => {
-          return h('Input', {
-            props: {
-              value: this.email,
-              autofocus: true,
-              placeholder: '请输入邮箱'
-            },
-            on: {
-              input: (val) => {
-                this.email = val
-              }
-            }
-          })
-        }
-      })
-    },
     saveOrderRemark (dto) {
       saveOrderRemark({ orderBid: this.orderInfo.orderBid, orderRemark: dto }).then(res => {
         if (res.code === 200) {
@@ -213,7 +213,7 @@ export default {
       this.phoneVisible = true
     },
     validPhone () {
-      this.$refs['cusPhoneForm'].validate((valid) => {
+      this.$refs.cusPhoneForm.validate((valid) => {
         if (valid) {
           if (this.phoneDto.phone !== this.phoneDto.oldPhone) {
             this.updateOrderPhone()
@@ -238,6 +238,24 @@ export default {
         this.handleError()
       })
     },
+    validMail () {
+      this.$refs.mailForm.validate((valid) => {
+        if (valid) {
+          this.sendEmail()
+        } else {
+          this.handleError()
+        }
+      })
+    },
+    sendEmail () {
+      this.mailDto.orderBid = this.orderInfo.orderBid
+      this.$Message.info('邮件后台发送中...')
+      sendEmail(this.mailDto).then(() => {
+        this.$Message.success('邮件发送成功')
+        this.mailVisible = false
+      })
+    },
+    updateMail () {},
     handleError () {
       setTimeout(() => {
         this.phoneLoading = false
@@ -245,6 +263,12 @@ export default {
           this.phoneLoading = true
         })
       }, 500)
+    },
+    printRegistrationForm () {
+      this.$Message.info('入住单后台生成中，稍后在新页面打开...')
+      getRegistrationForm(this.orderInfo.orderBid).then(res => {
+        window.open(res.body, '_blank')
+      })
     }
   },
   watch: {

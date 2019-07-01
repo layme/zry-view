@@ -302,26 +302,6 @@ export default [
     ]
   },
   {
-    path: '/config',
-    name: 'config',
-    meta: {
-      icon: 'ios-book',
-      title: '配置'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'channel',
-        name: 'channel',
-        meta: {
-          icon: '_qq',
-          title: '渠道'
-        },
-        component: () => import('@/view/config/channel/channel.vue')
-      }
-    ]
-  },
-  {
     path: '/marketing',
     name: 'marketing',
     meta: {

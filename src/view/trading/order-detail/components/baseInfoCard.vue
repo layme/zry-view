@@ -12,15 +12,14 @@
         </Col>
         <Col :span="6">
           <FormItem label="预定人手机号：">
-            <span v-if="order.secondChannel > 1">
-              <a @click="updatePhone">{{ order.cusPhone }}</a>
-            </span>
-            <span v-else>{{ order.cusPhone }}</span>
+            <span>{{ order.cusPhone }}</span>
+            <a v-if="order.secondChannel > 1" @click="updatePhone" style="margin-left: 10px;"><Icon type="md-create" /></a>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="邮箱：">
             <span>{{ order.cusMail | nullFilter }}</span>
+<!--            <a @click="updateMail" style="margin-left: 10px;"><Icon type="md-create" /></a>-->
           </FormItem>
         </Col>
         <Col :span="6">
@@ -61,6 +60,7 @@
       <Button type="primary" class="my-btn" v-if="order.orderStatus === 5" @click="prePay">支 付</Button>
       <Button type="warning" class="my-btn" v-if="order.orderStatus === 5" @click="cancelOrder">取 消</Button>
       <Button type="warning" class="my-btn" v-if="order.orderStatus === 1" @click="closeOrder">取 消</Button>
+      <Button type="primary" class="my-btn" v-if="order.orderStatus === 8 || order.orderStatus === 9 || order.orderStatus === 10" @click="toRefundDetail(order.orderBid)">取消详情</Button>
     </Form>
     <Modal
       v-model="visible"
@@ -168,6 +168,9 @@ export default {
     },
     updatePhone () {
       this.$emit('updatePhone')
+    },
+    updateMail () {
+      this.$emit('updateMail')
     },
     prePay () {
       if (this.order.firstChannel !== 2) {
