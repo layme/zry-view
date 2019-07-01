@@ -70,9 +70,6 @@ export default {
     create () {
       this.$emit('create')
     }
-  },
-  created () {
-    this.submit()
   }
 }
 </script>

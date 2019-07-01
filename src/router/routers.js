@@ -311,6 +311,15 @@ export default [
     component: Main,
     children: [
       {
+        path: 'marketingConfig',
+        name: 'projectConfigIndex',
+        meta: {
+          icon: '_qq',
+          title: '营销配置'
+        },
+        component: () => import('@/view/marketing/marketing-config/projectConfigIndex.vue')
+      },
+      {
         path: 'marketingActivity',
         name: 'marketingActivityList',
         meta: {

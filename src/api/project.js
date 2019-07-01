@@ -119,3 +119,20 @@ export const getBedCountByStatus = () => {
     method: 'get'
   })
 }
+
+// 获取项目排序列表
+export const getProjectSortList = () => {
+  return axios.request({
+    method: 'get',
+    url: '/project/getProjectSortList.action'
+  })
+}
+
+// 保存项目排序
+export const saveProjectSort = (data) => {
+  return axios.request({
+    method: 'post',
+    url: '/project/sort.action',
+    params: data
+  })
+}

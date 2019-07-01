@@ -8,19 +8,20 @@
       <template slot-scope="{ row }" slot="orderStatus">
         <div>{{ row.orderStatus | orderStatusFilter }}</div>
       </template>
-      <template slot-scope="{ row }" slot="refundStatus">
-        <div>{{ row.refundStatus | refundStatusFilter }}</div>
+      <template slot-scope="{ row }" slot="status">
+        <div>{{ row.status | refundStatusFilter }}</div>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="handlePageChange"/>
+          :page-size="paramDto.limit" @on-change="getpageList"/>
   </div>
 </template>
 <script>
 import refundForm from './refundForm'
+import { getRefundList } from '@/api/refund'
 
 export default {
-  name: 'orderList',
+  name: 'refundList',
   components: {
     refundForm
   },
@@ -43,7 +44,7 @@ export default {
         },
         {
           title: '退款状态',
-          slot: 'refundStatus'
+          slot: 'status'
         },
         {
           title: '项目',
@@ -52,7 +53,7 @@ export default {
         },
         {
           title: '预订人',
-          key: 'customer'
+          key: 'name'
         },
         {
           title: '入住人数',
@@ -61,17 +62,17 @@ export default {
         },
         {
           title: '入住时间',
-          key: 'checkInDate',
+          key: 'checkInTime',
           minWidth: 30
         },
         {
           title: '退房时间',
-          key: 'checkOutDate',
+          key: 'checkOutTime',
           minWidth: 30
         },
         {
           title: '申请时间',
-          key: 'createDate',
+          key: 'createTime',
           minWidth: 65
         },
         {
@@ -80,53 +81,10 @@ export default {
         },
         {
           title: '退款金额',
-          key: 'amount'
+          key: 'refundAmount'
         }
       ],
-      data: [
-        {
-          bid: 'as70a7s9d0786',
-          orderNumber: 'BJ201905170001',
-          orderStatus: 6,
-          refundStatus: 2,
-          projectName: 'CBD自如驿',
-          customer: 'ayu',
-          personCount: 1,
-          checkInDate: '2019-05-17',
-          checkOutDate: '2019-05-18',
-          createDate: '2019-05-17 10:05:39',
-          amount: 159,
-          refund: 30
-        },
-        {
-          bid: 'as70a7s9d0787',
-          orderNumber: 'BJ201905170008',
-          orderStatus: 6,
-          refundStatus: 2,
-          projectName: 'CBD自如驿',
-          customer: 'ayu',
-          personCount: 1,
-          checkInDate: '2019-05-17',
-          checkOutDate: '2019-05-18',
-          createDate: '2019-05-17 10:05:39',
-          amount: 159,
-          refund: 30
-        },
-        {
-          bid: 'as70a7s9d0789',
-          orderNumber: 'BJ201905170009',
-          orderStatus: 6,
-          refundStatus: 2,
-          projectName: 'CBD自如驿',
-          customer: 'ayu',
-          personCount: 1,
-          checkInDate: '2019-05-17',
-          checkOutDate: '2019-05-18',
-          createDate: '2019-05-17 10:05:39',
-          amount: 159,
-          refund: 30
-        }
-      ],
+      data: [],
       total: 0
     }
   },
@@ -134,13 +92,24 @@ export default {
     listRefund (dto) {
       Object.assign(this.paramDto, dto)
       this.paramDto.page = 1
-      this.handlePageChange()
+      this.getpageList()
     },
-    handlePageChange () {
+    getpageList () {
       console.info('paramDto', this.paramDto)
+      this.loading = true
+      getRefundList(this.paramDto).then(res => {
+        if (!res.body) {
+          return
+        }
+        this.data = res.body.rows
+        this.total = res.body.total
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     toRefundDetail (row) {
-      const orderBid = row.bid
+      const orderBid = row.orderBid
       const route = {
         name: 'refundDetail',
         query: {
@@ -149,6 +118,9 @@ export default {
       }
       this.$router.push(route)
     }
+  },
+  created () {
+    this.getpageList()
   },
   filters: {
     orderStatusFilter (val) {

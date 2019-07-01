@@ -27,7 +27,7 @@ export default {
       refundInfo: {
         bid: '',
         orderNumber: 'BJ201905170001',
-        refundStatus: 3,
+        refundStatus: 1,
         createTime: '2019-05-17 10:34:12'
       },
       refundList: [

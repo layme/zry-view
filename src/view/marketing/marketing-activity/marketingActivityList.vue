@@ -7,8 +7,7 @@
         <Tag v-else color="default">已下线</Tag>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <a v-if="row.isOnline === 1" class="my-btn">下线</a>
-        <a v-else class="my-btn">上线</a>
+        <a class="my-btn" @click="changeIsOnline(row)">{{ row.isOnline === 1 ? '下线' : '上线' }}</a>
         <a class="my-btn" @click="updateActivity(row)">修改</a>
         <a @click="confirmRemove(row)" style="color: #ed4014">删除</a>
       </template>
@@ -29,7 +28,7 @@
 <script>
 import marketingActivitySearchForm from './marketingActivitySearchForm'
 import marketingActivityForm from './marketingActivityForm'
-import { getMarketingActivities } from '@/api/marketingActivity'
+import { getMarketingActivities, changeIsOnline, delActivity, createActivity, updateActivity } from '@/api/marketingActivity'
 
 export default {
   name: 'marketingActivityList',
@@ -115,6 +114,37 @@ export default {
         this.loading = false
       })
     },
+    changeIsOnline (row) {
+      let val = 0
+      let onLine = ''
+      if (row.onLine === 1) {
+        val = 0
+        onLine = '确定要下线吗？'
+      } else {
+        val = 1
+        onLine = '确定要上线吗？'
+      }
+      this.$Modal.confirm({
+        title: '通知',
+        content: '<p>' + onLine + '</p>',
+        onOk: () => {
+          let params = {
+            bid: row.bid,
+            isOnline: val
+          }
+          changeIsOnline(params).then(res => {
+            if (res.code === 200) {
+              this.$Message.success('操作成功')
+              this.handlePageChange()
+            } else {
+              this.$Message.warning(res.message)
+            }
+          })
+        },
+        onCancel: () => {
+        }
+      })
+    },
     createActivity () {
       this.title = '新增营销活动'
       this.visible = true
@@ -129,7 +159,29 @@ export default {
       this.$refs.activityForm.validForm()
     },
     handleSubmit (dto) {
-      this.visible = false
+      if (dto.bid) {
+        this.handleUpdateActivity(dto)
+      } else {
+        this.handleSaveActivity(dto)
+      }
+    },
+    handleUpdateActivity (dto) {
+      updateActivity(dto).then(res => {
+        this.$Message.success('更新营销活动成功')
+        this.visible = false
+        this.listActivity()
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    handleSaveActivity (dto) {
+      createActivity(dto).then(res => {
+        this.$Message.success('创建营销活动成功')
+        this.visible = false
+        this.listActivity()
+      }).catch(() => {
+        this.handleError()
+      })
     },
     handleError () {
       setTimeout(() => {
@@ -144,15 +196,22 @@ export default {
         title: '通知',
         content: '<p>确定删除该营销活动吗？</p>',
         onOk: () => {
-          this.removeActivity(row)
+          delActivity({ bid: row.bid }).then(res => {
+            if (res.code === 200) {
+              this.$Message.success('删除成功')
+              this.handlePageChange()
+            } else {
+              this.$Message.warning(res.message)
+            }
+          })
         },
         onCancel: () => {
         }
       })
-    },
-    removeActivity (row) {
-      this.$Message.success('remove success')
     }
+  },
+  created () {
+    this.handlePageChange()
   }
 }
 </script>
