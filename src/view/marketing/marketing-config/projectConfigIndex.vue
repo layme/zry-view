@@ -1,7 +1,7 @@
 <template>
   <div>
     <search-list @search="listRefund"></search-list>
-    <!--<img-config :n="imgConfigN" :fid="fid"></img-config>-->
+    <img-config :n="imgConfigN" :fid="fid"></img-config>
     <Table stripe :columns="columns" :data="data" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="picConfig">
         <a class="my-btn" @click="configPic(row)">配置</a>
@@ -28,7 +28,7 @@
 </template>
 <script>
 import searchList from './components/searchList'
-// import ImgConfig from './components/ImgConfig'
+import ImgConfig from './components/ImgConfig'
 import { getRefundList } from '@/api/refund'
 
 export default {

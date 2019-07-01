@@ -289,3 +289,11 @@ export const checkDateStr = (str1, str2) => {
     return -1
   }
 }
+
+export function isType (type, value) {
+  function typeString (value) {
+    return Object.prototype.toString.call(value).slice(8, -1)
+  }
+
+  return typeString(value) === type
+}
