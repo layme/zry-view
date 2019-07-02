@@ -49,9 +49,7 @@ export default {
   methods: {
     listHobby () {
       listHobby(this.guestFid).then(res => {
-        if (res.code === 200) {
-          this.guestHobbyDto.hobbyTags = res.body
-        }
+        this.guestHobbyDto.hobbyTags = res.body
       })
     },
     // 删除标签
@@ -84,11 +82,9 @@ export default {
     // 向后台提交标签
     saveTags () {
       saveTags(this.guestHobbyDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.listHobby()
-          this.isChange = false
-        }
+        this.$Message.success('保存成功')
+        this.listHobby()
+        this.isChange = false
       })
     }
   },

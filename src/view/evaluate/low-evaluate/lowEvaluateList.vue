@@ -50,21 +50,16 @@ export default {
     handlePageChange () {
       this.$delete(this.paramDto, 'evaluateTime')
       getLowEvaluate(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.evaluateList = res.body.rows
-          this.total = res.body.total
-          this.haveData = this.total > 0
-        } else {
-          this.$Message.warning(res.message)
-          this.haveData = false
-        }
+        this.evaluateList = res.body.rows
+        this.total = res.body.total
+        this.haveData = this.total > 0
+      }).catch(() => {
+        this.haveData = false
       })
     },
     projectScore () {
       getProjectScore(this.$store.state.user.currentProject.bid).then(res => {
-        if (res.code === 200) {
-          this.totalScore = res.body
-        }
+        this.totalScore = res.body
       })
     },
     toOrderDetail (orderNumber) {

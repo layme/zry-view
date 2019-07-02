@@ -149,9 +149,7 @@ export default {
     getStock (dto) {
       this.loading = true
       getStock(dto).then(res => {
-        if (res.code === 200) {
-          this.stockData = res.body
-        }
+        this.stockData = res.body
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -159,13 +157,9 @@ export default {
     },
     saveBed () {
       changeBed(this.changeBedDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('床位保存成功')
-          this.stockVisible = false
-          this.$emit('refresh')
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('床位保存成功')
+        this.stockVisible = false
+        this.$emit('refresh')
       }).catch(() => {
         this.handleError()
       })
@@ -187,10 +181,8 @@ export default {
         content: '<p>确定要解绑吗？</p>',
         onOk: () => {
           unbindBed(dto).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('床位解绑成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('床位解绑成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -208,10 +200,8 @@ export default {
       }
       dto.customerPhone = phone
       checkInOrder(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('办理入住成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('办理入住成功')
+        this.$emit('refresh')
       })
     },
     cancelBookBed () {
@@ -223,10 +213,8 @@ export default {
         content: '<p>确定要退订床位吗？</p>',
         onOk: () => {
           cancelBookBed(dto).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('退订床位成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('退订床位成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -239,10 +227,8 @@ export default {
     handleCheckOut (dto) {
       dto.customerPhone = this.order.cusPhone
       checkOutOrder(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('办理退租成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('办理退租成功')
+        this.$emit('refresh')
       })
     },
     generateLockPwd () {
@@ -254,10 +240,8 @@ export default {
             orderBid: this.order.orderBid,
             projectBid: this.order.projectBid
           }).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('密码生成成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('密码生成成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -270,9 +254,7 @@ export default {
     },
     sendDoorPwd () {
       sendDoorPwd(this.order.orderBid).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('密码发送成功')
-        }
+        this.$Message.success('密码发送成功')
       })
     },
     toRefundDetail () {

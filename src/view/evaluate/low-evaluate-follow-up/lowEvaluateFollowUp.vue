@@ -51,13 +51,11 @@ export default {
       this.loading = true
       this.evalParamDto.orderNumber = this.$route.query.orderNumber
       getLowEvaluate(this.evalParamDto).then(res => {
-        if (res.code === 200) {
-          this.evaluate = res.body.rows[0]
-          this.listLowEvalFollowUp()
-        } else {
-          this.$Message.warning(res.message)
-          this.loading = false
-        }
+        this.evaluate = res.body.rows[0]
+        this.listLowEvalFollowUp()
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
 
@@ -66,12 +64,10 @@ export default {
       this.evalFollowUpDto.lowEvaluateBid = this.evaluate.bid
       this.evalFollowUpDto.content = ''
       getFollowUp(this.evalFollowUpDto).then(res => {
-        if (res.code === 200) {
-          this.followRecords = res.body
-          this.haveData = this.followRecords.length > 0
-        } else {
-          this.haveData = false
-        }
+        this.followRecords = res.body
+        this.haveData = this.followRecords.length > 0
+      }).catch(() => {
+        this.haveData = false
       })
     },
 
@@ -104,16 +100,12 @@ export default {
     // 保存低评跟进情况描述
     insertLowEvalFollowUp (dto) {
       saveFollowUp(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('操作成功')
-          // 局部更新低评跟进过程
-          this.listLowEvalFollowUp()
-          // 更新低评处理状态
-          this.evaluate.followUpStatus = dto.followUpStatus
-          this.$refs.followUpForm.reset()
-        } else {
-          this.$Message.warning(res.message)
-        }
+        this.$Message.success('操作成功')
+        // 局部更新低评跟进过程
+        this.listLowEvalFollowUp()
+        // 更新低评处理状态
+        this.evaluate.followUpStatus = dto.followUpStatus
+        this.$refs.followUpForm.reset()
       })
     }
   },

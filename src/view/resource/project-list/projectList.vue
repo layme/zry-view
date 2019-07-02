@@ -84,10 +84,8 @@ export default {
       this.loading = true
       Object.assign(this.paramDto, dto)
       getProjects(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.projectList = res.body.rows
-          this.total = res.body.total
-        }
+        this.projectList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -114,12 +112,8 @@ export default {
         content: '<p>' + ti + '</p>',
         onOk: () => {
           validOrNot(row.bid, val).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('操作成功')
-              this.handlePageChange()
-            } else {
-              this.$Message.warning(res.message)
-            }
+            this.$Message.success('操作成功')
+            this.handlePageChange()
           })
         },
         onCancel: () => {
@@ -141,12 +135,8 @@ export default {
         content: '<p>' + ti + '</p>',
         onOk: () => {
           showOrNot(row.bid, val).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('操作成功')
-              this.handlePageChange()
-            } else {
-              this.$Message.warning(res.message)
-            }
+            this.$Message.success('操作成功')
+            this.handlePageChange()
           })
         },
         onCancel: () => {
@@ -168,12 +158,8 @@ export default {
         content: '<p>' + ti + '</p>',
         onOk: () => {
           canOrderOrNot(row.bid, val).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('操作成功')
-              this.handlePageChange()
-            } else {
-              this.$Message.warning(res.message)
-            }
+            this.$Message.success('操作成功')
+            this.handlePageChange()
           })
         },
         onCancel: () => {

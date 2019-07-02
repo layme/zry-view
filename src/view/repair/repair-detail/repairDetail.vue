@@ -128,11 +128,7 @@ export default {
   methods: {
     getDetail () {
       getDetail(this.$route.query.orderSn).then(res => {
-        if (res.code === 200) {
-          this.repair = res.body
-        } else {
-          this.$Message.warning(res.message)
-        }
+        this.repair = res.body
       })
     }
   },

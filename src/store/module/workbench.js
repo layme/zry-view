@@ -55,43 +55,33 @@ export default {
     // 获取密码
     getPassword ({ commit }) {
       getPassword().then(res => {
-        if (res.code === 200) {
-          commit('setPasswords', res.body)
-        }
+        commit('setPasswords', res.body)
       })
     },
     // 待保洁数量
     getBedCountByStatus ({ commit }) {
       getBedCountByStatus().then(res => {
-        if (res.code === 200) {
-          commit('setCleanCount', res.body)
-        }
+        commit('setCleanCount', res.body)
       })
     },
     getStockOrderCount ({ commit }, data) {},
     // 房型列表
     getHouseTypeList ({ commit }) {
       getHouseTypeList(store.state.user.currentProject.bid).then(res => {
-        if (res.code === 200) {
-          commit('setHouseTypeList', res.body)
-        }
+        commit('setHouseTypeList', res.body)
       })
     },
     // 每日库存
     getStockOfPerDay ({ commit }, dto) {
       getStockOfPerDay(dto).then(res => {
-        if (res.code === 200) {
-          commit('setStockData', res.body)
-        }
+        commit('setStockData', res.body)
       })
     },
     // 工作台数据
     getStockWorkbench ({ commit }, dto) {
       commit('setLoading', true)
       getStockWorkbench(dto).then(res => {
-        if (res.code === 200) {
-          commit('setWorkData', res.body)
-        }
+        commit('setWorkData', res.body)
         commit('setLoading', false)
       }).catch(() => {
         commit('setLoading', false)
@@ -100,9 +90,7 @@ export default {
     // 订单渠道枚举值
     getOrderEnums ({ commit }) {
       getConfEnum().then(res => {
-        if (res.code === 200) {
-          commit('setOrderEnums', res.body)
-        }
+        commit('setOrderEnums', res.body)
       })
     }
   }

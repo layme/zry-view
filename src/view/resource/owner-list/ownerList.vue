@@ -183,10 +183,8 @@ export default {
     },
     handlePageChange () {
       getOwners(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.ownerList = res.body.rows
-          this.total = res.body.total
-        }
+        this.ownerList = res.body.rows
+        this.total = res.body.total
       })
     },
     addOwner () {
@@ -212,14 +210,12 @@ export default {
       }, 500)
     },
     saveOwner (dto) {
-      saveOwner(dto).then(res => {
-        if (res.data.code === 200) {
-          this.$Message.success('保存成功')
-          this.actionVisible = false
-          this.listOwner()
-        } else {
-          this.$Message.warning(res.message)
-        }
+      saveOwner(dto).then(() => {
+        this.$Message.success('保存成功')
+        this.actionVisible = false
+        this.listOwner()
+      }).catch(() => {
+        this.handleError()
       })
     },
     editOwner (row) {
@@ -228,14 +224,12 @@ export default {
       this.actionVisible = true
     },
     updateOwner (dto) {
-      updateOwner(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.actionVisible = false
-          this.listOwner()
-        } else {
-          this.$Message.warning(res.message)
-        }
+      updateOwner(dto).then(() => {
+        this.$Message.success('保存成功')
+        this.actionVisible = false
+        this.listOwner()
+      }).catch(() => {
+        this.handleError()
       })
     },
     deleteOwnerConfirm (row) {
@@ -250,13 +244,9 @@ export default {
       })
     },
     deleteOwner (row) {
-      removeOwner({ bid: row.bid, isDel: 1 }).then(res => {
-        if (res.data.code === 200) {
-          this.$Message.success('删除成功')
-          this.listOwner()
-        } else {
-          this.$Message.warning(res.message)
-        }
+      removeOwner({ bid: row.bid, isDel: 1 }).then(() => {
+        this.$Message.success('删除成功')
+        this.listOwner()
       })
     },
     openDetailDialog (row) {

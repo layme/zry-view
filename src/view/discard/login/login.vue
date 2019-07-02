@@ -33,11 +33,9 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        if (res.code === 200) {
-          this.$router.push({
-            name: this.$config.homeName
-          })
-        }
+        this.$router.push({
+          name: this.$config.homeName
+        })
       })
     }
   },

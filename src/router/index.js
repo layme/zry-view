@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
-import iView from 'iview'
+import iView, { Modal } from 'iview'
 import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
 import config from '@/config'
 const { homeName } = config
@@ -44,9 +44,18 @@ router.beforeEach((to, from, next) => {
         turnTo(to, user.access, next)
       }).catch(() => {
         setToken('')
-        next({
-          name: 'login'
-        })
+        setTimeout(() => {
+          Modal.warning({
+            title: '通知',
+            content: '登录已失效，传送至登录页面···',
+            onOk: () => {
+              store.dispatch('handleLogout')
+              next({
+                name: 'login'
+              })
+            }
+          })
+        }, 500)
       })
     }
   }

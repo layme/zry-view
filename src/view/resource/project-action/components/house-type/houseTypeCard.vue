@@ -326,10 +326,8 @@ export default {
     saveHouseType () {
       this.loading = true
       saveHouseType(this.houseTypeDto).then(res => {
-        if (res.code === 200) {
-          this.Message.success('保存成功')
-          this.$store.commit('upStep', 5)
-        }
+        this.Message.success('保存成功')
+        this.$store.commit('upStep', 5)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -338,9 +336,7 @@ export default {
     updateHouseType () {
       this.loading = true
       updateHouseType(this.houseTypeDto).then(res => {
-        if (res.code === 200) {
-          this.Message.success('保存成功')
-        }
+        this.Message.success('保存成功')
         this.loading = false
       }).catch(() => {
         this.loading = false

@@ -63,7 +63,7 @@ export default {
         ],
         series: this.lineData.orderSeries
       }
-      this.dom.setOption(option)
+      this.dom.setOption(option, true)
       on(window, 'resize', this.resize)
     }
   },

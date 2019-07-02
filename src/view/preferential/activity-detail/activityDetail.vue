@@ -110,9 +110,7 @@ export default {
       this.loading = true
       this.activityBid = this.$route.query.activityBid
       getActivityDetail(this.activityBid).then(res => {
-        if (res.code === 200) {
-          this.activity = res.body
-        }
+        this.activity = res.body
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -163,10 +161,8 @@ export default {
         ticketInfo: this.ticket
       }
       saveActivity(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.getActivityDetail()
-        }
+        this.$Message.success('保存成功')
+        this.getActivityDetail()
       })
     }
   },

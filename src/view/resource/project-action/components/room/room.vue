@@ -209,10 +209,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getRooms(this.roomParamDto).then(res => {
-        if (res.code === 200) {
-          this.roomList = res.body.list
-          this.total = res.body.total
-        }
+        this.roomList = res.body.list
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -250,18 +248,14 @@ export default {
     },
     saveRoom (dto) {
       saveRoom(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('保存成功')
+        this.handlePageChange()
       })
     },
     updateRoom (dto) {
       updateRoom(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('修改成功')
+        this.handlePageChange()
       })
     },
     deleteRoomConfirm (row) {
@@ -277,10 +271,8 @@ export default {
     },
     deleteRoom (row) {
       deleteRoom(row.bid).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('删除成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('删除成功')
+        this.handlePageChange()
       })
     },
     editAirReport (row) {
@@ -295,13 +287,9 @@ export default {
         this.airVisible = false
       } else {
         updateRoom(this.roomAirDto).then(res => {
-          if (res.code === 200) {
-            this.$Message.success('保存成功')
-            this.airVisible = false
-            this.handlePageChange()
-          } else {
-            this.airSaveError()
-          }
+          this.$Message.success('保存成功')
+          this.airVisible = false
+          this.handlePageChange()
         }).catch(() => {
           this.airSaveError()
         })

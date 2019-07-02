@@ -168,19 +168,15 @@ export default {
     },
     handleSaveOrder (dto) {
       saveOrder(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('订单创建成功')
-          const orderNumber = res.body
-          const route = {
-            name: 'orderDetail',
-            query: {
-              orderNumber
-            }
+        this.$Message.success('订单创建成功')
+        const orderNumber = res.body
+        const route = {
+          name: 'orderDetail',
+          query: {
+            orderNumber
           }
-          this.$router.push(route)
-        } else {
-          this.handleOrderError()
         }
+        this.$router.push(route)
       }).catch(() => {
         this.handleOrderError()
       })
@@ -198,13 +194,9 @@ export default {
     },
     handleLockBed (dto) {
       lockBedStock(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('锁定成功')
-          this.lockVisible = false
-          this.handleFlush()
-        } else {
-          this.handleLockError()
-        }
+        this.$Message.success('锁定成功')
+        this.lockVisible = false
+        this.handleRefresh()
       }).catch(() => {
         this.handleLockError()
       })

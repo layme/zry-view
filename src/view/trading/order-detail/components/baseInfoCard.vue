@@ -153,10 +153,8 @@ export default {
         content: '<p>确定取消该订单？</p><p style="color: #808695;">未支付取消，直接释放库存，无需审核</p>',
         onOk: () => {
           cancelOrder(this.order.orderBid).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('取消成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('取消成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -182,20 +180,14 @@ export default {
     },
     getFinSettle () {
       getFinSettle().then(res => {
-        if (res.code === 200) {
-          this.finSettleOptions = res.body
-        }
+        this.finSettleOptions = res.body
       })
     },
     pay () {
       pay(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('支付成功')
-          this.visible = false
-          this.$emit('refresh')
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('支付成功')
+        this.visible = false
+        this.$emit('refresh')
       }).catch(() => {
         this.handleError()
       })
@@ -221,13 +213,9 @@ export default {
     },
     handleCloseOrder () {
       refundOrder(this.closeDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('取消成功')
-          this.cancelVisible = false
-          this.toRefundDetail(this.order.orderBid)
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('取消成功')
+        this.cancelVisible = false
+        this.toRefundDetail(this.order.orderBid)
       }).catch(() => {
         this.handleError()
       })

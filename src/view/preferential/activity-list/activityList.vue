@@ -90,10 +90,8 @@ export default {
     handlePageChange () {
       this.loading = true
       listActivity(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.activityList = res.body.rows
-          this.total = res.body.total
-        }
+        this.activityList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -140,10 +138,8 @@ export default {
     },
     updateActivity (activityBid, activityStatus) {
       updateActivity(activityBid, activityStatus).then(res => {
-        if (res.code === 200) {
-          this.$Message.success(`${activityStatus === 1 ? '开启' : '关闭'}成功`)
-          this.handlePageChange()
-        }
+        this.$Message.success(`${activityStatus === 1 ? '开启' : '关闭'}成功`)
+        this.handlePageChange()
       })
     }
   },

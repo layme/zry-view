@@ -102,9 +102,7 @@ export default {
         endCreateTime: getDate(this.paramDto.date[1], 'date')
       }
       getReportDaily(dto).then(res => {
-        if (res.code === 200) {
-          this.listDate = res.body.rows
-        }
+        this.listDate = res.body.rows
         this.loading = false
       }).catch(() => {
         this.loading = false

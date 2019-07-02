@@ -97,10 +97,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getWorkPassword(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.passwordList = res.body.rows
-          this.total = res.body.total
-        }
+        this.passwordList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -125,13 +123,9 @@ export default {
     },
     save () {
       applyWorkPassword(this.applyDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('内务密码申请成功')
-          this.visible = false
-          this.handlePageChange()
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('内务密码申请成功')
+        this.visible = false
+        this.handlePageChange()
       }).catch(() => {
         this.handleError()
       })

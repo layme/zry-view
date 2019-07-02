@@ -153,12 +153,8 @@ export default {
     handlePageChange () {
       this.loadingTable = true
       getGuests(this.guestDto).then(res => {
-        if (res.code === 200) {
-          this.guestList = res.body.rows
-          this.total = res.body.total
-        } else {
-          this.$Message.warning('查询失败，请稍后重试')
-        }
+        this.guestList = res.body.rows
+        this.total = res.body.total
         this.loadingTable = false
       }).catch(() => {
         this.loadingTable = false

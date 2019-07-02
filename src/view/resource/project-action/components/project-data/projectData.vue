@@ -97,12 +97,10 @@ export default {
     listData () {
       this.loading = true
       getData(this.projectBid).then(res => {
-        if (res.code === 200) {
-          this.businessQualificationAtt = res.body.businessQualificationAtt
-          this.contractAtt = res.body.contractAtt
-          this.elseAtt = res.body.elseAtt
-          this.turnTo(this.currentLabel)
-        }
+        this.businessQualificationAtt = res.body.businessQualificationAtt
+        this.contractAtt = res.body.contractAtt
+        this.elseAtt = res.body.elseAtt
+        this.turnTo(this.currentLabel)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -140,10 +138,8 @@ export default {
     },
     deleteImg (val) {
       deleteData(val).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('删除成功')
-          this.listData()
-        }
+        this.$Message.success('删除成功')
+        this.listData()
       })
     },
     openUpload () {
@@ -192,11 +188,9 @@ export default {
           break
       }
       saveData(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.uploadDialogVisible = false
-          this.listData()
-        }
+        this.$Message.success('保存成功')
+        this.uploadDialogVisible = false
+        this.listData()
       })
     }
   },

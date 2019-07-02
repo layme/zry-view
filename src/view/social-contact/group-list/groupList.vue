@@ -69,10 +69,8 @@ export default {
     },
     handlePageChange () {
       getGroups(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.groupList = res.body.rows
-          this.total = res.body.total
-        }
+        this.groupList = res.body.rows
+        this.total = res.body.total
       }).catch(() => {
       })
     },
@@ -115,11 +113,9 @@ export default {
         owner: this.groupList[index].owner
       }
       removeGroup(data).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('解散群聊成功')
-          this.visible = false
-          this.listGroup()
-        }
+        this.$Message.success('解散群聊成功')
+        this.visible = false
+        this.listGroup()
       })
     },
     saveGroup () {
@@ -139,13 +135,9 @@ export default {
         description: JSON.stringify({ headUrl: dto.headUrl })
       }
       updateGroup(data).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('更新群聊成功')
-          this.visible = false
-          this.listGroup()
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('更新群聊成功')
+        this.visible = false
+        this.listGroup()
       }).catch(() => {
         this.handleError()
       })
@@ -157,13 +149,9 @@ export default {
         desc: JSON.stringify({ headUrl: dto.headUrl })
       }
       createGroup(data).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('创建群聊成功')
-          this.visible = false
-          this.listGroup()
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('创建群聊成功')
+        this.visible = false
+        this.listGroup()
       }).catch(() => {
         this.handleError()
       })

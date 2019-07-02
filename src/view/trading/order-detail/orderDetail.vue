@@ -159,19 +159,17 @@ export default {
       this.loading = true
       this.orderNumber = this.$route.query.orderNumber
       orderDetail(this.orderNumber).then(res => {
-        if (res.code === 200) {
-          this.orderInfo = res.body.orderInfo
-          this.accountBank = res.body.accountBank
-          this.lockPwdList = res.body.lockPwdList
-          this.lockPwdHave1 = res.body.lockPwdHave1
-          this.lockPwdHave2 = res.body.lockPwdHave2
-          this.hasCheckInStayPerson = res.body.hasCheckInStayPerson
-          this.ticketInfo = res.body.ticketInfo
-          this.renewOrderEndMinDate = res.body.renewOrderEndMinDate
-          this.recordList = res.body.recordList
-          this.guestType = res.body.guestType
-          this.firstChannel = res.body.firstChannel
-        }
+        this.orderInfo = res.body.orderInfo
+        this.accountBank = res.body.accountBank
+        this.lockPwdList = res.body.lockPwdList
+        this.lockPwdHave1 = res.body.lockPwdHave1
+        this.lockPwdHave2 = res.body.lockPwdHave2
+        this.hasCheckInStayPerson = res.body.hasCheckInStayPerson
+        this.ticketInfo = res.body.ticketInfo
+        this.renewOrderEndMinDate = res.body.renewOrderEndMinDate
+        this.recordList = res.body.recordList
+        this.guestType = res.body.guestType
+        this.firstChannel = res.body.firstChannel
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -179,28 +177,22 @@ export default {
     },
     saveOrderRemark (dto) {
       saveOrderRemark({ orderBid: this.orderInfo.orderBid, orderRemark: dto }).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('备注保存成功，备注信息稍后展示')
-          this.$refs.remarkRef.clear()
-          setTimeout(() => {
-            this.getOrderRemark()
-          }, 2000)
-        }
+        this.$Message.success('备注保存成功，备注信息稍后展示')
+        this.$refs.remarkRef.clear()
+        setTimeout(() => {
+          this.getOrderRemark()
+        }, 2000)
       })
     },
     getOrderRemark () {
       getOrderRemark(this.orderInfo.orderBid).then(res => {
-        if (res.code === 200) {
-          this.recordList = res.body
-        }
+        this.recordList = res.body
       })
     },
     saveStayPerson (dto) {
-      saveStayPerson(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('入住人保存成功')
-          this.getOrderDetail()
-        }
+      saveStayPerson(dto).then(() => {
+        this.$Message.success('入住人保存成功')
+        this.getOrderDetail()
       })
     },
     saveBed (dto) {
@@ -227,13 +219,9 @@ export default {
     },
     updateOrderPhone () {
       updateOrderPhone(this.phoneDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('预定手机号修改成功')
-          this.phoneVisible = false
-          this.getOrderDetail()
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('预定手机号修改成功')
+        this.phoneVisible = false
+        this.getOrderDetail()
       }).catch(() => {
         this.handleError()
       })

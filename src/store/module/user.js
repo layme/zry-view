@@ -90,9 +90,7 @@ export default {
           userName,
           password
         }).then(res => {
-          if (res.code === 200) {
-            commit('setToken', res.body)
-          }
+          commit('setToken', res.body)
           resolve(res)
         }).catch(err => {
           reject(err)
@@ -138,10 +136,8 @@ export default {
     changeCurrentProject ({ state, commit }, projectBid) {
       return new Promise((resolve, reject) => {
         changeCurrentProject(projectBid).then(res => {
-          if (res.code === 200) {
-            commit('setCurrentProject', state.projectList.find(item => item.bid === projectBid))
-            Message.success('项目切换成功')
-          }
+          commit('setCurrentProject', state.projectList.find(item => item.bid === projectBid))
+          Message.success('项目切换成功')
         })
       })
     },
@@ -154,9 +150,7 @@ export default {
         pageSize: 1
       }
       getUnreadCount(dto).then(res => {
-        if (res.code === 200) {
-          commit('setMessageCount', res.body.total)
-        }
+        commit('setMessageCount', res.body.total)
       })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表

@@ -67,10 +67,8 @@ export default {
       if (this.houseSorts[index].bid) {
         this.loading = true
         deleteHouseSort(this.houseSorts[index].bid).then(res => {
-          if (res.code === 200) {
-            this.$Message.success('删除成功')
-            this.houseSorts.splice(index, 1)
-          }
+          this.$Message.success('删除成功')
+          this.houseSorts.splice(index, 1)
           this.loading = false
         }).catch(() => {
           this.loading = false
@@ -94,10 +92,8 @@ export default {
     showHouseSort (bid, val) {
       this.loading = true
       showOrNot(bid, val).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('操作成功')
-          this.getHouseSorts()
-        }
+        this.$Message.success('操作成功')
+        this.getHouseSorts()
         this.loading = false
       }).catch(() => {
         this.loading = false

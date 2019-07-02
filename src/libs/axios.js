@@ -42,7 +42,9 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(resp => {
       this.destroy(url, true)
-      if (resp.data.code !== 200) {
+      if (resp.data.code <= 200) {
+        return resp.data
+      } else {
         if (resp.data.code === 401) {
           setTimeout(() => {
             Modal.warning({
@@ -59,8 +61,8 @@ class HttpRequest {
           let message = resp.data.message ? resp.data.message : '系统异常'
           Message.warning(message)
         }
+        return Promise.reject(resp.data)
       }
-      return resp.data
     }, error => {
       this.destroy(url, false)
       this.catchError(error)

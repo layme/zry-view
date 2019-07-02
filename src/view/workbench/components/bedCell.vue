@@ -38,10 +38,8 @@ export default {
         status: this.bed.bedStatus === 3 ? 1 : 3
       }
       updStockStatus(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('设置成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('设置成功')
+        this.$emit('refresh')
       })
     }
   }

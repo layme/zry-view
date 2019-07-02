@@ -73,10 +73,8 @@ export default {
     getStock () {
       this.loading = true
       getStock(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.stockData = res.body
-          this.allStockData.push(...res.body)
-        }
+        this.stockData = res.body
+        this.allStockData.push(...res.body)
         this.loading = false
       }).catch(() => {
         this.loading = false

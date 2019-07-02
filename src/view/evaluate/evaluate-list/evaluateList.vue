@@ -76,22 +76,16 @@ export default {
     handlePageChange () {
       this.$delete(this.paramDto, 'evaluateTime')
       getEvaluate(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.evaluateList = res.body.rows
-          this.total = res.body.total
-          this.haveData = this.total > 0
-        } else {
-          this.haveData = false
-        }
+        this.evaluateList = res.body.rows
+        this.total = res.body.total
+        this.haveData = this.total > 0
+      }).catch(() => {
+        this.haveData = false
       })
     },
     projectScore () {
       getProjectScore(this.$store.state.user.currentProject.bid).then(res => {
-        if (res.code === 200) {
-          this.totalScore = res.data
-        } else {
-          console.log('查询项目评分失败')
-        }
+        this.totalScore = res.data
       })
     },
     toOrderDetail (orderNumber) {
@@ -134,15 +128,11 @@ export default {
     },
     reply () {
       reply(this.replyDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('回复成功，数据稍后刷新')
-          setTimeout(() => {
-            this.handlePageChange()
-          }, this.delay)
-          this.replyVisible = false
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('回复成功，数据稍后刷新')
+        setTimeout(() => {
+          this.handlePageChange()
+        }, this.delay)
+        this.replyVisible = false
       }).catch(() => {
         this.handleError()
       })
@@ -176,12 +166,10 @@ export default {
         isValid: val
       }
       shieldValuate(evalShieldDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success(`${action}成功`)
-          setTimeout(() => {
-            this.handlePageChange()
-          }, this.delay)
-        }
+        this.$Message.success(`${action}成功`)
+        setTimeout(() => {
+          this.handlePageChange()
+        }, this.delay)
       })
     }
   },

@@ -63,11 +63,9 @@ export default {
       if (this.houseTypes[index].bid) {
         this.loading = true
         deleteHouseType(this.houseTypes[index].bid).then(res => {
-          if (res.code === 200) {
-            this.Message.success('删除成功')
-            this.$emit('remove', this.index)
-            this.houseTypes.splice(index, 1)
-          }
+          this.Message.success('删除成功')
+          this.$emit('remove', this.index)
+          this.houseTypes.splice(index, 1)
           this.loading = false
         }).catch(() => {
           this.loading = false
@@ -78,9 +76,7 @@ export default {
     },
     getHouseTypeParentBidOptions () {
       getHouseSorts(this.projectBid).then(res => {
-        if (res.code === 200) {
-          this.houseTypeParentBidOptions = res.body
-        }
+        this.houseTypeParentBidOptions = res.body
       })
     },
     getBedTypeList () {
@@ -103,10 +99,8 @@ export default {
     showHouseType (bid, val) {
       this.loading = true
       showOrNot(bid, val).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('操作成功')
-          this.getHouseType()
-        }
+        this.$Message.success('操作成功')
+        this.getHouseType()
         this.loading = false
       }).catch(() => {
         this.loading = false
