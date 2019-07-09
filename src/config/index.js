@@ -23,6 +23,10 @@ export default {
    */
   homeName: 'workbench',
   /**
+   * 密码重置跳转链接
+   */
+  resetPassword: 'http://cas.ziroom.com/CAS/api/password/forgetPwd/one',
+  /**
    * @description 需要加载的插件
    */
   plugin: {}
