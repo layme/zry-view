@@ -320,8 +320,8 @@ export default {
         })
       })
       this.ownerDto.remark = this.owner.remark
-      if (this.ownerDto.organizationCodeAtt) {
-        this.ownerDto.organizationCodeAtt.forEach(item => {
+      if (this.owner.organizationCodeAtt) {
+        this.owner.organizationCodeAtt.forEach(item => {
           this.defaultOrgList.push(
             {
               url: item.attachmentImgUrl,
@@ -330,8 +330,8 @@ export default {
           )
         })
       }
-      if (this.ownerDto.titleDeedAtt) {
-        this.ownerDto.titleDeedAtt.forEach(item => {
+      if (this.owner.titleDeedAtt) {
+        this.owner.titleDeedAtt.forEach(item => {
           this.defaultProList.push(
             {
               url: item.attachmentImgUrl,
@@ -340,8 +340,8 @@ export default {
           )
         })
       }
-      if (this.ownerDto.elseAtt) {
-        this.ownerDto.elseAtt.forEach(item => {
+      if (this.owner.elseAtt) {
+        this.owner.elseAtt.forEach(item => {
           this.defaultOtherList.push(
             {
               url: item.attachmentImgUrl,

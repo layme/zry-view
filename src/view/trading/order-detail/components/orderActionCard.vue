@@ -73,7 +73,7 @@
 <script>
 import bedCard from './bedCard'
 import feeCard from './feeCard'
-import { unbindBed, changeBed, cancelBookBed, checkInOrder, checkOutOrder, generateLockPwd } from '@/api/order'
+import { unbindBed, changeBed, cancelBookBed, checkInOrder, checkOutOrder, generateLockPwd, saveStayPerson } from '@/api/order'
 import { getStock } from '@/api/stock'
 import { checkDoorPwd, sendDoorPwd } from '@/api/smartLock'
 
@@ -100,6 +100,7 @@ export default {
       stockLoading: true,
       stockData: [],
       selectAreaBed: '',
+      type: '',
       changeBedDto: {
         orderBid: '',
         stayPersonBid: '',
@@ -111,6 +112,20 @@ export default {
         newBedBid: '',
         newAreaBid: '',
         projectBid: ''
+      },
+      saveBedDto: {
+        orderBid: '',
+        startDate: '',
+        endDate: '',
+        stayPersonList: [
+          {
+            orderBid: '',
+            bid: '',
+            houseTypeBid: '',
+            areaBid: '',
+            areaBedBid: ''
+          }
+        ]
       },
       pwdVisible: false,
       pwdColumns: [
@@ -128,20 +143,31 @@ export default {
     }
   },
   methods: {
-    selectBed (dto, stay) {
+    selectBed (dto, stay, type) {
       this.stockVisible = true
       this.selectAreaBed = ''
       this.getStock(dto)
-      this.changeBedDto.orderBid = stay.orderBid
-      this.changeBedDto.stayPersonBid = stay.bid
-      this.changeBedDto.oldBedBid = stay.areaBedBid
-      this.changeBedDto.oldAreaBid = stay.areaBid
-      this.changeBedDto.houseTypeBid = stay.houseTypeBid
-      this.changeBedDto.startDate = dto.checkInTime
-      this.changeBedDto.endDate = dto.checkOutTime
-      this.changeBedDto.newBedBid = ''
-      this.changeBedDto.newAreaBid = ''
-      this.changeBedDto.projectBid = this.order.projectBid
+      if (type === 'first') {
+        this.type = 'first'
+        this.saveBedDto.orderBid = stay.orderBid
+        this.saveBedDto.startDate = dto.checkInTime
+        this.saveBedDto.endDate = dto.checkOutTime
+        this.saveBedDto.stayPersonList[0].orderBid = stay.orderBid
+        this.saveBedDto.stayPersonList[0].bid = stay.bid
+        this.saveBedDto.stayPersonList[0].houseTypeBid = stay.houseTypeBid
+      } else {
+        this.type = 'second'
+        this.changeBedDto.orderBid = stay.orderBid
+        this.changeBedDto.stayPersonBid = stay.bid
+        this.changeBedDto.oldBedBid = stay.areaBedBid
+        this.changeBedDto.oldAreaBid = stay.areaBid
+        this.changeBedDto.houseTypeBid = stay.houseTypeBid
+        this.changeBedDto.startDate = dto.checkInTime
+        this.changeBedDto.endDate = dto.checkOutTime
+        this.changeBedDto.newBedBid = ''
+        this.changeBedDto.newAreaBid = ''
+        this.changeBedDto.projectBid = this.order.projectBid
+      }
     },
     changeBed () {
       this.$refs.bedCard.changeBed()
@@ -156,7 +182,23 @@ export default {
       })
     },
     saveBed () {
-      changeBed(this.changeBedDto).then(res => {
+      if (this.type === 'first') {
+        this.firstSaveBed()
+      } else {
+        this.secondSaveBed()
+      }
+    },
+    secondSaveBed () {
+      changeBed(this.changeBedDto).then(() => {
+        this.$Message.success('床位保存成功')
+        this.stockVisible = false
+        this.$emit('refresh')
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    firstSaveBed () {
+      saveStayPerson(this.saveBedDto).then(() => {
         this.$Message.success('床位保存成功')
         this.stockVisible = false
         this.$emit('refresh')
@@ -274,9 +316,13 @@ export default {
         let a = val.split(',')
         this.changeBedDto.newAreaBid = a[0]
         this.changeBedDto.newBedBid = a[1]
+        this.saveBedDto.stayPersonList[0].areaBid = a[0]
+        this.saveBedDto.stayPersonList[0].areaBedBid = a[1]
       } else {
         this.changeBedDto.newAreaBid = ''
         this.changeBedDto.newBedBid = ''
+        this.saveBedDto.stayPersonList[0].areaBid = ''
+        this.saveBedDto.stayPersonList[0].areaBedBid = ''
       }
     }
   }

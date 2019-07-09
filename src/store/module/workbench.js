@@ -1,6 +1,7 @@
 import { getConfEnum } from '@/api/order'
 import { getPassword, getBedCountByStatus } from '@/api/project'
 import { getHouseTypeList, getStockWorkbench, getStockOfPerDay } from '@/api/stock'
+import { getRefundCountByStatusAndFlag } from '@/api/refund'
 import store from '@/store'
 
 export default {
@@ -64,7 +65,14 @@ export default {
         commit('setCleanCount', res.body)
       })
     },
-    getStockOrderCount ({ commit }, data) {},
+    getStockOrderCount ({ commit }) {
+      getRefundCountByStatusAndFlag('yes').then(res => {
+        commit('setStockOrderCount', res.body)
+      })
+      getRefundCountByStatusAndFlag('no').then(res => {
+        commit('setUnStockOrderCount', res.body)
+      })
+    },
     // 房型列表
     getHouseTypeList ({ commit }) {
       getHouseTypeList(store.state.user.currentProject.bid).then(res => {

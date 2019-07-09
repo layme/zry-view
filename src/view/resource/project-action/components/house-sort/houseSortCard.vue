@@ -119,7 +119,7 @@ export default {
     },
     updateHouseSort () {
       this.loading = true
-      updateHouseSort(this.houseSortDto).then(res => {
+      updateHouseSort(this.houseSortDto).then(() => {
         this.$Message.success('修改成功')
         this.loading = false
       }).catch(() => {

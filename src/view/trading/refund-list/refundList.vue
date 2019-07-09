@@ -12,8 +12,8 @@
         <div>{{ row.status | refundStatusFilter }}</div>
       </template>
     </Table>
-    <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="getpageList"/>
+    <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
+          :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
   </div>
 </template>
 <script>
@@ -29,8 +29,8 @@ export default {
     return {
       loading: false,
       paramDto: {
-        page: 1,
-        limit: 10
+        pageIndex: 1,
+        pageSize: 10
       },
       columns: [
         {
@@ -91,16 +91,12 @@ export default {
   methods: {
     listRefund (dto) {
       Object.assign(this.paramDto, dto)
-      this.paramDto.page = 1
-      this.getpageList()
+      this.paramDto.pageIndex = 1
+      this.handlePageChange()
     },
-    getpageList () {
-      console.info('paramDto', this.paramDto)
+    handlePageChange () {
       this.loading = true
       getRefundList(this.paramDto).then(res => {
-        if (!res.body) {
-          return
-        }
         this.data = res.body.rows
         this.total = res.body.total
         this.loading = false
@@ -109,18 +105,20 @@ export default {
       })
     },
     toRefundDetail (row) {
+      let flag = 'n'
+      if (row.orderStatus === 11 || row.orderStatus === 6 || row.orderStatus === 1 || row.orderStatus === 2) {
+        flag = 'y'
+      }
       const orderBid = row.orderBid
       const route = {
         name: 'refundDetail',
         query: {
-          orderBid
+          orderBid,
+          flag
         }
       }
       this.$router.push(route)
     }
-  },
-  created () {
-    this.getpageList()
   },
   filters: {
     orderStatusFilter (val) {

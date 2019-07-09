@@ -2,7 +2,7 @@ import Cookies from 'js-cookie'
 // cookie保存的天数
 import config from '@/config'
 import { forEach, hasOneOf, objEqual } from '@/libs/tools'
-const { title, cookieExpires, useI18n } = config
+const { title, cookieExpires, useI18n, HomeName } = config
 
 export const TOKEN_KEY = 'token'
 
@@ -125,9 +125,10 @@ export const getTagNavListFromLocalstorage = () => {
 
 /**
  * @param {Array} routers 路由列表数组
+ * @param homeName
  * @description 用于找到路由列表中name为home的对象
  */
-export const getHomeRoute = (routers, homeName = 'workbench') => {
+export const getHomeRoute = (routers, homeName = HomeName) => {
   let i = -1
   let len = routers.length
   let homeRoute = {}

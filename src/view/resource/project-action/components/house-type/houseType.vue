@@ -63,8 +63,7 @@ export default {
       if (this.houseTypes[index].bid) {
         this.loading = true
         deleteHouseType(this.houseTypes[index].bid).then(res => {
-          this.Message.success('删除成功')
-          this.$emit('remove', this.index)
+          this.$Message.success('删除成功')
           this.houseTypes.splice(index, 1)
           this.loading = false
         }).catch(() => {

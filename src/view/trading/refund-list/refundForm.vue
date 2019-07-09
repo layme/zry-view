@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="订单号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="App/OTA" clearable></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -23,12 +23,14 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
-        <FormItem label="入住人">
-          <Input v-model.trim="paramDto.checkinPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+        <FormItem label="退款方式">
+          <Select v-model="paramDto.isOwnFlag" placeholder="请选择" clearable>
+            <Option v-for="x in flagOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
         </FormItem>
       </Col>
       <Col span="8">
@@ -57,10 +59,10 @@ export default {
       paramDto: {
         orderNumber: '',
         refoundStatus: '',
-        applyRefundStartTime: '',
-        applyRefundEndTime: '',
+        refundStartTime: '',
+        refundEndTime: '',
         bookPerson: '',
-        checkinPerson: '',
+        isOwnFlag: '',
         checkInStartTime: '',
         checkInEndTime: ''
       },
@@ -83,6 +85,16 @@ export default {
           label: '打款异常',
           value: 3
         }
+      ],
+      flagOptions: [
+        {
+          label: '取消',
+          value: 1
+        },
+        {
+          label: '退房',
+          value: 2
+        }
       ]
     }
   },
@@ -100,6 +112,9 @@ export default {
       this.paramDto.applyRefundStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.applyRefundEndTime = val[1] ? getDate(val[1], 'date') : ''
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

@@ -48,7 +48,7 @@
           <Button type="primary" icon="ios-search" @click="listRoom"> 查 询</Button>
         </Col>
         <Col span="12" style="text-align: right">
-          <Button type="primary" @click="addRoom"> 新增项目</Button>
+          <Button type="primary" @click="addRoom"> 新增房间</Button>
         </Col>
       </Row>
     </Form>
