@@ -33,11 +33,9 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        if (res.code === 200) {
-          this.$router.push({
-            name: this.$config.homeName
-          })
-        }
+        this.$router.push({
+          name: this.$config.homeName
+        })
       })
     }
   },
@@ -70,7 +68,7 @@ export default {
   .div-left {
     height: 100%;
     width: ~"calc(100% * 0.6)";
-    background: url('../../../assets/images/city.jpg');
+    background: url('../../assets/images/city.jpg');
     opacity: 0.9;
     float: left;
     padding: 40px 0 0 30px;

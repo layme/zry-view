@@ -196,6 +196,7 @@ export default {
   data () {
     return {
       houseTypeDto: {
+        bid: '',
         projectBid: this.projectBid,
         houseTypeParentBid: '',
         houseName: '',
@@ -326,10 +327,9 @@ export default {
     saveHouseType () {
       this.loading = true
       saveHouseType(this.houseTypeDto).then(res => {
-        if (res.code === 200) {
-          this.Message.success('保存成功')
-          this.$store.commit('upStep', 5)
-        }
+        this.$Message.success('保存成功')
+        this.houseTypeDto.bid = res.body
+        this.$store.commit('upStep', 5)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -337,10 +337,8 @@ export default {
     },
     updateHouseType () {
       this.loading = true
-      updateHouseType(this.houseTypeDto).then(res => {
-        if (res.code === 200) {
-          this.Message.success('保存成功')
-        }
+      updateHouseType(this.houseTypeDto).then(() => {
+        this.$Message.success('保存成功')
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -386,20 +384,21 @@ export default {
         this.houseTypeDto.bid = this.houseType.bid
         this.houseTypeDto.houseTypeParentBid = this.houseType.houseTypeParentBid
         this.houseTypeDto.houseName = this.houseType.houseName
-        this.houseTypeDto.houseArea = this.houseType.houseArea
+        this.houseTypeDto.houseArea = this.houseType.houseArea.toString()
         this.houseTypeDto.isShow = this.houseType.isShow
         this.houseTypeDto.checkInLimit = this.houseType.checkInLimit
         this.houseTypeDto.isBathroom = this.houseType.isBathroom
         this.houseTypeDto.isBath = this.houseType.isBath
         this.houseTypeDto.introduction = this.houseType.introduction
         this.houseTypeDto.bedList = this.houseType.bedList
-        this.houseTypeDto.originalPrice = this.houseType.originalPrice
-        this.houseTypeDto.usualPrice = this.houseType.usualPrice
+        this.houseTypeDto.originalPrice = this.houseType.originalPrice.toString()
+        this.houseTypeDto.usualPrice = this.houseType.usualPrice.toString()
         this.houseTypeDto.priceList = JSON.parse(JSON.stringify(this.houseType.priceList))
         this.houseTypeDto.priceList.forEach((item) => {
           this.$set(item, 'dateRange', [])
-          item.dateRange.push(item.startDate)
-          item.dateRange.push(item.endDate)
+          item.dateRange.push(new Date(item.startDate))
+          item.dateRange.push(new Date(item.endDate))
+          item.specialPrice = item.specialPrice.toString()
         })
       }
     }

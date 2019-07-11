@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 // 获取临时密码申请列表
 export const getApplyPwd = data => {
@@ -80,7 +79,7 @@ export const sendDoorPwd = data => {
   return axios.request({
     url: '/smartLock/sendDoorPwd.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       orderBid: data
     }

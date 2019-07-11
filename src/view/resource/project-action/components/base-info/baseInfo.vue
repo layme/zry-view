@@ -355,16 +355,14 @@ export default {
       }
       this.loading = true
       getBaseInfo(this.projectBid).then(res => {
-        if (res.code === 200) {
-          this.baseDto = res.body
-          this.baseDto.projectArea = this.baseDto.projectArea.toString()
-          this.baseDto.signDate = new Date(this.baseDto.signDate)
-          this.baseDto.endlineDate = new Date(this.baseDto.endlineDate)
-          this.baseDto.openDate = new Date(this.baseDto.openDate)
-          this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
-          this.loading = false
-          this.canClear = false
-        }
+        this.baseDto = res.body
+        this.baseDto.projectArea = this.baseDto.projectArea.toString()
+        this.baseDto.signDate = new Date(this.baseDto.signDate)
+        this.baseDto.endlineDate = new Date(this.baseDto.endlineDate)
+        this.baseDto.openDate = new Date(this.baseDto.openDate)
+        this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
+        this.loading = false
+        this.canClear = false
       }).catch(() => {
         this.loading = false
       })
@@ -409,12 +407,10 @@ export default {
     saveBase (dto) {
       this.loading = true
       saveBase(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.proBid = res.body
-          this.$store.commit('upStep', 2)
-          this.$emit('success', this.proBid, dto.projectName)
-        }
+        this.$Message.success('保存成功')
+        this.proBid = res.body
+        this.$store.commit('upStep', 2)
+        this.$emit('success', this.proBid, dto.projectName)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -423,12 +419,10 @@ export default {
     updateBase (dto) {
       this.loading = true
       updateBase(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-          this.proBid = res.body
-          this.$store.commit('upStep', 2)
-          this.$emit('success', this.proBid, dto.projectName)
-        }
+        this.$Message.success('修改成功')
+        this.proBid = res.body
+        this.$store.commit('upStep', 2)
+        this.$emit('success', this.proBid, dto.projectName)
         this.loading = false
       }).catch(() => {
         this.loading = false

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Divider orientation="left">基本信息</Divider>
     <div style="margin: 0 200px">
       <Form :model="repair" :label-width="90">
@@ -127,12 +128,12 @@ export default {
   },
   methods: {
     getDetail () {
+      this.loading = true
       getDetail(this.$route.query.orderSn).then(res => {
-        if (res.code === 200) {
-          this.repair = res.body
-        } else {
-          this.$Message.warning(res.message)
-        }
+        this.repair = res.body
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     }
   },
@@ -147,4 +148,13 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .full-top {
+    position: relative;
+    min-height: 300px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
+  }
 </style>

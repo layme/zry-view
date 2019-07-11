@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 // 获取列表
 export const getHouseTypeList = data => {
@@ -64,7 +63,7 @@ export const unLockBedStock = data => {
   return axios.request({
     url: '/stock/unLockBedStock.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       lockBedBid: data
     }

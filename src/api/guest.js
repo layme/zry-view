@@ -78,3 +78,31 @@ export const deleteEvent = data => {
     data: data
   })
 }
+
+export const collectGuestInfo = data => {
+  return axios.request({
+    url: '/guest/collectGuestInfo.action',
+    method: 'get',
+    params: {
+      orderBid: data
+    }
+  })
+}
+
+export const listGuestInfo = data => {
+  return axios.request({
+    url: '/guest/listGuestInfo.action',
+    method: 'get',
+    params: {
+      orderBid: data
+    }
+  })
+}
+
+export const saveGuestInfo = data => {
+  return axios.request({
+    url: '/guest/saveGuestInfo.action',
+    method: 'post',
+    data: data
+  })
+}

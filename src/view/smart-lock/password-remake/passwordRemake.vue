@@ -72,10 +72,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getPwdRemakeList(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.passwordList = res.body.rows
-          this.total = res.body.total
-        }
+        this.passwordList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -99,11 +97,14 @@ export default {
         areaBid: row.areaBid
       }
       resetOrderPassword(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('密码重制成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('密码重制成功')
+        this.handlePageChange()
       })
+    }
+  },
+  watch: {
+    '$store.state.user.currentProject' () {
+      this.getList()
     }
   },
   created () {

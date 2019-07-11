@@ -70,10 +70,8 @@ export default {
         maxPower: this.paramDto.battery[1]
       }
       getPowerInfo(dto).then(res => {
-        if (res.code === 200) {
-          this.batteryList = res.body.rows
-          this.total = res.body.total
-        }
+        this.batteryList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -87,6 +85,11 @@ export default {
       } else {
         return 'error'
       }
+    }
+  },
+  watch: {
+    '$store.state.user.currentProject' () {
+      this.getList()
     }
   },
   created () {

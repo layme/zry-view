@@ -9,10 +9,14 @@
     </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" size="large" long shape="circle">登 录</Button>
+      <div style="text-align: right">
+        <a :href="resetPassword" target="_blank" style="color: #808695">忘记密码</a>
+      </div>
     </FormItem>
   </Form>
 </template>
 <script>
+import config from '@/config'
 export default {
   name: 'LoginForm',
   props: {
@@ -38,7 +42,8 @@ export default {
       form: {
         userName: '',
         password: ''
-      }
+      },
+      resetPassword: config.resetPassword
     }
   },
   computed: {

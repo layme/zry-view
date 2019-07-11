@@ -98,17 +98,13 @@ export default {
     },
     openLockInfo (orderBid) {
       getLockBedStock(orderBid).then(res => {
-        if (res.code === 200) {
-          this.lockInfo = res.body
-        }
+        this.lockInfo = res.body
       })
     },
     unLockBed () {
       unLockBedStock(this.lockInfo.lockbedBid).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('解锁成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('解锁成功')
+        this.$emit('refresh')
       })
     }
   },

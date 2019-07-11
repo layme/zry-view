@@ -73,7 +73,7 @@
 <script>
 import bedCard from './bedCard'
 import feeCard from './feeCard'
-import { unbindBed, changeBed, cancelBookBed, checkInOrder, checkOutOrder, generateLockPwd } from '@/api/order'
+import { unbindBed, changeBed, cancelBookBed, checkInOrder, checkOutOrder, generateLockPwd, saveStayPerson } from '@/api/order'
 import { getStock } from '@/api/stock'
 import { checkDoorPwd, sendDoorPwd } from '@/api/smartLock'
 
@@ -100,6 +100,7 @@ export default {
       stockLoading: true,
       stockData: [],
       selectAreaBed: '',
+      type: '',
       changeBedDto: {
         orderBid: '',
         stayPersonBid: '',
@@ -111,6 +112,20 @@ export default {
         newBedBid: '',
         newAreaBid: '',
         projectBid: ''
+      },
+      saveBedDto: {
+        orderBid: '',
+        startDate: '',
+        endDate: '',
+        stayPersonList: [
+          {
+            orderBid: '',
+            bid: '',
+            houseTypeBid: '',
+            areaBid: '',
+            areaBedBid: ''
+          }
+        ]
       },
       pwdVisible: false,
       pwdColumns: [
@@ -128,20 +143,31 @@ export default {
     }
   },
   methods: {
-    selectBed (dto, stay) {
+    selectBed (dto, stay, type) {
       this.stockVisible = true
       this.selectAreaBed = ''
       this.getStock(dto)
-      this.changeBedDto.orderBid = stay.orderBid
-      this.changeBedDto.stayPersonBid = stay.bid
-      this.changeBedDto.oldBedBid = stay.areaBedBid
-      this.changeBedDto.oldAreaBid = stay.areaBid
-      this.changeBedDto.houseTypeBid = stay.houseTypeBid
-      this.changeBedDto.startDate = dto.checkInTime
-      this.changeBedDto.endDate = dto.checkOutTime
-      this.changeBedDto.newBedBid = ''
-      this.changeBedDto.newAreaBid = ''
-      this.changeBedDto.projectBid = this.order.projectBid
+      if (type === 'first') {
+        this.type = 'first'
+        this.saveBedDto.orderBid = stay.orderBid
+        this.saveBedDto.startDate = dto.checkInTime
+        this.saveBedDto.endDate = dto.checkOutTime
+        this.saveBedDto.stayPersonList[0].orderBid = stay.orderBid
+        this.saveBedDto.stayPersonList[0].bid = stay.bid
+        this.saveBedDto.stayPersonList[0].houseTypeBid = stay.houseTypeBid
+      } else {
+        this.type = 'second'
+        this.changeBedDto.orderBid = stay.orderBid
+        this.changeBedDto.stayPersonBid = stay.bid
+        this.changeBedDto.oldBedBid = stay.areaBedBid
+        this.changeBedDto.oldAreaBid = stay.areaBid
+        this.changeBedDto.houseTypeBid = stay.houseTypeBid
+        this.changeBedDto.startDate = dto.checkInTime
+        this.changeBedDto.endDate = dto.checkOutTime
+        this.changeBedDto.newBedBid = ''
+        this.changeBedDto.newAreaBid = ''
+        this.changeBedDto.projectBid = this.order.projectBid
+      }
     },
     changeBed () {
       this.$refs.bedCard.changeBed()
@@ -149,23 +175,33 @@ export default {
     getStock (dto) {
       this.loading = true
       getStock(dto).then(res => {
-        if (res.code === 200) {
-          this.stockData = res.body
-        }
+        this.stockData = res.body
         this.loading = false
       }).catch(() => {
         this.loading = false
       })
     },
     saveBed () {
-      changeBed(this.changeBedDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('床位保存成功')
-          this.stockVisible = false
-          this.$emit('refresh')
-        } else {
-          this.handleError()
-        }
+      if (this.type === 'first') {
+        this.firstSaveBed()
+      } else {
+        this.secondSaveBed()
+      }
+    },
+    secondSaveBed () {
+      changeBed(this.changeBedDto).then(() => {
+        this.$Message.success('床位保存成功')
+        this.stockVisible = false
+        this.$emit('refresh')
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    firstSaveBed () {
+      saveStayPerson(this.saveBedDto).then(() => {
+        this.$Message.success('床位保存成功')
+        this.stockVisible = false
+        this.$emit('refresh')
       }).catch(() => {
         this.handleError()
       })
@@ -187,10 +223,8 @@ export default {
         content: '<p>确定要解绑吗？</p>',
         onOk: () => {
           unbindBed(dto).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('床位解绑成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('床位解绑成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -208,10 +242,8 @@ export default {
       }
       dto.customerPhone = phone
       checkInOrder(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('办理入住成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('办理入住成功')
+        this.$emit('refresh')
       })
     },
     cancelBookBed () {
@@ -223,10 +255,8 @@ export default {
         content: '<p>确定要退订床位吗？</p>',
         onOk: () => {
           cancelBookBed(dto).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('退订床位成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('退订床位成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -239,10 +269,8 @@ export default {
     handleCheckOut (dto) {
       dto.customerPhone = this.order.cusPhone
       checkOutOrder(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('办理退租成功')
-          this.$emit('refresh')
-        }
+        this.$Message.success('办理退租成功')
+        this.$emit('refresh')
       })
     },
     generateLockPwd () {
@@ -254,10 +282,8 @@ export default {
             orderBid: this.order.orderBid,
             projectBid: this.order.projectBid
           }).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('密码生成成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('密码生成成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -270,9 +296,7 @@ export default {
     },
     sendDoorPwd () {
       sendDoorPwd(this.order.orderBid).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('密码发送成功')
-        }
+        this.$Message.success('密码发送成功')
       })
     },
     toRefundDetail () {
@@ -292,9 +316,13 @@ export default {
         let a = val.split(',')
         this.changeBedDto.newAreaBid = a[0]
         this.changeBedDto.newBedBid = a[1]
+        this.saveBedDto.stayPersonList[0].areaBid = a[0]
+        this.saveBedDto.stayPersonList[0].areaBedBid = a[1]
       } else {
         this.changeBedDto.newAreaBid = ''
         this.changeBedDto.newBedBid = ''
+        this.saveBedDto.stayPersonList[0].areaBid = ''
+        this.saveBedDto.stayPersonList[0].areaBedBid = ''
       }
     }
   }

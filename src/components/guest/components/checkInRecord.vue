@@ -91,10 +91,8 @@ export default {
     handlePageChange () {
       this.loading = true
       listRecord(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.recordList = res.body.rows
-          this.total = res.body.total
-        }
+        this.recordList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false

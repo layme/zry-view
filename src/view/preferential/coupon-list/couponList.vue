@@ -121,10 +121,8 @@ export default {
     handlePageChange () {
       this.loading = true
       listCoupon(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.couponList = res.body.rows
-          this.total = res.body.total
-        }
+        this.couponList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -153,9 +151,7 @@ export default {
       this.couponVisible = true
       this.couponLoading = true
       getTicketDetail(row.couponBid).then(res => {
-        if (res.code === 200) {
-          this.coupon = res.body
-        }
+        this.coupon = res.body
         this.couponLoading = false
       }).catch(() => {
         this.couponLoading = false

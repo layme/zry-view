@@ -268,11 +268,9 @@ export default {
         this.activityDto.limitProjectInfo = null
       }
       saveActivity(this.activityDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功，跳转回优惠活动列表')
-          this.closeTag({ name: 'createActivity' })
-          this.$router.push({ name: 'activityList' })
-        }
+        this.$Message.success('保存成功，跳转回优惠活动列表')
+        this.closeTag({ name: 'createActivity' })
+        this.$router.push({ name: 'activityList' })
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -281,9 +279,7 @@ export default {
     handleProjectChange (index) {
       console.info('index ', index)
       getHouseTypeList(this.activityDto.limitProjectInfo[index].projectBid).then(res => {
-        if (res.code === 200) {
-          this.houseTypeBidGroup.splice(index, 1, res.body)
-        }
+        this.houseTypeBidGroup.splice(index, 1, res.body)
       })
     }
   },

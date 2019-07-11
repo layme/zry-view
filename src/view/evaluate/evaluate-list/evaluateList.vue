@@ -1,13 +1,17 @@
 <template>
   <div>
     <evaluate-form @search="listEvaluate"></evaluate-form>
-    <evaluate-card class="my-card" v-for="(item, index) in evaluateList" :key="index" :row="item"
-                   :index="index" @link="toOrderDetail" @reply="openReplyModal" @shield="confirmShieldEvaluate"></evaluate-card>
-    <Card v-if="!haveData" class="my-card">
-      <div class="no-data">
-        <span>没有找到匹配的记录</span>
-      </div>
-    </Card>
+    <div class="full-top">
+      <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
+      <evaluate-card class="my-card" v-for="(item, index) in evaluateList" :key="index" :row="item"
+                     :index="index" @link="toOrderDetail" @reply="openReplyModal"
+                     @shield="confirmShieldEvaluate"></evaluate-card>
+      <Card v-if="!evaluateList.length" class="my-card">
+        <div class="no-data">
+          <span>没有找到匹配的记录</span>
+        </div>
+      </Card>
+    </div>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
           :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
 
@@ -52,7 +56,6 @@ export default {
       replyVisible: false,
       replyLoading: true,
       replyTitle: '',
-      haveData: true,
       total: 0,
       evaluateList: [],
       replyDto: {
@@ -74,24 +77,19 @@ export default {
       this.projectScore(this.paramDto.projectBid)
     },
     handlePageChange () {
+      this.loading = true
       this.$delete(this.paramDto, 'evaluateTime')
       getEvaluate(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.evaluateList = res.body.rows
-          this.total = res.body.total
-          this.haveData = this.total > 0
-        } else {
-          this.haveData = false
-        }
+        this.evaluateList = res.body.rows
+        this.total = res.body.total
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     projectScore () {
       getProjectScore(this.$store.state.user.currentProject.bid).then(res => {
-        if (res.code === 200) {
-          this.totalScore = res.data
-        } else {
-          console.log('查询项目评分失败')
-        }
+        this.totalScore = res.data
       })
     },
     toOrderDetail (orderNumber) {
@@ -134,15 +132,11 @@ export default {
     },
     reply () {
       reply(this.replyDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('回复成功，数据稍后刷新')
-          setTimeout(() => {
-            this.handlePageChange()
-          }, this.delay)
-          this.replyVisible = false
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('回复成功，数据稍后刷新')
+        setTimeout(() => {
+          this.handlePageChange()
+        }, this.delay)
+        this.replyVisible = false
       }).catch(() => {
         this.handleError()
       })
@@ -176,12 +170,10 @@ export default {
         isValid: val
       }
       shieldValuate(evalShieldDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success(`${action}成功`)
-          setTimeout(() => {
-            this.handlePageChange()
-          }, this.delay)
-        }
+        this.$Message.success(`${action}成功`)
+        setTimeout(() => {
+          this.handlePageChange()
+        }, this.delay)
       })
     }
   },
@@ -212,5 +204,15 @@ export default {
     text-align: center;
     padding-top: 40px;
     color: #909399;
+  }
+
+  .full-top {
+    position: relative;
+    min-height: 300px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

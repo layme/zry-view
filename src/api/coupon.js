@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-// import { getToken } from '@/libs/util'
 
 // 获取优惠券列表
 export const listCoupon = (data) => {

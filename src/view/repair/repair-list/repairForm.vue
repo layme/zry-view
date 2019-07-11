@@ -146,8 +146,9 @@ export default {
       this.paramDto.visitTimeStart = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.visitTimeEnd = val[1] ? getDate(val[1], 'date') : ''
     },
-    '$store.state.user.currentProject' (to, from) {
-      this.paramDto.projectBid = to.bid
+    '$store.state.user.currentProject' (val) {
+      this.paramDto.projectBid = val.bid
+      this.search()
     }
   },
   created () {

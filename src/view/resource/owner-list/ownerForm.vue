@@ -232,7 +232,7 @@ export default {
   },
   methods: {
     validateForm () {
-      this.$refs['ownerForm'].validate((valid) => {
+      this.$refs.ownerForm.validate((valid) => {
         if (valid) {
           this.buildAtt()
           this.$emit('success', this.ownerDto)
@@ -300,10 +300,28 @@ export default {
     }
   },
   created () {
-    if (this.owner) {
-      this.ownerDto = this.owner
-      if (this.ownerDto.organizationCodeAtt) {
-        this.ownerDto.organizationCodeAtt.forEach(item => {
+    if (Object.keys(this.owner).length) {
+      this.ownerDto.bid = this.owner.bid
+      this.ownerDto.ownerType = this.owner.ownerType
+      this.ownerDto.ownerName = this.owner.ownerName
+      this.ownerDto.ownerOperatorName = this.owner.ownerOperatorName
+      this.ownerDto.ownerLegalRepresent = this.owner.ownerLegalRepresent
+      this.ownerDto.ownerBusinessCode = this.owner.ownerBusinessCode
+      this.ownerDto.ownerOperatorIdcard = this.owner.ownerOperatorIdcard
+      this.ownerDto.ownerUser = this.owner.ownerUser
+      this.ownerDto.ownerPhone = this.owner.ownerPhone
+      this.ownerDto.ownerBankName = this.owner.ownerBankName
+      this.ownerDto.financeUser = this.owner.financeUser
+      this.ownerDto.financePhone = this.owner.financePhone
+      this.ownerDto.ownerBankCard = this.owner.ownerBankCard
+      this.owner.contractList.forEach(item => {
+        this.ownerDto.contractList.push({
+          ownerContractNo: item.ownerContractNo
+        })
+      })
+      this.ownerDto.remark = this.owner.remark
+      if (this.owner.organizationCodeAtt) {
+        this.owner.organizationCodeAtt.forEach(item => {
           this.defaultOrgList.push(
             {
               url: item.attachmentImgUrl,
@@ -312,8 +330,8 @@ export default {
           )
         })
       }
-      if (this.ownerDto.titleDeedAtt) {
-        this.ownerDto.titleDeedAtt.forEach(item => {
+      if (this.owner.titleDeedAtt) {
+        this.owner.titleDeedAtt.forEach(item => {
           this.defaultProList.push(
             {
               url: item.attachmentImgUrl,
@@ -322,8 +340,8 @@ export default {
           )
         })
       }
-      if (this.ownerDto.elseAtt) {
-        this.ownerDto.elseAtt.forEach(item => {
+      if (this.owner.elseAtt) {
+        this.owner.elseAtt.forEach(item => {
           this.defaultOtherList.push(
             {
               url: item.attachmentImgUrl,

@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-// import { getToken } from '@/libs/util'
 
 // 获取群聊列表
 export const getGroups = (data) => {

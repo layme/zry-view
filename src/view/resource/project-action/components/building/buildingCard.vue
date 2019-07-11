@@ -180,11 +180,9 @@ export default {
       this.buildingDto.buildingRentablefloor = this.buildingDto.rentableFloor.join(',')
       this.buildingDto.buildingFinishYear = getDate(this.buildingDto.buildingFinishYear, 'year')
       saveBuilding(this.buildingDto).then(res => {
-        if (res.code === 200) {
-          this.buildingDto.fid = res.body
-          this.$Message.success('保存成功')
-          this.$store.commit('upStep', 3)
-        }
+        this.buildingDto.fid = res.body
+        this.$Message.success('保存成功')
+        this.$store.commit('upStep', 3)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -198,9 +196,7 @@ export default {
       this.buildingDto.buildingRentablefloor = this.buildingDto.rentableFloor.join(',')
       this.buildingDto.buildingFinishYear = getDate(this.buildingDto.buildingFinishYear, 'year')
       updateBuilding(this.buildingDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-        }
+        this.$Message.success('修改成功')
         this.loading = false
       }).catch(() => {
         this.loading = false

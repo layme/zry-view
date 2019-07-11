@@ -26,7 +26,7 @@ export default [
       title: '登录',
       hideInMenu: true
     },
-    component: () => import('@/view/discard/login/login.vue')
+    component: () => import('@/view/login/login.vue')
   },
   {
     path: '/',
@@ -302,26 +302,6 @@ export default [
     ]
   },
   {
-    path: '/config',
-    name: 'config',
-    meta: {
-      icon: 'ios-book',
-      title: '配置'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'channel',
-        name: 'channel',
-        meta: {
-          icon: '_qq',
-          title: '渠道'
-        },
-        component: () => import('@/view/config/channel/channel.vue')
-      }
-    ]
-  },
-  {
     path: '/marketing',
     name: 'marketing',
     meta: {
@@ -503,6 +483,26 @@ export default [
       }
     ]
   },
+  {
+    path: '/message',
+    name: 'message',
+    component: Main,
+    meta: {
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'messageList',
+        name: 'messageList',
+        meta: {
+          icon: 'md-notifications',
+          title: '消息中心'
+        },
+        component: () => import('@/view/message/index.vue')
+      }
+    ]
+  },
   /*
   {
     path: '',
@@ -529,26 +529,6 @@ export default [
           title: 'QQ群'
         },
         component: () => import('@/view/discard/join-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/message',
-    name: 'message',
-    component: Main,
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    children: [
-      {
-        path: 'message_page',
-        name: 'message_page',
-        meta: {
-          icon: 'md-notifications',
-          title: '消息中心'
-        },
-        component: () => import('@/view/discard/single-page/message/index.vue')
       }
     ]
   },

@@ -1,9 +1,9 @@
 <template>
-  <div>渠道配置</div>
+  <div></div>
 </template>
 <script>
 export default {
-  name: 'channel'
+  name: ''
 }
 </script>
 <style lang="less" scoped>

@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 export const getOrders = data => {
   return axios.request({
@@ -145,7 +144,7 @@ export const cancelOrder = data => {
   return axios.request({
     url: '/order/cancelOrder.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       orderBid: data
     }
@@ -163,6 +162,24 @@ export const pay = data => {
 export const refundOrder = data => {
   return axios.request({
     url: '/order/refundOrder.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const getRegistrationForm = data => {
+  return axios.request({
+    url: '/order/getRegistrationForm.action',
+    method: 'get',
+    params: {
+      orderBid: data
+    }
+  })
+}
+
+export const sendEmail = data => {
+  return axios.request({
+    url: '/order/sendEmail.action',
     method: 'post',
     data: data
   })
