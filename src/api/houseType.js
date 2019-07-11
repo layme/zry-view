@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 // 获取列表
 export const getHouseTypes = (data) => {
@@ -46,7 +45,7 @@ export const deleteHouseType = (data) => {
   return axios.request({
     url: '/houseType/deleteHouseType.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       houseTypeBid: data
     }
@@ -66,7 +65,7 @@ export const showOrNot = (houseTypeBid, isShow) => {
   return axios.request({
     url: '/houseType/updateHouseTypeValid.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       houseTypeBid: houseTypeBid,
       isShow: isShow

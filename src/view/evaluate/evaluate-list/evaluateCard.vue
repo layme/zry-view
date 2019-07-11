@@ -1,6 +1,7 @@
 <template>
   <Card>
     <div v-if="row.evaluateStatus === 0" class="discard">
+      <div class="discard-logo">已屏蔽</div>
     </div>
     <Row>
       <Col :span="10">
@@ -111,8 +112,27 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: #c5c8ce;
+    background-color: #e8eaec;
     border-radius: 4px;
-    opacity: 0.2;
+    opacity: 0.7;
+  }
+
+  .discard-logo {
+    opacity: 1;
+    border: 3px solid #ed4014;
+    border-radius: 6px;
+    width: 150px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 32px;
+    color: #ed4014;
+    top: 30%;
+    right: 20%;
+    position: absolute;
+    -moz-transform: rotate(25deg);
+    -webkit-transform: rotate(25deg);
+    -o-transform: rotate(25deg);
+    -ms-transform: rotate(25deg);
+    transform: rotate(25deg);
   }
 </style>

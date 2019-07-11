@@ -41,7 +41,12 @@
         </Col>
         <Col :span="6" class="my-col" v-if="orderInfo.refundStatus === 4">
           <span class="my-span">拒绝原因:
-            <Tag color="warning">{{ orderInfo.refuseReason }}</Tag>
+            <Tag color="warning">{{ orderInfo.refuseReason | refuseReasonFilter }}</Tag>
+          </span>
+        </Col>
+        <Col :span="6" class="my-col" v-if="orderInfo.refundStatus === 4">
+          <span class="my-span">备注:
+            {{ orderInfo.refuseRemark | nullFilter }}
           </span>
         </Col>
       </Row>
@@ -70,13 +75,37 @@
       <Row class="my-row" v-if="orderInfo.refundStatus === 0 || orderInfo.refundStatus === 3">
         <Button class="my-btn" @click="refreshPredict">估算退款</Button>
         <Button type="primary" class="my-btn" :loading="loading" @click="saveOrderRefundInfo">提交审核</Button>
-        <Button type="primary" class="my-btn">拒绝退款</Button>
+        <Button v-if="validRefuseBtn" type="primary" class="my-btn" @click="openRefuse">拒绝退款</Button>
       </Row>
     </div>
+    <Modal
+      v-model="visible"
+      :loading="refuseLoading"
+      title="拒绝退款"
+      width="500"
+      @on-ok="validateForm">
+      <Form ref="refuseForm" :model="refuseDto" :rules="rules" :label-width="80">
+        <FormItem label="拒绝原因" prop="refuseReason">
+          <Select v-model="refuseDto.refuseReason" placeholder="" class="my-select">
+            <Option v-for="x in refuseOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
+        </FormItem>
+        <div v-if="refuseDto.refuseReason === 3">
+          <FormItem label="备注" prop="refuseRemark"
+                    :rules="[{ required: true, message: '请输入备注信息', trigger: 'blur' }]">
+            <Input type="textarea" v-model.trim="refuseDto.refuseRemark" placeholder="" :row="2"
+                   :maxlength="200"></Input>
+          </FormItem>
+        </div>
+        <FormItem v-else label="备注" prop="refuseRemark">
+          <Input type="textarea" v-model.trim="refuseDto.refuseRemark" placeholder="" :row="2" :maxlength="200"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
   </Card>
 </template>
 <script>
-import { saveOrderRefundInfo, submitRefundCheck } from '@/api/refund'
+import { saveOrderRefundInfo, submitRefundCheck, saveRefuseRefund } from '@/api/refund'
 export default {
   name: 'amountPredictCard',
   props: {
@@ -100,7 +129,35 @@ export default {
         refundAmount: '',
         refundWay: '',
         orderBid: ''
-      }
+      },
+      visible: false,
+      refuseLoading: true,
+      refuseDto: {
+        orderBid: '',
+        refundWay: '',
+        refuseReason: 1,
+        refuseRemark: ''
+      },
+      refuseOptions: [
+        {
+          label: '不符合退款规则，已超出退款时限',
+          value: 1
+        },
+        {
+          label: '用户取消退款',
+          value: 2
+        },
+        {
+          label: '其他',
+          value: 3
+        }
+      ],
+      rules: {}
+    }
+  },
+  computed: {
+    validRefuseBtn () {
+      return this.$route.query.flag === 'n' && !(this.orderInfo.isRelease === 0 && this.orderInfo.refundStatus === 0 && (this.orderInfo.orderStatus === 8 || this.orderInfo.orderStatus === 9 || this.orderInfo.orderStatus === 10))
     }
   },
   methods: {
@@ -146,6 +203,37 @@ export default {
         this.$Message.success('退款审核提交成功')
         this.$emit('refresh')
       })
+    },
+    openRefuse () {
+      this.visible = true
+      this.refuseDto.orderBid = this.orderInfo.orderBid
+      this.refuseDto.refundWay = this.orderInfo.refundWay
+      this.refuseDto.refuseRemark = this.orderInfo.refuseRemark
+    },
+    validateForm () {
+      this.$refs.refuseForm.validate((valid) => {
+        if (valid) {
+          this.refuseRefund()
+        } else {
+          this.handleError()
+        }
+      })
+    },
+    refuseRefund () {
+      saveRefuseRefund(this.refuseDto).then(() => {
+        this.$Message.success('拒绝成功')
+        this.visible = false
+      }).catch(() => {
+        this.handleError()
+      })
+    },
+    handleError () {
+      setTimeout(() => {
+        this.refuseLoading = false
+        this.$nextTick(() => {
+          this.refuseLoading = true
+        })
+      }, 500)
     }
   },
   watch: {
@@ -169,6 +257,16 @@ export default {
         } else {
           return '-'
         }
+      }
+    },
+    refuseReasonFilter (val) {
+      switch (val) {
+        case 1:
+          return '不符合退款规则，已超出退款时限'
+        case 2:
+          return '用户取消退款'
+        case 3:
+          return '其他'
       }
     }
   }

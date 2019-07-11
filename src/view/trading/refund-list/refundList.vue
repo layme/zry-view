@@ -1,6 +1,6 @@
 <template>
   <div>
-    <refund-form @search="listRefund"></refund-form>
+    <refund-form @search="listRefund" @exportList="exportFile"></refund-form>
     <Table stripe :columns="columns" :data="data" :loading="loading" class="my-table">
       <template slot-scope="{ row }" slot="orderNumber">
         <a @click="toRefundDetail(row)">{{ row.orderNumber }}</a>
@@ -14,16 +14,19 @@
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
           :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
+    <export-file ref="exportFile"></export-file>
   </div>
 </template>
 <script>
 import refundForm from './refundForm'
 import { getRefundList } from '@/api/refund'
+import ExportFile from '_c/export-file/ExportFile'
 
 export default {
   name: 'refundList',
   components: {
-    refundForm
+    refundForm,
+    ExportFile
   },
   data () {
     return {
@@ -118,6 +121,13 @@ export default {
         }
       }
       this.$router.push(route)
+    },
+    exportFile (dto) {
+      let data = {
+        type: 1005,
+        jsonParam: JSON.stringify(dto)
+      }
+      this.$refs.exportFile.requestExportFile(data)
     }
   },
   filters: {

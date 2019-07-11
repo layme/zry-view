@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-// import { getToken } from '@/libs/util'
 
 // 获取活动列表
 export const getMarketingActivities = (data) => {

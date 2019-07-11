@@ -483,6 +483,26 @@ export default [
       }
     ]
   },
+  {
+    path: '/message',
+    name: 'message',
+    component: Main,
+    meta: {
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'messageList',
+        name: 'messageList',
+        meta: {
+          icon: 'md-notifications',
+          title: '消息中心'
+        },
+        component: () => import('@/view/message/index.vue')
+      }
+    ]
+  },
   /*
   {
     path: '',
@@ -509,26 +529,6 @@ export default [
           title: 'QQ群'
         },
         component: () => import('@/view/discard/join-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/message',
-    name: 'message',
-    component: Main,
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    children: [
-      {
-        path: 'message_page',
-        name: 'message_page',
-        meta: {
-          icon: 'md-notifications',
-          title: '消息中心'
-        },
-        component: () => import('@/view/discard/single-page/message/index.vue')
       }
     ]
   },

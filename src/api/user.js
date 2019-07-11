@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 export const login = ({ userName, password }) => {
   return axios.request({
@@ -20,7 +19,7 @@ export const changeCurrentProject = (projectBid) => {
   return axios.request({
     url: '/security/changeCurrentProject',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       projectBid: projectBid
     }
@@ -119,7 +118,7 @@ export const delPermission = data => {
   return axios.request({
     url: '/projectZO/delete.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       id: data
     }

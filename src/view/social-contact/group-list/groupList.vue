@@ -22,14 +22,22 @@
         </Col>
       </Row>
     </Form>
-    <group-card v-for="(item, index) in groupList" :key="index" :index="index" :group="item" class="my-card"
+    <div class="full-top">
+      <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
+      <group-card v-for="(item, index) in groupList" :key="index" :index="index" :group="item" class="my-card"
                 @detail="handleDetail" @update="updateGroup" @remove="handleRemove" ></group-card>
+      <Card v-if="!groupList.length" class="my-card">
+        <div class="no-data">
+          <span>没有找到匹配的记录</span>
+        </div>
+      </Card>
+    </div>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
           :page-size="paramDto.limit" @on-change="handlePageChange"/>
     <Modal
       v-model="visible"
       :title="title"
-      :loading="loading"
+      :loading="groupLoading"
       @on-ok="saveGroup">
       <group-form ref="groupForm" v-if="visible" :group="row" @submit="handleSubmit" @error="handleError"></group-form>
     </Modal>
@@ -54,10 +62,11 @@ export default {
         page: 1,
         limit: 5
       },
+      loading: false,
       groupList: [],
       total: 0,
       visible: false,
-      loading: true,
+      groupLoading: true,
       title: '',
       row: {}
     }
@@ -68,10 +77,13 @@ export default {
       this.handlePageChange()
     },
     handlePageChange () {
+      this.loading = true
       getGroups(this.paramDto).then(res => {
         this.groupList = res.body.rows
         this.total = res.body.total
+        this.loading = false
       }).catch(() => {
+        this.loading = false
       })
     },
     addGroup () {
@@ -158,9 +170,9 @@ export default {
     },
     handleError () {
       setTimeout(() => {
-        this.loading = false
+        this.groupLoading = false
         this.$nextTick(() => {
-          this.loading = true
+          this.groupLoading = true
         })
       }, 500)
     }
@@ -181,5 +193,22 @@ export default {
   .my-page {
     text-align: right;
     margin-top: 20px
+  }
+
+  .no-data {
+    height: 100px;
+    text-align: center;
+    padding-top: 40px;
+    color: #909399;
+  }
+
+  .full-top {
+    position: relative;
+    min-height: 300px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

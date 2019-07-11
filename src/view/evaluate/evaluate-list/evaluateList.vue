@@ -1,13 +1,17 @@
 <template>
   <div>
     <evaluate-form @search="listEvaluate"></evaluate-form>
-    <evaluate-card class="my-card" v-for="(item, index) in evaluateList" :key="index" :row="item"
-                   :index="index" @link="toOrderDetail" @reply="openReplyModal" @shield="confirmShieldEvaluate"></evaluate-card>
-    <Card v-if="!haveData" class="my-card">
-      <div class="no-data">
-        <span>没有找到匹配的记录</span>
-      </div>
-    </Card>
+    <div class="full-top">
+      <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
+      <evaluate-card class="my-card" v-for="(item, index) in evaluateList" :key="index" :row="item"
+                     :index="index" @link="toOrderDetail" @reply="openReplyModal"
+                     @shield="confirmShieldEvaluate"></evaluate-card>
+      <Card v-if="!evaluateList.length" class="my-card">
+        <div class="no-data">
+          <span>没有找到匹配的记录</span>
+        </div>
+      </Card>
+    </div>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.pageIndex"
           :page-size="paramDto.pageSize" @on-change="handlePageChange"/>
 
@@ -52,7 +56,6 @@ export default {
       replyVisible: false,
       replyLoading: true,
       replyTitle: '',
-      haveData: true,
       total: 0,
       evaluateList: [],
       replyDto: {
@@ -74,13 +77,14 @@ export default {
       this.projectScore(this.paramDto.projectBid)
     },
     handlePageChange () {
+      this.loading = true
       this.$delete(this.paramDto, 'evaluateTime')
       getEvaluate(this.paramDto).then(res => {
         this.evaluateList = res.body.rows
         this.total = res.body.total
-        this.haveData = this.total > 0
+        this.loading = false
       }).catch(() => {
-        this.haveData = false
+        this.loading = false
       })
     },
     projectScore () {
@@ -200,5 +204,15 @@ export default {
     text-align: center;
     padding-top: 40px;
     color: #909399;
+  }
+
+  .full-top {
+    position: relative;
+    min-height: 300px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
   }
 </style>

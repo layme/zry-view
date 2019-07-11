@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 // cookie保存的天数
-import config from '@/config'
 import { forEach, hasOneOf, objEqual } from '@/libs/tools'
+import config from '@/config'
 const { title, cookieExpires, useI18n, HomeName } = config
 
 export const TOKEN_KEY = 'token'
@@ -10,8 +10,8 @@ export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
 }
 
-export const delToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: -1 })
+export const delToken = () => {
+  setToken('')
 }
 
 export const getToken = () => {
@@ -404,25 +404,25 @@ export const setTitle = (routeItem, vm) => {
   window.document.title = resTitle
 }
 
-export function getBaseUrl () {
-  var baseUrl
-  switch (location.host) {
-    case 'zyu.d.ziroom.com':
-      baseUrl = '//zyu.d.ziroom.com'
-      break
-    case 'zyu.q.ziroom.com':
-      baseUrl = '//zyu.q.ziroom.com'
-      break
-    case 'zyu.t.ziroom.com':
-      baseUrl = '//zyu.t.ziroom.com'
-      break
-    case 'zyu.ziroom.com':
-      baseUrl = 'https://zyu.ziroom.com'
-      break
-    default:
-      baseUrl = '//zyu.t.ziroom.com'
-      // baseUrl = "//10.30.14.24:8080/sojourn-web-zyu-0.0.1-SNAPSHOT"
-      break
-  }
-  return baseUrl
-}
+// export function getBaseUrl () {
+//   var baseUrl
+//   switch (location.host) {
+//     case 'zyu.d.ziroom.com':
+//       baseUrl = '//zyu.d.ziroom.com'
+//       break
+//     case 'zyu.q.ziroom.com':
+//       baseUrl = '//zyu.q.ziroom.com'
+//       break
+//     case 'zyu.t.ziroom.com':
+//       baseUrl = '//zyu.t.ziroom.com'
+//       break
+//     case 'zyu.ziroom.com':
+//       baseUrl = 'https://zyu.ziroom.com'
+//       break
+//     default:
+//       baseUrl = '//zyu.t.ziroom.com'
+//       // baseUrl = "//10.30.14.24:8080/sojourn-web-zyu-0.0.1-SNAPSHOT"
+//       break
+//   }
+//   return baseUrl
+// }

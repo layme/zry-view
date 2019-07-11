@@ -8,7 +8,7 @@
       </Col>
       <Col span="8">
         <FormItem label="退款状态">
-          <Select v-model="paramDto.refoundStatus" placeholder="请选择" clearable>
+          <Select v-model="paramDto.refoundStatusStr" placeholder="请选择" clearable>
             <Option v-for="x in refundStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
         </FormItem>
@@ -27,7 +27,7 @@
         </FormItem>
       </Col>
       <Col span="8">
-        <FormItem label="退款方式">
+        <FormItem label="发起方式">
           <Select v-model="paramDto.isOwnFlag" placeholder="请选择" clearable>
             <Option v-for="x in flagOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
@@ -45,7 +45,7 @@
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
+        <Button type="warning" icon="ios-cloud-download-outline" @click="exportList"> 导 出</Button>
       </Col>
     </Row>
   </Form>
@@ -58,7 +58,7 @@ export default {
     return {
       paramDto: {
         orderNumber: '',
-        refoundStatus: '',
+        refoundStatusStr: '',
         refundStartTime: '',
         refundEndTime: '',
         bookPerson: '',
@@ -88,11 +88,11 @@ export default {
       ],
       flagOptions: [
         {
-          label: '取消',
+          label: '取消订单',
           value: 1
         },
         {
-          label: '退房',
+          label: '订单退租',
           value: 2
         }
       ]
@@ -101,6 +101,9 @@ export default {
   methods: {
     submit () {
       this.$emit('search', this.paramDto)
+    },
+    exportList () {
+      this.$emit('exportList', this.paramDto)
     }
   },
   watch: {
@@ -111,6 +114,9 @@ export default {
     applyRefundTime (val) {
       this.paramDto.applyRefundStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.applyRefundEndTime = val[1] ? getDate(val[1], 'date') : ''
+    },
+    '$store.state.user.currentProject' () {
+      this.submit()
     }
   },
   created () {

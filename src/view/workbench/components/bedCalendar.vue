@@ -1,5 +1,6 @@
 <template>
   <div class="calendar-top">
+    <vue-scroll :ops="ops">
     <table id="t" v-if="$store.state.workbench.stockData.length">
       <thead>
       <tr>
@@ -51,6 +52,7 @@
       </template>
       </tbody>
     </table>
+    </vue-scroll>
   </div>
 </template>
 <script>
@@ -68,6 +70,11 @@ export default {
   },
   data () {
     return {
+      ops: {
+        scrollPanel: {
+          scrollingX: true
+        }
+      },
       bedCount: 0,
       todayStr: getDate(new Date(), 'date'),
       startDateStr: getDate(new Date(), 'date'),

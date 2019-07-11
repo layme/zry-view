@@ -12,9 +12,7 @@ class HttpRequest {
   getInsideConfig () {
     return {
       baseURL: this.baseUrl,
-      headers: {
-        'Authorization': getToken() || ''
-      }
+      timeout: 10000
     }
   }
   destroy (url, isSuccess) {
@@ -51,9 +49,11 @@ class HttpRequest {
               title: '通知',
               content: '登录已失效，传送至登录页面···',
               onOk: () => {
-                delToken()
                 store.dispatch('handleLogout')
-                router.push({ name: 'login' })
+                delToken()
+                next({
+                  name: 'login'
+                })
               }
             })
           }, 500)
@@ -65,20 +65,26 @@ class HttpRequest {
       }
     }, error => {
       this.destroy(url, false)
-      this.catchError(error)
+      HttpRequest.catchError(error)
       return Promise.reject(error)
     })
   }
   request (options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
+    if (!options.headers) {
+      options.headers = {}
+      options.headers.Authorization = getToken() || ''
+    } else {
+      options.headers.Authorization = getToken() || ''
+    }
     this.interceptors(instance, options.url)
     if (!store.state.app.baseUrl) {
       store.commit('setBaseUrl', this.baseUrl)
     }
     return instance(options)
   }
-  catchError (error) {
+  static catchError (error) {
     console.info('err ', error)
     if (error.response) {
       const status = error.response.status

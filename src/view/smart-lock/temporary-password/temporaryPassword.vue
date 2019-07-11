@@ -176,6 +176,11 @@ export default {
       })
     }
   },
+  watch: {
+    '$store.state.user.currentProject' () {
+      this.handlePageChange()
+    }
+  },
   created () {
     this.handlePageChange()
   }

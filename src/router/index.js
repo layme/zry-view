@@ -40,16 +40,46 @@ router.beforeEach((to, from, next) => {
       turnTo(to, store.state.user.access, next)
     } else {
       store.dispatch('getUserInfo').then(user => {
-        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+        if (!store.state.user.access.length) {
+          setTimeout(() => {
+            Modal.warning({
+              title: '通知',
+              content: '暂无资源权限，无法使用本系统，请联系管理员',
+              onOk: () => {
+                store.dispatch('handleLogout')
+                setToken('')
+                next({
+                  name: 'login'
+                })
+              }
+            })
+          }, 500)
+        }
+        if (!store.state.user.projectList.length) {
+          setTimeout(() => {
+            Modal.warning({
+              title: '通知',
+              content: '暂无项目权限，无法使用本系统，请联系管理员',
+              onOk: () => {
+                store.dispatch('handleLogout')
+                setToken('')
+                next({
+                  name: 'login'
+                })
+              }
+            })
+          }, 500)
+        }
+        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问; access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
         turnTo(to, user.access, next)
       }).catch(() => {
-        setToken('')
         setTimeout(() => {
           Modal.warning({
             title: '通知',
             content: '登录已失效，传送至登录页面···',
             onOk: () => {
               store.dispatch('handleLogout')
+              setToken('')
               next({
                 name: 'login'
               })

@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 export const getRefundList = data => {
   return axios.request({
@@ -75,10 +74,26 @@ export const submitRefundCheck = (orderBid, orderStatus) => {
   return axios.request({
     url: '/order/submitRefundCheck.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       orderBid: orderBid,
       orderStatus: orderStatus
     }
+  })
+}
+
+export const updateRefundDetail = data => {
+  return axios.request({
+    url: '/refund/updateRefundDetail.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const saveRefuseRefund = data => {
+  return axios.request({
+    url: '/refund/saveRefuseRefund.action',
+    method: 'post',
+    data: data
   })
 }

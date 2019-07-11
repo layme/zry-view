@@ -1,5 +1,4 @@
 import axios from '@/libs/request'
-import { getToken } from '@/libs/util'
 
 // 获取活动列表
 export const listActivity = (data) => {
@@ -35,7 +34,7 @@ export const updateActivity = (activityBid, activityStatus) => {
   return axios.request({
     url: '/activity/updateActivity.action',
     method: 'post',
-    headers: { 'Authorization': getToken() || '', 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     params: {
       activityBid: activityBid,
       activityStatus: activityStatus

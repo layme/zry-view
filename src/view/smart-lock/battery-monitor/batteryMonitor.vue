@@ -87,6 +87,11 @@ export default {
       }
     }
   },
+  watch: {
+    '$store.state.user.currentProject' () {
+      this.getList()
+    }
+  },
   created () {
     this.getList()
   }

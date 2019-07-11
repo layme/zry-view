@@ -1,8 +1,9 @@
 <template>
-  <div id="app" v-cloak>
+  <div class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Divider orientation="left">评价信息</Divider>
     <div style="margin: 0 200px">
-      <info-card :evaluate="evaluate"></info-card>
+      <info-card v-if="Object.keys(evaluate).length" :evaluate="evaluate"></info-card>
     </div>
     <Divider orientation="left">跟进记录</Divider>
     <div v-if="haveData" style="margin: 0 200px">
@@ -80,7 +81,7 @@ export default {
     confirmFinish (dto) {
       this.$Modal.confirm({
         title: '通知',
-        content: `<p>确认完结后，将无法再修改,</p><p>继续吗？</p>`,
+        content: `<p>确认完结后，将无法再修改，继续吗？</p>`,
         onOk: () => {
           this.finish(dto)
         },
@@ -121,4 +122,13 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .full-top {
+    position: relative;
+    min-height: 500px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
+  }
 </style>

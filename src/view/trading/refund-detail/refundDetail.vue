@@ -7,6 +7,9 @@
     <Row>
       <strong class="order order-number">订单号：{{ orderInfo.orderNumber }}</strong>
     </Row>
+    <cancel-reason-card v-if="Object.keys(orderInfo).length && $route.query.flag === 'n'"
+                        :order-info="orderInfo"
+                        class="card-cls"></cancel-reason-card>
     <refund-card v-if="Object.keys(orderInfo).length"
                  v-for="(refund, index) in orderInfo.refundDetailVos"
                  :key="index" :index="index + 1"
@@ -25,12 +28,14 @@
   </div>
 </template>
 <script>
+import cancelReasonCard from './components/cancelReasonCard'
 import refundCard from './components/refundCard'
 import refundVerifyCard from './components/refundVerifyCard'
 import { getOrderRefund, getCheckOutData, getAllFeeAmount } from '@/api/refund'
 export default {
   name: 'refundDetail',
   components: {
+    cancelReasonCard,
     refundCard,
     refundVerifyCard
   },
@@ -56,6 +61,8 @@ export default {
           return '#19be6b'
         case 3:
           return '#ff9900'
+        case 4:
+          return '#515a6e'
         default:
           return '#2d8cf0'
       }
@@ -125,6 +132,8 @@ export default {
           return '打款成功'
         case 3:
           return '打款异常'
+        case 4:
+          return '拒绝退款'
       }
     }
   },

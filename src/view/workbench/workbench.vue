@@ -236,6 +236,16 @@ export default {
         this.getStockWorkbench(val)
       },
       deep: true
+    },
+    '$store.state.user.currentProject' () {
+      this.init()
+      this.getPassword()
+      this.getBedCountByStatus()
+      this.getStockOrderCount()
+      this.getHouseTypeList()
+      this.getOrderEnums()
+      this.getStockOfPerDay(this.workDto)
+      this.getStockWorkbench(this.workDto)
     }
   },
   created () {

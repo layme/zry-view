@@ -65,6 +65,7 @@ export default {
       setTimeout(() => { document.body.removeChild(link) }, 1000)
     },
     cancelExport () {
+      this.$Message.info('文件导出已取消')
       this.visible = false
       clearInterval(this.interval)
     }
