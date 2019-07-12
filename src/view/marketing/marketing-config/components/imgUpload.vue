@@ -1,12 +1,13 @@
 <template>
   <div>
-    <Modal v-model="isShow" :loading="loading" :mask-closable="false" :class-name="z100000">
+    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false" :class-name="z100000">
       <h3 slot="header" class="modal-header">图片上传</h3>
       <div style="display: flex;flex-wrap: wrap">
-        <template v-for="item in data " v-if="data">
-          <div class="fileItem">
+        <template v-for="(item, index) in data " v-if="data">
+          <div class="fileItem" :key="item.bid">
             <div style="margin-bottom: 10px;">
               <img class="file-img" :src="item.attachmentImgUrl" alt="">
+              <a href="javascript:;" style="vertical-align: bottom" @click="setFirst(index)" v-if="index != 0">设为首图</a>
               <a href="javascript:;" style="vertical-align: bottom" @click="deleteItem(item)">删除</a>
             </div>
           </div>
@@ -22,7 +23,7 @@
                   :on-format-error="formatError"
 
           >
-            <Icon type="ios-plus-empty" size="80" style="vertical-align: middle"></Icon>
+            <Icon type="ios-add" size="80" style="vertical-align: middle"></Icon>
           </Upload>
 
         </div>
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+import { getConfigImg, editConfigImg } from '@/api/marketingConfig'
 
 export default {
   name: 'ImgUpload',
@@ -71,7 +73,6 @@ export default {
       data: [],
       loading: true,
       z100000: 'z100000',
-      num: 1,
       uploadPicUrl: this.$store.state.app.baseUrl + '/system/upLoadImg.action'
     }
   },
@@ -79,22 +80,17 @@ export default {
     formatError () {
       this.$Message.info('请上传图片类型文件')
     },
-    handleError () {
-
+    handleError (err, file, fileList) {
+      this.$Message.error('图片上传失败')
+      console.info(err)
     },
     handleSuccess (res) {
       let params = {
         attachmentImgUrl: res.body.attachmentImgUrl,
         moduleFid: this.fid,
-        type: 1,
         order: this.labelOrder
       }
-      if (!this.fid) {
-        this.data.push(params)
-      }
-      /* labeladdConfigImg(params).then(res1 => {
-        this.data.push(res1.data)
-      }).catch(error=>{}) */
+      this.data.push(params)
     },
     changeLoading () {
       this.loading = false
@@ -102,23 +98,12 @@ export default {
         this.loading = true
       })
     },
+    setFirst (index) {
+      let removed = this.data.splice(index, 1)
+      this.data.unshift(removed[0])
+    },
     deleteItem (item) {
-      if (this.data.length <= this.num) {
-        this.$Message.error('至少保留' + this.num + '张图片')
-        this.changeLoading()
-        return
-      }
-      if (!this.fid) {
-        this.data = this.data.filter(v => v.attachmentImgUrl !== item.attachmentImgUrl)
-        this.changeLoading()
-        return
-      }
-      let params = {
-        fid: item.fid
-      }
-      /* labelremoveConfigImg(params).then(res => {
-        this.labelgetConfigImg()
-      }).catch(error=>{}) */
+      this.data = this.data.filter(v => v.attachmentImgUrl !== item.attachmentImgUrl)
     },
     labelgetConfigImg () {
       if (!this.fid) {
@@ -127,9 +112,29 @@ export default {
       let params = {
         fid: this.fid
       }
-      /* labelgetConfigImg(params).then(res => {
-        this.data = res.data
-      }).catch(error=>{}) */
+      getConfigImg(params).then(res => {
+        this.data = res.body
+      }).catch(error => console.info(error))
+    },
+    ok () {
+      this.data.forEach((ele, index) => {
+        ele['attachmentOrder'] = index
+        if (index === 0) {
+          ele['isDefault'] = 1
+        }
+      })
+      if (!this.fid) {
+        this.$emit('pic', this.data)
+        this.isShow = false
+        return
+      }
+      editConfigImg(this.data).then(res => {
+        this.$Message.success('图片配置成功')
+        this.changeLoading()
+        this.isShow = false
+      }).catch(() => {
+        this.changeLoading()
+      })
     }
   },
   created () {

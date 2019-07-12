@@ -5,21 +5,21 @@
       <Row class="row" >
         <Col span="4"><span style="color: #ed4014;">*</span>排序</Col>
         <Col span="13"><span style="color: #ed4014;">*</span>标签文本</Col>
-        <Col span="3"><span style="color: #ed4014;">*</span>标签图片</Col>
+        <Col span="3">标签图片</Col>
         <Col span="4">操作</Col>
       </Row>
       <Row class="row" v-for="(item,index) in data " :key="item.fid">
         <Col span="4">
-          <InputNumber :min="1" v-model="item.labelOrder"></InputNumber>
+          <InputNumber :min="1" :precision="0.1" v-model="item.labelOrder"></InputNumber>
         </Col>
         <Col span="13">
-          <Input class="width85" v-model="item.labelName"/>
+          <Input class="width85" v-model="item.labelName" :maxlength="10"/>
         </Col>
         <Col span="3">
           <a @click.stop="uploadImg(item)" >配置</a>
         </Col>
         <Col span="4">
-          <a @click.stop="deleteItem(item,index)">删除</a>
+          <a @click.stop="deleteItem(item, index)">删除</a>
         </Col>
       </Row>
       <div class="mt20">
@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import ImgUpload from './ImgUpload'
+import ImgUpload from './imgUpload'
 import { isType } from '@/libs/tools'
+import { labelList, labelremove, editAddImgConfig } from '@/api/marketingConfig'
 
 export default {
   name: 'ImgConfig',
@@ -48,15 +49,11 @@ export default {
     fid: {
       type: String,
       default: ''
-    },
-    projectFid: {
-      type: String,
-      default: ''
-
     }
   },
   watch: {
     n () {
+      this.data = []
       this.labellist()
       this.isShow = true
     }
@@ -73,17 +70,59 @@ export default {
     }
   },
   methods: {
+    changeLoading () {
+      this.loading = false
+      this.$nextTick(() => {
+        this.loading = true
+      })
+    },
     ok () {
+      let a1 = []
+      let isNull = false
+
+      if (this.data.length === 0) {
+        this.isShow = false
+        this.changeLoading()
+        return
+      }
+      this.data.forEach(ele => {
+        if (!ele.labelName || !ele.labelOrder) {
+          isNull = true
+          return
+        }
+
+        a1.push(ele.labelOrder + '')
+      })
+
+      if (isNull) {
+        this.$Message.info('排序或标签名不能为空')
+        this.changeLoading()
+        return
+      }
+
+      let a2 = new Set(a1)
+      if (a1.length !== a2.size) {
+        this.$Message.info('排序不能重复')
+        this.changeLoading()
+        return
+      }
+      let params = {
+        moduleFid: this.fid,
+        labelEntities: this.data
+      }
+      editAddImgConfig(params).then(res => {
+        this.$Message.success('标签保存成功')
+        this.changeLoading()
+        this.isShow = false
+      }).catch(() => {
+        this.changeLoading()
+      })
     },
     uploadImg (item) {
       this.pics = []
       let order = item.labelOrder
       if (!order) {
         this.$Message.info('请先添加排序')
-        return
-      }
-      if ((+order).toString() === 'NaN' || !isType('Number', +order)) {
-        this.$Message.info('排序字段为数字')
         return
       }
       let labelOrder = this.data.filter(item => item.labelOrder === order)
@@ -95,7 +134,7 @@ export default {
         this.pics = item.picUrl
       }
 
-      this.labelFid = item.fid
+      this.labelFid = item.bid
       this.labelOrder = order
       this.uploadN++
     },
@@ -103,14 +142,14 @@ export default {
       this.$Modal.confirm({
         content: '<p>确认删除？</p>',
         onOk: () => {
-          if (item.fid) {
-            /* let params = {
-              fid: item.fid
+          if (item.bid) {
+            let params = {
+              fid: item.bid
             }
-            labelremove(params).then(res=>{
+            labelremove(params).then(res => {
               this.$Message.success('删除成功')
               this.labellist()
-            }) */
+            })
           } else {
             this.data.splice(index, 1)
           }
@@ -128,6 +167,7 @@ export default {
         }
       }
       this.data.push({
+        'bid': '',
         'labelOrder': order,
         'labelName': '',
         'picUrl': [],
@@ -135,16 +175,16 @@ export default {
       })
     },
     labellist () {
-      /* if (!this.fid) {
-         return
-       }
-       let params = {
-         moduleFid: this.fid,
-         type: 0
-       }
-       labellist(params).then(res=>{
-         this.data=res.data
-       }) */
+      if (!this.fid) {
+        return
+      }
+      let params = {
+        moduleFid: this.fid,
+        type: 0
+      }
+      labelList(params).then(res => {
+        this.data = res.body
+      })
     },
     pic (data) {
       if (data.length < 1) {
