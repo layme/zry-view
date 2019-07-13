@@ -60,7 +60,7 @@ export default {
     // 显示标签输入框
     showInput () {
       this.inputVisible = true
-      this.$nextTick(function () {
+      this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },

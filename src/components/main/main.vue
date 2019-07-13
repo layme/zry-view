@@ -52,7 +52,7 @@ import Language from './components/language'
 import ErrorStore from './components/error-store'
 import CurrentProject from './components/current-project'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, routeEqual } from '@/libs/util'
+import { getNewTagList, routeEqual, getWebSocketUrl } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logoko-min.png'
 import maxLogo from '@/assets/images/logoko-max.png'
@@ -166,7 +166,7 @@ export default {
     // 初始化webSocket
     initWebSocket () {
       // ws地址
-      const server_name = location.host
+      const server_name = getWebSocketUrl()
 
       if ('WebSocket' in window) {
         this.webSock = new WebSocket('ws://' + server_name + '/webSocket/remind.soc')

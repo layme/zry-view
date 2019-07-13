@@ -169,6 +169,7 @@ export default {
     handleSaveOrder (dto) {
       saveOrder(dto).then(res => {
         this.$Message.success('订单创建成功')
+        this.orderVisible = false
         const orderNumber = res.body
         const route = {
           name: 'orderDetail',

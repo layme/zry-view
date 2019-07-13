@@ -5,8 +5,37 @@ export default {
   state: {
     currentHouseTypeList: [],
     priceTypeList: [],
-    checkedPriceType: [],
-    adjustType: {}
+    adjustType: {},
+    weekOptions: [
+      {
+        label: '周一',
+        value: 2
+      },
+      {
+        label: '周二',
+        value: 3
+      },
+      {
+        label: '周三',
+        value: 4
+      },
+      {
+        label: '周四',
+        value: 5
+      },
+      {
+        label: '周五',
+        value: 6
+      },
+      {
+        label: '周六',
+        value: 7
+      },
+      {
+        label: '周日',
+        value: 1
+      }
+    ]
   },
   mutations: {
     setCurrentHouseTypeList (state, currentHouseTypeList) {
@@ -17,12 +46,6 @@ export default {
     },
     pushPriceTypeList (state, priceTypeList) {
       state.priceTypeList.push(priceTypeList)
-    },
-    setCheckedPriceType (state, checkedPriceType) {
-      state.checkedPriceType = checkedPriceType
-    },
-    pushCheckedPriceType (state, checkedPriceType) {
-      state.checkedPriceType.push(checkedPriceType)
     },
     setAdjustType (state, adjustType) {
       state.adjustType = adjustType
@@ -39,18 +62,10 @@ export default {
         })
       })
     },
-    getPriceTypeList ({ state, commit }) {
+    getPriceTypeList ({ commit }) {
       return new Promise((resolve, reject) => {
         listProjectPriceType().then(res => {
           commit('setPriceTypeList', res.body)
-          let count = 0
-          let aa = []
-          state.priceTypeList.forEach(v => {
-            if (v.isHideHousePrice === 0) {
-              if (count++ < 3) { aa.push(v.code) }
-            }
-          })
-          commit('setCheckedPriceType', aa)
           resolve(res)
         }).catch(err => {
           reject(err)
