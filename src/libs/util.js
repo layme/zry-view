@@ -415,6 +415,6 @@ export function getWebSocketUrl () {
     case 'zinn.ziroom.com':
       return 'zry.ms.ziroom.com'
     default:
-      return 'localhost:8081'
+      return '127.0.0.1:8081'
   }
 }

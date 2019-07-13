@@ -169,11 +169,11 @@ export default {
       const server_name = getWebSocketUrl()
 
       if ('WebSocket' in window) {
-        this.webSock = new WebSocket('ws://' + server_name + '/webSocket/remind.soc')
+        this.webSock = new WebSocket(`ws://${server_name}/webSocket/remind.soc?Authorization=${this.$store.state.user.token}`)
       } else if ('MozWebSocket' in window) {
-        this.webSock = new MozWebSocket('ws://' + server_name + '/webSocket/remind.soc')
+        this.webSock = new MozWebSocket(`ws://${server_name}/webSocket/remind.soc?Authorization=${this.$store.state.user.token}`)
       } else {
-        this.webSock = new SockJS('http://' + server_name + '/webSocket/sockJs/remind.soc')
+        this.webSock = new SockJS(`http://${server_name}/webSocket/sockJs/remind.soc?Authorization=${this.$store.state.user.token}`)
       }
 
       this.webSock.onopen = this.webSocketOnOpen
