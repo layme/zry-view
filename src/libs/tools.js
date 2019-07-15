@@ -290,10 +290,16 @@ export const checkDateStr = (str1, str2) => {
   }
 }
 
-export function isType (type, value) {
+export const isType = (type, value) => {
   function typeString (value) {
     return Object.prototype.toString.call(value).slice(8, -1)
   }
-
   return typeString(value) === type
+}
+
+export const daysBetweenDateStr = (startDate, endDate) => {
+  startDate = Date.parse(startDate)
+  endDate = Date.parse(endDate)
+  let dateSpan = endDate - startDate
+  return Math.floor(dateSpan / (24 * 3600 * 1000))
 }

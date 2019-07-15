@@ -152,7 +152,7 @@ export default {
     margin: 0 15px;
     font-size: 20px;
     &-number {
-      margin-left: 50px;
+      margin-left: 80px;
     }
     &-switch {
       margin-top: -5px;
@@ -168,17 +168,19 @@ export default {
 
   .con {
     position: relative;
+    height: 100%;
   }
 
   .subscript {
+    z-index: 2;
     color: #fff;
     height: 40px;
     width: 200px;
     position: absolute;
-    left: -90px;
-    top: -10px;
+    left: -75px;
+    top: 5px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 40px;
     background-color: #2d8cf0;
     -moz-transform: rotate(-45deg);
@@ -189,6 +191,6 @@ export default {
   }
 
   .full-spin {
-    height: 100%;
+    height: 100px;
   }
 </style>

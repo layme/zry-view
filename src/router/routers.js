@@ -157,6 +157,35 @@ export default [
     ]
   },
   {
+    path: '/price',
+    name: 'price',
+    meta: {
+      icon: 'ios-book',
+      title: '价格体系'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'priceList',
+        name: 'priceList',
+        meta: {
+          icon: '_qq',
+          title: '价格列表'
+        },
+        component: () => import('@/view/price-system/price-edit/priceList.vue')
+      },
+      {
+        path: 'priceType',
+        name: 'priceType',
+        meta: {
+          icon: '_qq',
+          title: '价格类型'
+        },
+        component: () => import('@/view/price-system/price-type/priceType.vue')
+      }
+    ]
+  },
+  {
     path: '/smartLock',
     name: 'lock',
     meta: {

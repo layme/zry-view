@@ -32,13 +32,6 @@
             <Input v-model.trim="paramDto.otaOrderNumber" placeholder="OTA订单号" clearable></Input>
           </FormItem>
         </Col>
-        <Col span="8">
-          <FormItem label="金额" prop="amount">
-            <Input v-model.trim="paramDto.amount" placeholder="OTA下单金额" clearable>
-              <template slot="prepend">¥</template>
-            </Input>
-          </FormItem>
-        </Col>
       </Row>
       <Row>
         <Col span="16">
@@ -63,6 +56,31 @@
           {{ stayBed.houseTypeName }}-{{ stayBed.areaName }}-{{ stayBed.areaBedCode }}
         </Tag>
       </FormItem>
+      <Row>
+        <Col span="8">
+          <FormItem label="价格类型" prop="channelCode">
+            <Select v-model="paramDto.channelCode" placeholder="请选择价格类型"
+                    :disabled="!paramDto.dateRange[0] || !paramDto.stayPersonInfo.length">
+              <Option v-for="item in priceTypeList" v-if="item.isHideHousePrice === 0" :key="item.code"
+                      :label="item.name" :value="item.code"></Option>
+            </Select>
+          </FormItem>
+        </Col>
+        <Col span="8">
+          <FormItem label="隐藏房价码">
+            <Input v-model.trim="hidePriceTypeCode" placeholder="输入隐藏房价码, 回车查询" clearable
+                   :disabled="!paramDto.dateRange[0] || !paramDto.stayPersonInfo.length"
+                   @on-enter="handleHidePriceTypeCodeChange"></Input>
+          </FormItem>
+        </Col>
+        <Col span="8">
+          <FormItem label="金额" prop="amount">
+            <Input v-model.trim="paramDto.amount" placeholder="OTA下单金额" disabled>
+              <template slot="prepend">¥</template>
+            </Input>
+          </FormItem>
+        </Col>
+      </Row>
     </Form>
     <Modal
       v-model="visible"
@@ -77,6 +95,9 @@
 <script>
 import { getDate } from '@/libs/tools'
 import bedSelector from './bedSelector'
+import { mapActions } from 'vuex'
+import { getHidePriceType } from '@/api/price'
+import { getOrderPriceByType } from '@/api/order'
 export default {
   name: 'createOrder',
   components: {
@@ -85,7 +106,6 @@ export default {
   data () {
     return {
       paramDto: {
-        amount: '',
         projectBid: this.$store.state.user.currentProject.bid,
         cityCode: '',
         uuid: '',
@@ -95,6 +115,8 @@ export default {
         orderName: '',
         phone: '',
         mail: '',
+        channelCode: '',
+        amount: '',
         dateRange: [],
         startDate: '',
         endDate: '',
@@ -118,6 +140,9 @@ export default {
           { required: true, message: '请输入OTA订单号', trigger: 'blur' },
           { max: 10, message: '不能超过20个字符', trigger: 'blur' }
         ],
+        channelCode: [
+          { required: true, message: '请输入价格类型', trigger: 'change' }
+        ],
         amount: [
           { required: true, message: '请输入OTA下单金额', trigger: 'blur' },
           { pattern: /^\d{1,4}(\.\d{0,2})?$/, message: '请输入1万以内的两位小数或整数', trigger: 'blur' }
@@ -135,10 +160,47 @@ export default {
           { required: true, type: 'array', message: '请选择入住床位', trigger: 'blur' }
         ]
       },
+      priceTypeList: [],
+      hidePriceTypeCode: '',
       visible: false
     }
   },
   methods: {
+    ...mapActions([
+      'getPriceTypeList'
+    ]),
+    handleHidePriceTypeCodeChange () {
+      this.hidePriceTypeCode = this.hidePriceTypeCode.replace(/([\u4e00-\u9fa5])|(\s)|[^\d\w]/g, '')
+      if (!this.hidePriceTypeCode.length) { return }
+      getHidePriceType({ typeCode: this.hidePriceTypeCode }).then(res => {
+        let hide = res.body
+        let exist = false
+        this.priceTypeList.forEach(item => {
+          if (item.code === hide.code) {
+            item.isHideHousePrice = 0
+            this.paramDto.channelCode = item.code
+            exist = true
+          }
+        })
+        if (!exist) {
+          this.priceTypeList.push(hide)
+          this.paramDto.channelCode = item.code
+        }
+      })
+    },
+    getOrderPriceByType () {
+      let dto = {
+        projectFid: this.$store.state.user.currentProject.bid,
+        channelCode: this.paramDto.channelCode,
+        startDate: this.paramDto.startDate,
+        endDate: this.paramDto.endDate,
+        houseTypeBids: ''
+      }
+      dto.houseTypeBids = Array.from(new Set(this.paramDto.stayPersonInfo.map(item => { return item.houseTypeBid }))).join(',')
+      getOrderPriceByType(dto).then(res => {
+        this.paramDto.amount = res.body.toString()
+      })
+    },
     validateForm () {
       this.$refs.orderForm.validate((valid) => {
         if (valid) {
@@ -164,7 +226,11 @@ export default {
     handleClose (index) {
       this.paramDto.stayPersonInfo.splice(index, 1)
     },
-    handleDateChange () {
+    handleDateChange (date) {
+      if (date[0] === date[1]) {
+        this.$Message.warning('不能选择同一天')
+        this.paramDto.dateRange = []
+      }
       this.paramDto.stockList = []
     }
   },
@@ -172,7 +238,15 @@ export default {
     'paramDto.dateRange' (val) {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
+    },
+    'paramDto.channelCode' () {
+      this.getOrderPriceByType()
     }
+  },
+  created () {
+    this.getPriceTypeList().then(res => {
+      this.priceTypeList = res.body
+    })
   }
 }
 </script>

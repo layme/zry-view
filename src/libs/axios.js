@@ -51,9 +51,7 @@ class HttpRequest {
               onOk: () => {
                 store.dispatch('handleLogout')
                 delToken()
-                next({
-                  name: 'login'
-                })
+                router.push({ name: 'login' })
               }
             })
           }, 500)

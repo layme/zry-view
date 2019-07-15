@@ -72,3 +72,11 @@ export const showOrNot = (houseTypeBid, isShow) => {
     }
   })
 }
+
+// 获取列表
+export const getCurrentHouseTypeList = () => {
+  return axios.request({
+    url: '/houseType/getCurrentHouseTypeList.action',
+    method: 'get'
+  })
+}

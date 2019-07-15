@@ -184,3 +184,11 @@ export const sendEmail = data => {
     data: data
   })
 }
+
+export const getOrderPriceByType = data => {
+  return axios.request({
+    url: '/order/getOrderPriceByType.action',
+    method: 'post',
+    data: data
+  })
+}
