@@ -136,3 +136,11 @@ export const saveProjectSort = (data) => {
     params: data
   })
 }
+
+// 获取公司列表
+export const getCompanyList = () => {
+  return axios.request({
+    url: '/project/collections',
+    method: 'get'
+  })
+}

@@ -133,10 +133,10 @@
         </FormItem>
       </Col>
       <Col :span="8">
-        <FormItem label="结算公司" prop="settlementCompany">
+        <FormItem label="收款公司" prop="settlementCompany">
           <Select v-model="baseDto.settlementCompany" placeholder="请选择" clearable>
-            <Option v-for="item in ownerOptions" :key="item.bid" :label="item.ownerName"
-                       :value="item.bid"></Option>
+            <Option v-for="item in CompanyOptions" :key="item.key" :label="item.text"
+                       :value="item.key"></Option>
           </Select>
         </FormItem>
       </Col>
@@ -173,7 +173,7 @@
 import MapCard from '@/components/baidu-map/MapCard.vue'
 import { getCityList, getAreaList } from '@/api/common'
 import { getOwnerList } from '@/api/owner'
-import { getBaseInfo, saveBase, updateBase } from '@/api/project'
+import { getBaseInfo, saveBase, updateBase, getCompanyList } from '@/api/project'
 
 export default {
   name: 'BaseInfo',
@@ -189,6 +189,7 @@ export default {
       cityOptions: [],
       areaOptions: [],
       ownerOptions: [],
+      CompanyOptions: [],
       baseDto: {
         projectName: '',
         cityCode: '',
@@ -349,6 +350,11 @@ export default {
         this.ownerOptions = res.body
       })
     },
+    getCompany () {
+      getCompanyList().then(res => {
+        this.CompanyOptions = res.body
+      })
+    },
     getBaseInfo () {
       if (!this.projectBid) {
         return
@@ -459,6 +465,7 @@ export default {
     this.getCity()
     this.getOwner()
     this.getBaseInfo()
+    this.getCompany()
   }
 }
 </script>
