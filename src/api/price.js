@@ -45,3 +45,26 @@ export const listPrice = data => {
     data: data
   })
 }
+
+export const listTimePrice = () => {
+  return axios.request({
+    url: '/timePrice/listTimePrice.action',
+    method: 'get'
+  })
+}
+
+export const saveTimePrice = data => {
+  return axios.request({
+    url: '/timePrice/saveTimePrice.action',
+    method: 'post',
+    data: data
+  })
+}
+
+export const listPriceChangeLog = data => {
+  return axios.request({
+    url: '/priceChange/listPriceChangeLog.action',
+    method: 'post',
+    data: data
+  })
+}

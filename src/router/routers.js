@@ -167,6 +167,15 @@ export default [
         component: () => import('@/view/price-system/price-edit/priceList.vue')
       },
       {
+        path: 'partTimePrice',
+        name: 'partTimePrice',
+        meta: {
+          title: '分时促销管理',
+          access: ['/timePrice/toTimePrice.action']
+        },
+        component: () => import('@/view/price-system/partTime-price/index.vue')
+      },
+      {
         path: 'priceTypeList',
         name: 'priceTypeList',
         meta: {
@@ -174,6 +183,15 @@ export default [
           access: ['/priceType/tolistPriceType.action']
         },
         component: () => import('@/view/price-system/price-type/priceTypeList.vue')
+      },
+      {
+        path: 'priceAdjustLog',
+        name: 'priceAdjustLog',
+        meta: {
+          title: '价格调整记录',
+          access: ['/priceChange/tolistPriceChange.action']
+        },
+        component: () => import('@/view/price-system/price_adjust_log/index.vue')
       }
     ]
   },

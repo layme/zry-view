@@ -198,9 +198,6 @@ export default {
         labelOrder[0].picUrl.push(item)
       })
     }
-  },
-  created () {
-
   }
 }
 </script>
