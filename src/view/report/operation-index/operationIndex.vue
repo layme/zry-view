@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="80" inline>
+    <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getData">
       <FormItem label="指标周期">
         <Select v-model="paramDto.cycleType" class="my-input" placeholder="">
           <Option

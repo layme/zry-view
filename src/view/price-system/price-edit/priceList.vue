@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Form :model="priceDto" :label-width="50" inline>
+    <Form :model="priceDto" :label-width="50" inline @keydown.enter.native="getPriceList">
       <FormItem label="营业日">
         <DatePicker v-model="priceDto.priceDate" type="daterange" split-panels placeholder=""
                     class="my-date-picker" @on-change="handleDateRange" :clearable="false" :editable="false"></DatePicker>
       </FormItem>
-      <Button type="primary" icon="ios-search" @click="getPriceList()" class="my-btn"> 查 询</Button>
+      <Button type="primary" icon="ios-search" @click="getPriceList" class="my-btn"> 查 询</Button>
       <Button type="primary" @click="openChangePriceDialog" class="my-btn">房价调整</Button>
       <Row>
         <FormItem label="筛选">

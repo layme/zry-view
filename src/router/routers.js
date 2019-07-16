@@ -55,7 +55,7 @@ export default [
     path: '/trading',
     name: 'trading',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-cube',
       title: '交易'
     },
     component: Main,
@@ -64,7 +64,6 @@ export default [
         path: 'order',
         name: 'orderList',
         meta: {
-          icon: '_qq',
           title: '订单列表',
           access: ['/order/toListOrder.action']
         },
@@ -74,7 +73,6 @@ export default [
         path: 'orderDetail',
         name: 'orderDetail',
         meta: {
-          icon: '_qq',
           title: '订单详情',
           hideInMenu: true,
           notCache: true
@@ -85,7 +83,6 @@ export default [
         path: 'refund',
         name: 'refundList',
         meta: {
-          icon: '_qq',
           title: '退款列表',
           access: ['/refund/toNewListRefund.action']
         },
@@ -95,7 +92,6 @@ export default [
         path: 'refundDetail',
         name: 'refundDetail',
         meta: {
-          icon: '_qq',
           title: '退款详情',
           hideInMenu: true,
           notCache: true
@@ -108,7 +104,7 @@ export default [
     path: '/resource',
     name: 'resource',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-home',
       title: '房源'
     },
     component: Main,
@@ -117,7 +113,6 @@ export default [
         path: 'project',
         name: 'projectList',
         meta: {
-          icon: '_qq',
           title: '项目',
           access: ['/project/toListProject.action']
         },
@@ -127,7 +122,6 @@ export default [
         path: 'addProject',
         name: 'addProject',
         meta: {
-          icon: '_qq',
           title: '新增项目',
           hideInMenu: true
         },
@@ -137,7 +131,6 @@ export default [
         path: 'updateProject',
         name: 'updateProject',
         meta: {
-          icon: '_qq',
           title: '修改项目',
           hideInMenu: true,
           notCache: true
@@ -148,7 +141,6 @@ export default [
         path: 'owner',
         name: 'ownerList',
         meta: {
-          icon: '_qq',
           title: '业主',
           access: ['/owner/toOwnerList.action']
         },
@@ -160,7 +152,7 @@ export default [
     path: '/price',
     name: 'price',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-pricetags',
       title: '价格体系'
     },
     component: Main,
@@ -169,8 +161,8 @@ export default [
         path: 'priceList',
         name: 'priceList',
         meta: {
-          icon: '_qq',
-          title: '价格列表'
+          title: '价格列表',
+          access: ['/price/toListPrice.action']
         },
         component: () => import('@/view/price-system/price-edit/priceList.vue')
       },
@@ -178,8 +170,8 @@ export default [
         path: 'priceTypeList',
         name: 'priceTypeList',
         meta: {
-          icon: '_qq',
-          title: '价格类型'
+          title: '价格类型',
+          access: ['/priceType/tolistPriceType.action']
         },
         component: () => import('@/view/price-system/price-type/priceTypeList.vue')
       }
@@ -189,7 +181,7 @@ export default [
     path: '/smartLock',
     name: 'lock',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-lock',
       title: '智能锁'
     },
     component: Main,
@@ -198,8 +190,8 @@ export default [
         path: 'temporaryPassword',
         name: 'temporaryPassword',
         meta: {
-          icon: '_qq',
-          title: '临时密码'
+          title: '临时密码',
+          access: ['/smartLock/toApplyTempLockPasswd.action']
         },
         component: () => import('@/view/smart-lock/temporary-password/temporaryPassword.vue')
       },
@@ -207,8 +199,8 @@ export default [
         path: 'passwordRemake',
         name: 'passwordRemake',
         meta: {
-          icon: '_qq',
-          title: '密码重制'
+          title: '密码重制',
+          access: ['/smartLock/toOrderPswLockList.action']
         },
         component: () => import('@/view/smart-lock/password-remake/passwordRemake.vue')
       },
@@ -216,8 +208,8 @@ export default [
         path: 'workPassword',
         name: 'workPassword',
         meta: {
-          icon: '_qq',
-          title: '内务密码'
+          title: '内务密码',
+          access: ['/smartLock/lockPswOutSource.action']
         },
         component: () => import('@/view/smart-lock/work-password/workPassword.vue')
       },
@@ -225,8 +217,8 @@ export default [
         path: 'batteryMonitor',
         name: 'batteryMonitor',
         meta: {
-          icon: '_qq',
-          title: '电量查询'
+          title: '电量查询',
+          access: ['/smartLock/toListPower.action']
         },
         component: () => import('@/view/smart-lock/battery-monitor/batteryMonitor.vue')
       }
@@ -236,7 +228,7 @@ export default [
     path: '/report',
     name: 'report',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-stats',
       title: '报表'
     },
     component: Main,
@@ -245,8 +237,8 @@ export default [
         path: 'operationIndex',
         name: 'operationIndex',
         meta: {
-          icon: '_qq',
-          title: '运营指标'
+          title: '运营指标',
+          access: ['/reportOperation/toOperationManage.action']
         },
         component: () => import('@/view/report/operation-index/operationIndex.vue')
       },
@@ -254,8 +246,8 @@ export default [
         path: 'dailyIndex',
         name: 'dailyIndex',
         meta: {
-          icon: '_qq',
-          title: '单日运营指标'
+          title: '单日运营指标',
+          access: ['/reportDaily/toReportDailyIndex.action']
         },
         component: () => import('@/view/report/daily-index/dailyIndex.vue')
       },
@@ -263,8 +255,8 @@ export default [
         path: 'guestData',
         name: 'guestData',
         meta: {
-          icon: '_qq',
-          title: '客群数据'
+          title: '客群数据',
+          access: ['/reportGuest/toGuestInfo.action']
         },
         component: () => import('@/view/report/guest-data/guestData.vue')
       },
@@ -272,8 +264,8 @@ export default [
         path: 'guestAnalysis',
         name: 'guestAnalysis',
         meta: {
-          icon: '_qq',
-          title: '客群分析'
+          title: '客群分析',
+          access: ['/reportGuest/toReportGuestInfo.action']
         },
         component: () => import('@/view/report/guest-analysis/guestAnalysis.vue')
       }
@@ -283,7 +275,7 @@ export default [
     path: '/preferential',
     name: 'preferential',
     meta: {
-      icon: 'ios-book',
+      icon: 'logo-yen',
       title: '优惠'
     },
     component: Main,
@@ -292,8 +284,8 @@ export default [
         path: 'activity',
         name: 'activityList',
         meta: {
-          icon: '_qq',
-          title: '优惠活动'
+          title: '优惠活动',
+          access: ['/activity/toListActivity.action']
         },
         component: () => import('@/view/preferential/activity-list/activityList.vue')
       },
@@ -301,7 +293,6 @@ export default [
         path: 'createActivity',
         name: 'createActivity',
         meta: {
-          icon: '_qq',
           title: '新增优惠活动',
           hideInMenu: true,
           notCache: true
@@ -312,7 +303,6 @@ export default [
         path: 'activityDetail',
         name: 'activityDetail',
         meta: {
-          icon: '_qq',
           title: '优惠活动详情',
           hideInMenu: true,
           notCache: true
@@ -323,8 +313,8 @@ export default [
         path: 'coupon',
         name: 'couponList',
         meta: {
-          icon: '_qq',
-          title: '优惠券'
+          title: '优惠券',
+          access: ['/coupon/toCouponList.action']
         },
         component: () => import('@/view/preferential/coupon-list/couponList.vue')
       }
@@ -334,7 +324,7 @@ export default [
     path: '/marketing',
     name: 'marketing',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-megaphone',
       title: '营销'
     },
     component: Main,
@@ -343,8 +333,8 @@ export default [
         path: 'marketingConfig',
         name: 'projectConfigIndex',
         meta: {
-          icon: '_qq',
-          title: '营销配置'
+          title: '营销配置',
+          access: ['/marketing/config']
         },
         component: () => import('@/view/marketing/marketing-config/projectConfigIndex.vue')
       },
@@ -352,8 +342,8 @@ export default [
         path: 'marketingActivity',
         name: 'marketingActivityList',
         meta: {
-          icon: '_qq',
-          title: '营销活动'
+          title: '营销活动',
+          access: ['/marketingActivity/toMarketingActivityList.action']
         },
         component: () => import('@/view/marketing/marketing-activity/marketingActivityList.vue')
       },
@@ -361,8 +351,8 @@ export default [
         path: 'projectSort',
         name: 'projectSort',
         meta: {
-          icon: '_qq',
-          title: '项目排序'
+          title: '项目排序',
+          access: ['/project/toListSortProject.action']
         },
         component: () => import('@/view/marketing/project-sort/projectSort.vue')
       }
@@ -372,7 +362,7 @@ export default [
     path: '/socialContact',
     name: 'socialContact',
     meta: {
-      icon: 'ios-book',
+      icon: 'md-aperture',
       title: '社交'
     },
     component: Main,
@@ -381,8 +371,9 @@ export default [
         path: 'group',
         name: 'groupList',
         meta: {
-          icon: '_qq',
-          title: '群聊'
+          icon: 'md-aperture',
+          title: '群聊',
+          access: ['/socialContact/list.action']
         },
         component: () => import('@/view/social-contact/group-list/groupList.vue')
       },
@@ -390,7 +381,6 @@ export default [
         path: 'chat',
         name: 'chatMemberList',
         meta: {
-          icon: '_qq',
           title: '群聊成员',
           hideInMenu: true,
           notCache: true
@@ -403,7 +393,7 @@ export default [
     path: '/repair',
     name: 'repair',
     meta: {
-      icon: 'ios-book',
+      icon: 'md-construct',
       title: '维修'
     },
     component: Main,
@@ -412,8 +402,9 @@ export default [
         path: 'repairList',
         name: 'repairList',
         meta: {
-          icon: '_qq',
-          title: '在线报修'
+          icon: 'md-construct',
+          title: '在线报修',
+          access: ['/repair/toListRepair.action']
         },
         component: () => import('@/view/repair/repair-list/repairList.vue')
       },
@@ -421,7 +412,6 @@ export default [
         path: 'repairDetail',
         name: 'repairDetail',
         meta: {
-          icon: '_qq',
           title: '维修单详情',
           hideInMenu: true,
           notCache: true
@@ -434,7 +424,7 @@ export default [
     path: '/permission',
     name: 'permission',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-finger-print',
       title: '权限'
     },
     component: Main,
@@ -443,8 +433,9 @@ export default [
         path: 'projectPermission',
         name: 'projectPermission',
         meta: {
-          icon: '_qq',
-          title: '项目权限'
+          icon: 'ios-finger-print',
+          title: '项目权限',
+          access: ['/projectZO/toListProjectZo.action']
         },
         component: () => import('@/view/permission/project/projectPermission.vue')
       }
@@ -454,7 +445,7 @@ export default [
     path: '/evaluate',
     name: 'evaluate',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-star',
       title: '用户评价'
     },
     component: Main,
@@ -463,7 +454,6 @@ export default [
         path: 'evaluateList',
         name: 'evaluateList',
         meta: {
-          icon: '_qq',
           title: '全部评价',
           access: ['/evaluate/toListEvaluate.action']
         },
@@ -473,7 +463,6 @@ export default [
         path: 'lowEvaluateList',
         name: 'lowEvaluateList',
         meta: {
-          icon: '_qq',
           title: '低分评价',
           access: ['/lowEvaluate/toListLowEvaluate.action']
         },
@@ -483,7 +472,6 @@ export default [
         path: 'lowEvaluateFollowUp',
         name: 'lowEvaluateFollowUp',
         meta: {
-          icon: '_qq',
           title: '低评处理',
           hideInMenu: true,
           notCache: true
@@ -496,7 +484,7 @@ export default [
     path: '/guest',
     name: 'guest',
     meta: {
-      icon: 'ios-book',
+      icon: 'ios-people',
       title: '客史'
     },
     component: Main,
@@ -505,8 +493,9 @@ export default [
         path: 'guestList',
         name: 'guestList',
         meta: {
-          icon: '_qq',
-          title: '客史'
+          icon: 'ios-people',
+          title: '客史',
+          access: ['/guest/toListGuest.action']
         },
         component: () => import('@/view/guest/guest-list/guestList.vue')
       }
@@ -532,401 +521,6 @@ export default [
       }
     ]
   },
-  /*
-  {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
-  {
-    path: '/join',
-    name: 'join',
-    component: Main,
-    meta: {
-      hideInBread: true
-    },
-    children: [
-      {
-        path: 'join_page',
-        name: 'join_page',
-        meta: {
-          icon: '_qq',
-          title: 'QQ群'
-        },
-        component: () => import('@/view/discard/join-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/components',
-    name: 'components',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tree_select_page',
-        name: 'tree_select_page',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '树状下拉选择器'
-        },
-        component: () => import('@/view/discard/components/tree-select/index.vue')
-      },
-      {
-        path: 'count_to_page',
-        name: 'count_to_page',
-        meta: {
-          icon: 'md-trending-up',
-          title: '数字渐变'
-        },
-        component: () => import('@/view/discard/components/count-to/count-to.vue')
-      },
-      {
-        path: 'drag_list_page',
-        name: 'drag_list_page',
-        meta: {
-          icon: 'ios-infinite',
-          title: '拖拽列表'
-        },
-        component: () => import('@/view/discard/components/drag-list/drag-list.vue')
-      },
-      {
-        path: 'drag_drawer_page',
-        name: 'drag_drawer_page',
-        meta: {
-          icon: 'md-list',
-          title: '可拖拽抽屉'
-        },
-        component: () => import('@/view/discard/components/drag-drawer')
-      },
-      {
-        path: 'org_tree_page',
-        name: 'org_tree_page',
-        meta: {
-          icon: 'ios-people',
-          title: '组织结构树'
-        },
-        component: () => import('@/view/discard/components/org-tree')
-      },
-      {
-        path: 'tree_table_page',
-        name: 'tree_table_page',
-        meta: {
-          icon: 'md-git-branch',
-          title: '树状表格'
-        },
-        component: () => import('@/view/discard/components/tree-table/index.vue')
-      },
-      {
-        path: 'cropper_page',
-        name: 'cropper_page',
-        meta: {
-          icon: 'md-crop',
-          title: '图片裁剪'
-        },
-        component: () => import('@/view/discard/components/cropper/cropper.vue')
-      },
-      {
-        path: 'tables_page',
-        name: 'tables_page',
-        meta: {
-          icon: 'md-grid',
-          title: '多功能表格'
-        },
-        component: () => import('@/view/discard/components/tables/tables.vue')
-      },
-      {
-        path: 'split_pane_page',
-        name: 'split_pane_page',
-        meta: {
-          icon: 'md-pause',
-          title: '分割窗口'
-        },
-        component: () => import('@/view/discard/components/split-pane/split-pane.vue')
-      },
-      {
-        path: 'markdown_page',
-        name: 'markdown_page',
-        meta: {
-          icon: 'logo-markdown',
-          title: 'Markdown编辑器'
-        },
-        component: () => import('@/view/discard/components/markdown/markdown.vue')
-      },
-      {
-        path: 'editor_page',
-        name: 'editor_page',
-        meta: {
-          icon: 'ios-create',
-          title: '富文本编辑器'
-        },
-        component: () => import('@/view/discard/components/editor/editor.vue')
-      },
-      {
-        path: 'icons_page',
-        name: 'icons_page',
-        meta: {
-          icon: '_bear',
-          title: '自定义图标'
-        },
-        component: () => import('@/view/discard/components/icons/icons.vue')
-      }
-    ]
-  },
-  {
-    path: '/update',
-    name: 'update',
-    meta: {
-      icon: 'md-cloud-upload',
-      title: '数据上传'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'update_table_page',
-        name: 'update_table_page',
-        meta: {
-          icon: 'ios-document',
-          title: '上传Csv'
-        },
-        component: () => import('@/view/discard/update/update-table.vue')
-      },
-      {
-        path: 'update_paste_page',
-        name: 'update_paste_page',
-        meta: {
-          icon: 'md-clipboard',
-          title: '粘贴表格数据'
-        },
-        component: () => import('@/view/discard/update/update-paste.vue')
-      }
-    ]
-  },
-  {
-    path: '/excel',
-    name: 'excel',
-    meta: {
-      icon: 'ios-stats',
-      title: 'EXCEL导入导出'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'upload-excel',
-        name: 'upload-excel',
-        meta: {
-          icon: 'md-add',
-          title: '导入EXCEL'
-        },
-        component: () => import('@/view/discard/excel/upload-excel.vue')
-      },
-      {
-        path: 'export-excel',
-        name: 'export-excel',
-        meta: {
-          icon: 'md-download',
-          title: '导出EXCEL'
-        },
-        component: () => import('@/view/discard/excel/export-excel.vue')
-      }
-    ]
-  },
-  {
-    path: '/tools_methods',
-    name: 'tools_methods',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tools_methods_page',
-        name: 'tools_methods_page',
-        meta: {
-          icon: 'ios-hammer',
-          title: '工具方法',
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () => import('@/view/discard/tools-methods/tools-methods.vue')
-      }
-    ]
-  },
-  {
-    path: '/i18n',
-    name: 'i18n',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'i18n_page',
-        name: 'i18n_page',
-        meta: {
-          icon: 'md-planet',
-          title: 'i18n - 多语言'
-        },
-        component: () => import('@/view/discard/i18n/i18n-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_store',
-    name: 'error_store',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_store_page',
-        name: 'error_store_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/discard/error-store/error-store.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_logger',
-    name: 'error_logger',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_logger_page',
-        name: 'error_logger_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/discard/single-page/error-logger.vue')
-      }
-    ]
-  },
-  {
-    path: '/directive',
-    name: 'directive',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'directive_page',
-        name: 'directive_page',
-        meta: {
-          icon: 'ios-navigate',
-          title: '指令'
-        },
-        component: () => import('@/view/discard/directive/directive.vue')
-      }
-    ]
-  },
-  {
-    path: '/multilevel',
-    name: 'multilevel',
-    meta: {
-      icon: 'md-menu',
-      title: '多级菜单'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'level_2_1',
-        name: 'level_2_1',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-1'
-        },
-        component: () => import('@/view/discard/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
-        },
-        component: parentView,
-        children: [
-          {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/discard/multilevel/level-2-2/level-2-2-1.vue')
-          },
-          {
-            path: 'level_2_2_2',
-            name: 'level_2_2_2',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/discard/multilevel/level-2-2/level-2-2-2.vue')
-          }
-        ]
-      },
-      {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/discard/multilevel/level-2-3.vue')
-      }
-    ]
-  },
-  {
-    path: '/argu',
-    name: 'argu',
-    meta: {
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'params/:id',
-        name: 'params',
-        meta: {
-          icon: 'md-flower',
-          title: route => `{{ params }}-${route.params.id}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () => import('@/view/discard/argu-page/params.vue')
-      },
-      {
-        path: 'query',
-        name: 'query',
-        meta: {
-          icon: 'md-flower',
-          title: route => `{{ query }}-${route.query.id}`,
-          notCache: true
-        },
-        component: () => import('@/view/discard/argu-page/query.vue')
-      }
-    ]
-  },
-  */
   {
     path: '/401',
     name: 'error_401',

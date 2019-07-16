@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="50" inline>
+    <Form :model="paramDto" :label-width="50" inline @keydown.enter.native="listPriceType">
       <FormItem label="名称">
         <Input v-model="paramDto.name" class="my-con" clearable></Input>
       </FormItem>

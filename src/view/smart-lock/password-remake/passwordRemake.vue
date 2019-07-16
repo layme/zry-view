@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="60" inline>
+    <Form :model="paramDto" :label-width="60" inline @keydown.enter.native="getList">
       <FormItem label="订单号" prop="orderNumber">
         <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '300px' }"></Input>
       </FormItem>

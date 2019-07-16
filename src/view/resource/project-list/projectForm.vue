@@ -1,5 +1,5 @@
 <template>
-  <Form :model="paramDto" :label-width="70">
+  <Form :model="paramDto" :label-width="70" @keydown.enter.native="submit">
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="城市">

@@ -2,7 +2,7 @@
   <div>
     <Row>
       <Col :span="18">
-        <Form :model="paramDto" :label-width="80" inline>
+        <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getData">
           <FormItem label="项目">
             <Select v-model="paramDto.projectBid" placeholder="" class="my-input">
               <Option
