@@ -21,6 +21,8 @@ import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 import { isHave } from '@/libs/action'
 import '@/libs/filters.js'
+// 动画效果
+import animated from 'animate.css'
 
 // 实际打包时应该不引入mock
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
@@ -35,6 +37,7 @@ Vue.use(BaiduMap, {
   ak: 'ukBW7hhft7HzjgTRaoGyMHmzIKTi3bx3'
 })
 Vue.use(preview)
+Vue.use(animated)
 
 /**
  * @description 注册admin内置插件
