@@ -175,6 +175,15 @@ export default [
         component: () => import('@/view/price-system/price-edit/priceList.vue')
       },
       {
+        path: 'partTimePrice',
+        name: 'partTimePrice',
+        meta: {
+          icon: '_qq',
+          title: '分时促销管理'
+        },
+        component: () => import('@/view/price-system/partTime-price/index.vue')
+      },
+      {
         path: 'priceType',
         name: 'priceType',
         meta: {
@@ -182,6 +191,15 @@ export default [
           title: '价格类型'
         },
         component: () => import('@/view/price-system/price-type/priceType.vue')
+      },
+      {
+        path: 'priceAdjustLog',
+        name: 'priceAdjustLog',
+        meta: {
+          icon: '_qq',
+          title: '价格调整记录'
+        },
+        component: () => import('@/view/price-system/price_adjust_log/index.vue')
       }
     ]
   },
