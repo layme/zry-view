@@ -46,17 +46,17 @@
       </Form>
     </Modal>
     <Modal
-      v-model="guestVisible"
-      title="用户详情"
+      v-model="customerVisible"
+      title="用户信息"
       width="800"
       footer-hide>
-      <guest-tabs v-if="guestVisible" :idNumber="idNumber" @close="handleClose"></guest-tabs>
+      <customer-card v-if="customerVisible" :uid="uid" @close="handleClose"></customer-card>
     </Modal>
   </div>
 </template>
 <script>
 import chatMemberForm from './chatMemberForm.vue'
-import guestTabs from '@/components/guest/guestTabs'
+import customerCard from './customerCard'
 import { getMembers, addGagMember, removeGagMember, removeMember, addAdminMember, deleteAdminMember, transferGroup } from '@/api/socialContact'
 import { mapMutations } from 'vuex'
 
@@ -64,7 +64,7 @@ export default {
   name: 'chatMemberList',
   components: {
     chatMemberForm,
-    guestTabs
+    customerCard
   },
   data () {
     return {
@@ -122,8 +122,8 @@ export default {
           value: 1
         }
       ],
-      guestVisible: false,
-      idNumber: ''
+      customerVisible: false,
+      uid: ''
     }
   },
   methods: {
@@ -306,11 +306,11 @@ export default {
       })
     },
     openGuest (row) {
-      this.idNumber = row.member
-      this.guestVisible = true
+      this.uid = row.member
+      this.customerVisible = true
     },
     handleClose () {
-      this.guestVisible = false
+      this.customerVisible = false
     }
   },
   watch: {

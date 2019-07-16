@@ -1,4 +1,5 @@
 import { listAdjustType, listProjectPriceType } from '@/api/price'
+import { getPriceTypeNames } from '@/api/priceType'
 import { getCurrentHouseTypeList } from '@/api/houseType'
 
 export default {
@@ -35,7 +36,8 @@ export default {
         label: '周日',
         value: 1
       }
-    ]
+    ],
+    priceTypeNames: []
   },
   mutations: {
     setCurrentHouseTypeList (state, currentHouseTypeList) {
@@ -49,6 +51,9 @@ export default {
     },
     setAdjustType (state, adjustType) {
       state.adjustType = adjustType
+    },
+    setPriceTypeNames (state, priceTypeNames) {
+      state.priceTypeNames = priceTypeNames
     }
   },
   actions: {
@@ -76,6 +81,16 @@ export default {
       return new Promise((resolve, reject) => {
         listAdjustType().then(res => {
           commit('setAdjustType', res.body)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    getPriceTypeNames ({ commit }) {
+      return new Promise((resolve, reject) => {
+        getPriceTypeNames().then(res => {
+          commit('setPriceTypeNames', res.body)
           resolve(res)
         }).catch(err => {
           reject(err)

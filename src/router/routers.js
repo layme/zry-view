@@ -175,13 +175,13 @@ export default [
         component: () => import('@/view/price-system/price-edit/priceList.vue')
       },
       {
-        path: 'priceType',
-        name: 'priceType',
+        path: 'priceTypeList',
+        name: 'priceTypeList',
         meta: {
           icon: '_qq',
           title: '价格类型'
         },
-        component: () => import('@/view/price-system/price-type/priceType.vue')
+        component: () => import('@/view/price-system/price-type/priceTypeList.vue')
       }
     ]
   },

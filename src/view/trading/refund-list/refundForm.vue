@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="订单号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="" clearable></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="自如" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -23,7 +23,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号" clearable></Input>
+          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -61,7 +61,7 @@ export default {
         refoundStatusStr: '',
         refundStartTime: '',
         refundEndTime: '',
-        bookPerson: '',
+        customer: '',
         isOwnFlag: '',
         checkInStartTime: '',
         checkInEndTime: ''
