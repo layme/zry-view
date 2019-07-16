@@ -132,8 +132,10 @@ export default {
       this.paramDto.checkOutStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.checkOutEndTime = val[1] ? getDate(val[1], 'date') : ''
     },
-    '$store.state.user.currentProject' () {
-      this.submit()
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.submit()
+      }
     }
   },
   created () {

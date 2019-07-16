@@ -238,15 +238,17 @@ export default {
       },
       deep: true
     },
-    '$store.state.user.currentProject' () {
-      this.init()
-      this.getPassword()
-      this.getBedCountByStatus()
-      this.getStockOrderCount()
-      this.getHouseTypeList()
-      this.getOrderEnums()
-      this.getStockOfPerDay(this.workDto)
-      this.getStockWorkbench(this.workDto)
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.init()
+        this.getPassword()
+        this.getBedCountByStatus()
+        this.getStockOrderCount()
+        this.getHouseTypeList()
+        this.getOrderEnums()
+        this.getStockOfPerDay(this.workDto)
+        this.getStockWorkbench(this.workDto)
+      }
     }
   },
   created () {

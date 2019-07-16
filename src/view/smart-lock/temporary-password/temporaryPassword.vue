@@ -177,8 +177,10 @@ export default {
     }
   },
   watch: {
-    '$store.state.user.currentProject' () {
-      this.handlePageChange()
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.handlePageChange()
+      }
     }
   },
   created () {

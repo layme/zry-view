@@ -147,8 +147,10 @@ export default {
       this.paramDto.visitTimeEnd = val[1] ? getDate(val[1], 'date') : ''
     },
     '$store.state.user.currentProject' (val) {
-      this.paramDto.projectBid = val.bid
-      this.search()
+      if (Object.keys(val).length) {
+        this.paramDto.projectBid = val.bid
+        this.search()
+      }
     }
   },
   created () {
