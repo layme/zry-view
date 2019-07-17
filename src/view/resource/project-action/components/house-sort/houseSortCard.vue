@@ -109,11 +109,9 @@ export default {
     saveHouseSort () {
       this.loading = true
       saveHouseSort(this.houseSortDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.houseSortDto.bid = res.body
-          this.$store.commit('upStep', 4)
-        }
+        this.$Message.success('保存成功')
+        this.houseSortDto.bid = res.body
+        this.$store.commit('upStep', 4)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -121,10 +119,8 @@ export default {
     },
     updateHouseSort () {
       this.loading = true
-      updateHouseSort(this.houseSortDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-        }
+      updateHouseSort(this.houseSortDto).then(() => {
+        this.$Message.success('修改成功')
         this.loading = false
       }).catch(() => {
         this.loading = false

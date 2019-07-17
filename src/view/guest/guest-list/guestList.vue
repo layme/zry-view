@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="guestDto" :label-width="80">
+    <Form :model="guestDto" :label-width="80" @keydown.enter.native="listGuest">
       <Row :gutter="20">
         <Col :span="8">
           <FormItem label="姓名">
@@ -153,12 +153,8 @@ export default {
     handlePageChange () {
       this.loadingTable = true
       getGuests(this.guestDto).then(res => {
-        if (res.code === 200) {
-          this.guestList = res.body.rows
-          this.total = res.body.total
-        } else {
-          this.$Message.warning('查询失败，请稍后重试')
-        }
+        this.guestList = res.body.rows
+        this.total = res.body.total
         this.loadingTable = false
       }).catch(() => {
         this.loadingTable = false

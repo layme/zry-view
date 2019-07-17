@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="60">
+    <Form :model="paramDto" :label-width="60" @keydown.enter.native="listData">
       <Row :gutter="20">
         <Col :span="8">
           <FormItem label="项目">
@@ -146,10 +146,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getPermission(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.dataList = res.body.rows
-          this.total = res.body.total
-        }
+        this.dataList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -157,9 +155,7 @@ export default {
     },
     getProjectListAll () {
       getProjectListAll().then(res => {
-        if (res.code === 200) {
-          this.allProjectOptions = res.body
-        }
+        this.allProjectOptions = res.body
       })
     },
     openModal () {
@@ -169,9 +165,7 @@ export default {
     getUser () {
       if (this.permissionDto.userName) {
         getUser(this.permissionDto.userName).then(res => {
-          if (res.code === 200) {
-            this.permissionDto.name = res.body.name
-          }
+          this.permissionDto.name = res.body.name
         })
       }
     },
@@ -197,13 +191,9 @@ export default {
     },
     savePermission () {
       savePermission(this.permissionDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('项目权限分配成功')
-          this.visible = false
-          this.listData()
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('项目权限分配成功')
+        this.visible = false
+        this.listData()
       }).catch(() => {
         this.handleError()
       })
@@ -221,10 +211,8 @@ export default {
     },
     delPermission (row) {
       delPermission(row.id).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('删除成功')
-          this.listData()
-        }
+        this.$Message.success('删除成功')
+        this.listData()
       })
     }
   },

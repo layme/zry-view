@@ -140,14 +140,12 @@ export default {
     getOrderInfo () {
       if (this.applyDto.orderCode) {
         getOrderInfoForSmartLock(this.applyDto.orderCode).then(res => {
-          if (res.code === 200) {
-            this.applyDto.projectName = res.body.projectName
-            this.applyDto.projectBid = res.body.projectBid
-            this.applyDto.orderBid = res.body.orderBid
-            this.roomOptions = res.body.list
-            if (this.roomOptions) {
-              this.applyDto.areaBid = this.roomOptions[0].bid + ',' + this.roomOptions[0].area_name
-            }
+          this.applyDto.projectName = res.body.projectName
+          this.applyDto.projectBid = res.body.projectBid
+          this.applyDto.orderBid = res.body.orderBid
+          this.roomOptions = res.body.list
+          if (this.roomOptions) {
+            this.applyDto.areaBid = this.roomOptions[0].bid + ',' + this.roomOptions[0].area_name
           }
         })
       }
@@ -171,15 +169,18 @@ export default {
     },
     save () {
       savePwd(this.applyDto).then(res => {
-        if (res.code === 200) {
-          this.visible = false
-          this.handlePageChange()
-        } else {
-          this.handleError()
-        }
+        this.visible = false
+        this.handlePageChange()
       }).catch(() => {
         this.handleError()
       })
+    }
+  },
+  watch: {
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.handlePageChange()
+      }
     }
   },
   created () {

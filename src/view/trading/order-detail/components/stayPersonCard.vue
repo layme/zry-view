@@ -69,7 +69,7 @@
           </Row>
         </div>
         <Button v-if="orderStatus === 1 || orderStatus === 2" type="primary" class="my-btn" @click="validateForm">保 存</Button>
-        <Button v-if="orderStatus === 2" type="primary" class="my-btn" ghost>客史记录</Button>
+        <Button v-if="orderStatus === 2" type="primary" class="my-btn" ghost @click="guestVisible = true">客史记录</Button>
       </Form>
     </Card>
     <Modal
@@ -79,13 +79,25 @@
       footer-hide>
       <guest-tabs v-if="visible" :guest-fid="guestFid" :active="active" @close="handleClose"></guest-tabs>
     </Modal>
+    <Modal
+      v-model="guestVisible"
+      title="客史信息搜集"
+      width="900"
+      footer-hide>
+      <guest-info-collect-list v-if="guestVisible" :order-bid="orderBid"></guest-info-collect-list>
+    </Modal>
   </div>
 </template>
 <script>
 import guestTabs from '@/components/guest/guestTabs'
+import guestInfoCollectList from '@/view/guest/guest-info-collect/guestInfoCollectList'
 
 export default {
   name: 'stayPersonCard',
+  components: {
+    guestTabs,
+    guestInfoCollectList
+  },
   props: {
     stayList: {
       type: Array,
@@ -94,9 +106,6 @@ export default {
     guestType: Object,
     orderBid: String,
     orderStatus: Number
-  },
-  components: {
-    guestTabs
   },
   data () {
     return {
@@ -122,7 +131,8 @@ export default {
       visible: false,
       guestFid: '',
       active: 'record',
-      rules: {}
+      rules: {},
+      guestVisible: false
     }
   },
   methods: {

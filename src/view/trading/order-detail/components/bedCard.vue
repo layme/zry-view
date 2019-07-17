@@ -37,7 +37,7 @@
           <Tag v-if="item.stayPersonStatus !== 1 && item.stayPersonStatus !== 6" color="blue">
             {{ item.stayPersonStatus | stayPersonStatusFilter }}
           </Tag>
-          <a v-else @click="selectBed(item)">选择床位</a>
+          <a v-else @click="selectBed(item, 'first')">选择床位</a>
         </div>
       </Col>
       <Col :span="1" style="text-align: center">
@@ -157,7 +157,7 @@ export default {
         })
       }
     },
-    selectBed (item) {
+    selectBed (item, type) {
       let startDate = ''
       let st = new Date(this.bedDto.startDate)
       let et = new Date(this.bedDto.endDate)
@@ -180,7 +180,7 @@ export default {
         checkOutTime: this.bedDto.endDate,
         houseTypeBid: item.houseTypeBid
       },
-      item)
+      item, type)
     },
     unbindBed () {
       let selected = this.bedDto.stayPersonList.filter(item => item.isSelect)
@@ -214,7 +214,7 @@ export default {
         } else if (!stay.areaBedBid && (stay.stayPersonStatus === 1 || stay.stayPersonStatus === 6)) {
           this.$Message.warning('当前入住人还未排床，请先排床')
         } else {
-          this.selectBed(stay)
+          this.selectBed(stay, 'second')
         }
       }
     },

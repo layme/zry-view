@@ -33,8 +33,8 @@ export default {
 </script>
 <style lang="less" scoped>
   .content {
-    height: 100%;
-    width: 100%;
+    width: 70px;
+    height: 60px;
     padding: 5px 0;
     color: #ffffff;
     line-height: 25px;

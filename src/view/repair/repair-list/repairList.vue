@@ -138,10 +138,8 @@ export default {
     handlePageChange () {
       this.loadingTable = true
       getRepair(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.repairList = res.body.rows
-          this.total = res.body.total
-        }
+        this.repairList = res.body.rows
+        this.total = res.body.total
         this.loadingTable = false
       }).catch(() => {
         this.loadingTable = false
@@ -155,16 +153,14 @@ export default {
     },
     saveRepair (dto) {
       saveRepair(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.createVisible = false
-          this.loadingTable = true
-          setTimeout(() => {
-            this.handlePageChange()
-          }, 500)
-        } else {
-          this.handleCreateError()
-        }
+        this.$Message.success('保存成功')
+        this.createVisible = false
+        this.loadingTable = true
+        setTimeout(() => {
+          this.handlePageChange()
+        }, 500)
+      }).catch(() => {
+        this.handleCreateError()
       })
     },
     handleCreateError () {
@@ -189,15 +185,13 @@ export default {
     },
     cancelRepair (dto) {
       cancelRepair(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('取消成功')
-          setTimeout(() => {
-            this.handlePageChange()
-          }, 600)
-          this.cancelVisible = false
-        } else {
-          this.handleCancelError()
-        }
+        this.$Message.success('取消成功')
+        setTimeout(() => {
+          this.handlePageChange()
+        }, 600)
+        this.cancelVisible = false
+      }).catch(() => {
+        this.handleCancelError()
       })
     },
     handleCancelError () {
@@ -238,16 +232,12 @@ export default {
     },
     getAreas () {
       getAreas().then(res => {
-        if (res.code === 200) {
-          this.areaOptions = res.body
-        }
+        this.areaOptions = res.body
       })
     },
     getGoods () {
       getGoods().then(res => {
-        if (res.code === 200) {
-          this.goodsOptions = res.body
-        }
+        this.goodsOptions = res.body
       })
     }
   },

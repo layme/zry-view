@@ -26,9 +26,7 @@ export default {
     getOrderRecord () {
       this.loading = true
       getOrderRecord(this.orderBid).then(res => {
-        if (res.code === 200) {
-          this.orderLog = res.body
-        }
+        this.orderLog = res.body
         this.loading = false
       }).catch(() => {
         this.loading = false

@@ -133,10 +133,10 @@
         </FormItem>
       </Col>
       <Col :span="8">
-        <FormItem label="结算公司" prop="settlementCompany">
+        <FormItem label="收款公司" prop="settlementCompany">
           <Select v-model="baseDto.settlementCompany" placeholder="请选择" clearable>
-            <Option v-for="item in ownerOptions" :key="item.bid" :label="item.ownerName"
-                       :value="item.bid"></Option>
+            <Option v-for="item in CompanyOptions" :key="item.key" :label="item.text"
+                       :value="item.key"></Option>
           </Select>
         </FormItem>
       </Col>
@@ -173,7 +173,7 @@
 import MapCard from '@/components/baidu-map/MapCard.vue'
 import { getCityList, getAreaList } from '@/api/common'
 import { getOwnerList } from '@/api/owner'
-import { getBaseInfo, saveBase, updateBase } from '@/api/project'
+import { getBaseInfo, saveBase, updateBase, getCompanyList } from '@/api/project'
 
 export default {
   name: 'BaseInfo',
@@ -189,6 +189,7 @@ export default {
       cityOptions: [],
       areaOptions: [],
       ownerOptions: [],
+      CompanyOptions: [],
       baseDto: {
         projectName: '',
         cityCode: '',
@@ -349,22 +350,25 @@ export default {
         this.ownerOptions = res.body
       })
     },
+    getCompany () {
+      getCompanyList().then(res => {
+        this.CompanyOptions = res.body
+      })
+    },
     getBaseInfo () {
       if (!this.projectBid) {
         return
       }
       this.loading = true
       getBaseInfo(this.projectBid).then(res => {
-        if (res.code === 200) {
-          this.baseDto = res.body
-          this.baseDto.projectArea = this.baseDto.projectArea.toString()
-          this.baseDto.signDate = new Date(this.baseDto.signDate)
-          this.baseDto.endlineDate = new Date(this.baseDto.endlineDate)
-          this.baseDto.openDate = new Date(this.baseDto.openDate)
-          this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
-          this.loading = false
-          this.canClear = false
-        }
+        this.baseDto = res.body
+        this.baseDto.projectArea = this.baseDto.projectArea.toString()
+        this.baseDto.signDate = new Date(this.baseDto.signDate)
+        this.baseDto.endlineDate = new Date(this.baseDto.endlineDate)
+        this.baseDto.openDate = new Date(this.baseDto.openDate)
+        this.location = { lng: this.baseDto.lng, lat: this.baseDto.lat }
+        this.loading = false
+        this.canClear = false
       }).catch(() => {
         this.loading = false
       })
@@ -409,12 +413,10 @@ export default {
     saveBase (dto) {
       this.loading = true
       saveBase(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.proBid = res.body
-          this.$store.commit('upStep', 2)
-          this.$emit('success', this.proBid, dto.projectName)
-        }
+        this.$Message.success('保存成功')
+        this.proBid = res.body
+        this.$store.commit('upStep', 2)
+        this.$emit('success', this.proBid, dto.projectName)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -423,12 +425,10 @@ export default {
     updateBase (dto) {
       this.loading = true
       updateBase(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-          this.proBid = res.body
-          this.$store.commit('upStep', 2)
-          this.$emit('success', this.proBid, dto.projectName)
-        }
+        this.$Message.success('修改成功')
+        this.proBid = res.body
+        this.$store.commit('upStep', 2)
+        this.$emit('success', this.proBid, dto.projectName)
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -465,6 +465,7 @@ export default {
     this.getCity()
     this.getOwner()
     this.getBaseInfo()
+    this.getCompany()
   }
 }
 </script>

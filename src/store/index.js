@@ -7,6 +7,7 @@ import order from './module/order'
 import project from './module/project'
 import guest from './module/guest'
 import workbench from './module/workbench'
+import price from './module/price'
 
 Vue.use(Vuex)
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
     order,
     project,
     guest,
-    workbench
+    workbench,
+    price
   }
 })

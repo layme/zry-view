@@ -105,10 +105,8 @@ export default {
   methods: {
     handlePageChange () {
       listEvent(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.eventList = res.body.rows
-          this.total = res.body.total
-        }
+        this.eventList = res.body.rows
+        this.total = res.body.total
       })
     },
     addEvent () {
@@ -139,18 +137,16 @@ export default {
     },
     save () {
       addOrUpdateEvent(this.eventDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.visible = false
-          this.handlePageChange()
-        } else {
-          setTimeout(() => {
-            this.loading = false
-            this.$nextTick(() => {
-              this.loading = true
-            })
-          }, 500)
-        }
+        this.$Message.success('保存成功')
+        this.visible = false
+        this.handlePageChange()
+      }).catch(() => {
+        setTimeout(() => {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
+          })
+        }, 500)
       })
     },
     handleUpdate (index) {
@@ -176,13 +172,9 @@ export default {
     },
     removeEvent () {
       deleteEvent({ guestFid: this.guestFid }).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('删除成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('删除成功')
+        this.handlePageChange()
       })
-      this.$Message.success('remove success')
-      this.visible = false
     }
   },
   created () {

@@ -12,15 +12,14 @@
         </Col>
         <Col :span="6">
           <FormItem label="预定人手机号：">
-            <span v-if="order.secondChannel > 1">
-              <a @click="updatePhone">{{ order.cusPhone }}</a>
-            </span>
-            <span v-else>{{ order.cusPhone }}</span>
+            <span>{{ order.cusPhone }}</span>
+            <a v-if="order.secondChannel > 1" @click="updatePhone" style="margin-left: 10px;"><Icon type="md-create" /></a>
           </FormItem>
         </Col>
         <Col :span="6">
           <FormItem label="邮箱：">
             <span>{{ order.cusMail | nullFilter }}</span>
+<!--            <a @click="updateMail" style="margin-left: 10px;"><Icon type="md-create" /></a>-->
           </FormItem>
         </Col>
         <Col :span="6">
@@ -61,6 +60,7 @@
       <Button type="primary" class="my-btn" v-if="order.orderStatus === 5" @click="prePay">支 付</Button>
       <Button type="warning" class="my-btn" v-if="order.orderStatus === 5" @click="cancelOrder">取 消</Button>
       <Button type="warning" class="my-btn" v-if="order.orderStatus === 1" @click="closeOrder">取 消</Button>
+      <Button type="primary" class="my-btn" v-if="order.orderStatus === 8 || order.orderStatus === 9 || order.orderStatus === 10" @click="toRefundDetail(order.orderBid)">取消详情</Button>
     </Form>
     <Modal
       v-model="visible"
@@ -153,10 +153,8 @@ export default {
         content: '<p>确定取消该订单？</p><p style="color: #808695;">未支付取消，直接释放库存，无需审核</p>',
         onOk: () => {
           cancelOrder(this.order.orderBid).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('取消成功')
-              this.$emit('refresh')
-            }
+            this.$Message.success('取消成功')
+            this.$emit('refresh')
           })
         },
         onCancel: () => {
@@ -169,6 +167,9 @@ export default {
     updatePhone () {
       this.$emit('updatePhone')
     },
+    updateMail () {
+      this.$emit('updateMail')
+    },
     prePay () {
       if (this.order.firstChannel !== 2) {
         this.$Message.warning('PC端暂时不能支付APP端创建的订单，请在APP端支付')
@@ -179,20 +180,14 @@ export default {
     },
     getFinSettle () {
       getFinSettle().then(res => {
-        if (res.code === 200) {
-          this.finSettleOptions = res.body
-        }
+        this.finSettleOptions = res.body
       })
     },
     pay () {
       pay(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('支付成功')
-          this.visible = false
-          this.$emit('refresh')
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('支付成功')
+        this.visible = false
+        this.$emit('refresh')
       }).catch(() => {
         this.handleError()
       })
@@ -218,13 +213,9 @@ export default {
     },
     handleCloseOrder () {
       refundOrder(this.closeDto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('取消成功')
-          this.cancelVisible = false
-          this.toRefundDetail(this.order.orderBid)
-        } else {
-          this.handleError()
-        }
+        this.$Message.success('取消成功')
+        this.cancelVisible = false
+        this.toRefundDetail(this.order.orderBid)
       }).catch(() => {
         this.handleError()
       })

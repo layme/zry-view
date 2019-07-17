@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="80" inline>
+    <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getData">
       <FormItem label="指标周期">
-        <Select v-model="paramDto.cycleType" class="my-input" placeholder="" clearable>
+        <Select v-model="paramDto.cycleType" class="my-input" placeholder="">
           <Option
             v-for="item in cycleTypeOptions"
             :key="item.value"
@@ -12,7 +12,7 @@
         </Select>
       </FormItem>
       <FormItem label="月份选择">
-        <DatePicker v-model="paramDto.date" type="month" placeholder="" class="my-input"></DatePicker>
+        <DatePicker v-model="paramDto.date" type="month" placeholder="" class="my-input" :clearable="false"></DatePicker>
       </FormItem>
       <FormItem>
         <Button type="primary" icon="ios-search" @click="getData"> 查 询</Button>
@@ -244,9 +244,7 @@ export default {
     getReportCore () {
       this.loading = true
       getReportCore(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.coreData = res.body
-        }
+        this.coreData = res.body
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -254,30 +252,22 @@ export default {
     },
     getReportCoreOCC () {
       getReportCoreOCC(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.occData = res.body
-        }
+        this.occData = res.body
       })
     },
     getLineReportCoreOCC () {
       getLineReportCoreOCC(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.occLineData = res.body
-        }
+        this.occLineData = res.body
       })
     },
     getMonthNewOrderCount () {
       getMonthNewOrderCount(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.newData = res.body
-        }
+        this.newData = res.body
       })
     },
     getChartNewOrderCount () {
       getChartNewOrderCount(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.newLineData = res.body
-        }
+        this.newLineData = res.body
       })
     }
   },

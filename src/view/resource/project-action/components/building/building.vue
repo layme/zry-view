@@ -62,10 +62,8 @@ export default {
       if (this.buildings[index].fid) {
         this.loading = true
         deleteBuilding(this.buildings[index].fid).then(res => {
-          if (res.code === 200) {
-            this.$Message.success('删除成功')
-            this.buildings.splice(index, 1)
-          }
+          this.$Message.success('删除成功')
+          this.buildings.splice(index, 1)
           this.loading = false
         }).catch(() => {
           this.loading = false

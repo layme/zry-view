@@ -46,17 +46,17 @@
       </Form>
     </Modal>
     <Modal
-      v-model="guestVisible"
-      title="用户详情"
+      v-model="customerVisible"
+      title="用户信息"
       width="800"
       footer-hide>
-      <guest-tabs v-if="guestVisible" :idNumber="idNumber" @close="handleClose"></guest-tabs>
+      <customer-card v-if="customerVisible" :uid="uid" @close="handleClose"></customer-card>
     </Modal>
   </div>
 </template>
 <script>
 import chatMemberForm from './chatMemberForm.vue'
-import guestTabs from '@/components/guest/guestTabs'
+import customerCard from './customerCard'
 import { getMembers, addGagMember, removeGagMember, removeMember, addAdminMember, deleteAdminMember, transferGroup } from '@/api/socialContact'
 import { mapMutations } from 'vuex'
 
@@ -64,7 +64,7 @@ export default {
   name: 'chatMemberList',
   components: {
     chatMemberForm,
-    guestTabs
+    customerCard
   },
   data () {
     return {
@@ -122,8 +122,8 @@ export default {
           value: 1
         }
       ],
-      guestVisible: false,
-      idNumber: ''
+      customerVisible: false,
+      uid: ''
     }
   },
   methods: {
@@ -151,10 +151,8 @@ export default {
         this.$router.push({ name: 'home' })
       }
       getMembers(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.chatList = res.body.rows
-          this.total = res.body.total
-        }
+        this.chatList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -197,10 +195,8 @@ export default {
         members: [row.member]
       }
       addGagMember(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('禁言成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('禁言成功')
+        this.handlePageChange()
       })
     },
     confirmRemoveGagMember (row) {
@@ -220,10 +216,8 @@ export default {
         members: [row.member]
       }
       removeGagMember(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('解禁成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('解禁成功')
+        this.handlePageChange()
       })
     },
     confirmRemoveMember (row) {
@@ -243,10 +237,8 @@ export default {
         members: [row.member]
       }
       removeMember(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('踢出群聊成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('踢出群聊成功')
+        this.handlePageChange()
       })
     },
     confirmAddAdminMember (row) {
@@ -267,10 +259,8 @@ export default {
         memberRole: 1
       }
       addAdminMember(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('管理员设置成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('管理员设置成功')
+        this.handlePageChange()
       })
     },
     confirmDeleteAdminMember (row) {
@@ -290,10 +280,8 @@ export default {
         members: [row.member]
       }
       deleteAdminMember(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('管理员取消成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('管理员取消成功')
+        this.handlePageChange()
       })
     },
     confirmTransferGroup (row) {
@@ -313,18 +301,16 @@ export default {
         owner: row.member
       }
       transferGroup(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('群主转移成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('群主转移成功')
+        this.handlePageChange()
       })
     },
     openGuest (row) {
-      this.idNumber = row.member
-      this.guestVisible = true
+      this.uid = row.member
+      this.customerVisible = true
     },
     handleClose () {
-      this.guestVisible = false
+      this.customerVisible = false
     }
   },
   watch: {

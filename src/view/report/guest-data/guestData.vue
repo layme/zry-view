@@ -115,10 +115,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getGuestDataReport(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.guestData = res.body.rows
-          this.total = res.body.total
-        }
+        this.guestData = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false

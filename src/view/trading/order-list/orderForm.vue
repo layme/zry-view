@@ -1,15 +1,16 @@
 <template>
-  <Form :model="paramDto" :label-width="70">
+  <Form :model="paramDto" :label-width="70" @keydown.enter.native="submit">
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="订单号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="App/OTA" clearable></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="自如/OTA" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="订单状态">
           <Select v-model="paramDto.orderStatus" placeholder="请选择" clearable>
             <Option v-for="x in orderStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+            <Option :value="12">NoShow</Option>
           </Select>
         </FormItem>
       </Col>
@@ -23,12 +24,12 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="入住人">
-          <Input v-model.trim="paramDto.stayPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.stayPerson" placeholder="姓名/证件号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -132,7 +133,9 @@ export default {
       this.paramDto.checkOutEndTime = val[1] ? getDate(val[1], 'date') : ''
     },
     '$store.state.user.currentProject' (val) {
-      this.submit()
+      if (Object.keys(val).length) {
+        this.submit()
+      }
     }
   },
   created () {

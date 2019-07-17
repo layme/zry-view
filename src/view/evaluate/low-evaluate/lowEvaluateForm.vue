@@ -1,5 +1,5 @@
 <template>
-  <Form :model="paramDto" :label-width="80">
+  <Form :model="paramDto" :label-width="80" @keydown.enter.native="search">
     <Row :gutter="20">
       <Col :span="8">
         <FormItem label="订单编号">
@@ -121,8 +121,11 @@ export default {
       this.paramDto.startDate = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.endDate = val[1] ? getDate(val[1], 'date') : ''
     },
-    '$store.state.user.currentProject' (to, from) {
-      this.paramDto.projectBid = to.bid
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.paramDto.projectBid = val.bid
+        this.search()
+      }
     }
   },
   created () {

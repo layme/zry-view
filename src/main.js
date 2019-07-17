@@ -9,6 +9,7 @@ import i18n from '@/locale'
 import config from '@/config'
 import importDirective from '@/directive'
 import { directive as clickOutside } from 'v-click-outside-x'
+import vuescroll from 'vuescroll'
 // import installPlugin from '@/plugin'
 import './index.less'
 import '@/assets/icons/iconfont.css'
@@ -20,6 +21,8 @@ import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 import { isHave } from '@/libs/action'
 import '@/libs/filters.js'
+// 动画效果
+import animated from 'animate.css'
 
 // 实际打包时应该不引入mock
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
@@ -34,6 +37,7 @@ Vue.use(BaiduMap, {
   ak: 'ukBW7hhft7HzjgTRaoGyMHmzIKTi3bx3'
 })
 Vue.use(preview)
+Vue.use(animated)
 
 /**
  * @description 注册admin内置插件
@@ -59,6 +63,32 @@ Vue.directive('action', {
       el.parentNode.removeChild(el)
     }
   }
+})
+
+Vue.use(vuescroll, {
+  ops: {
+    bar: {
+      showDelay: 500,
+      onlyShowBarOnScroll: true,
+      keepShow: false,
+      background: '#c1c1c1',
+      opacity: 0.5,
+      hoverStyle: false,
+      specifyBorderRadius: false,
+      minSize: false,
+      size: '6px',
+      disable: false
+    },
+    scrollPanel: {
+      initialScrollY: false,
+      initialScrollX: false,
+      scrollingX: false,
+      scrollingY: true,
+      speed: 300,
+      verticalNativeBarPos: 'right'
+    }
+  }, // 在这里设置全局默认配置
+  name: 'vueScroll' // 在这里自定义组件名字，默认是vueScroll
 })
 
 /* eslint-disable no-new */

@@ -172,10 +172,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getAreas(this.areaParamDto).then(res => {
-        if (res.code === 200) {
-          this.areaList = res.body.list
-          this.total = res.body.total
-        }
+        this.areaList = res.body.list
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -213,18 +211,14 @@ export default {
     },
     saveArea (dto) {
       saveArea(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('保存成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('保存成功')
+        this.handlePageChange()
       })
     },
     updateArea (dto) {
       updateArea(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('修改成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('修改成功')
+        this.handlePageChange()
       })
     },
     deleteAreaConfirm (row) {
@@ -240,10 +234,8 @@ export default {
     },
     deleteArea (row) {
       deleteArea(row.bid).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('删除成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('删除成功')
+        this.handlePageChange()
       })
     },
     openConfirm (row) {
@@ -268,10 +260,8 @@ export default {
     },
     openArea (msg, bid, val) {
       validOrNot(bid, val).then(res => {
-        if (res.code === 200) {
-          this.$Message.success(msg + '成功')
-          this.handlePageChange()
-        }
+        this.$Message.success(msg + '成功')
+        this.handlePageChange()
       })
     }
   },

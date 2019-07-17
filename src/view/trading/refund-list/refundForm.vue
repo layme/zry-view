@@ -1,14 +1,14 @@
 <template>
-  <Form :model="paramDto" :label-width="70">
+  <Form :model="paramDto" :label-width="70" @keydown.enter.native="submit">
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="订单号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="App/OTA" clearable></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="自如" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
         <FormItem label="退款状态">
-          <Select v-model="paramDto.refoundStatus" placeholder="请选择" clearable>
+          <Select v-model="paramDto.refoundStatusStr" placeholder="请选择" clearable>
             <Option v-for="x in refundStatusOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
           </Select>
         </FormItem>
@@ -23,12 +23,14 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
-        <FormItem label="入住人">
-          <Input v-model.trim="paramDto.checkinPerson" placeholder="姓名/手机号/身份证号" clearable></Input>
+        <FormItem label="发起方式">
+          <Select v-model="paramDto.isOwnFlag" placeholder="请选择" clearable>
+            <Option v-for="x in flagOptions" :value="x.value" :key="x.value">{{ x.label }}</Option>
+          </Select>
         </FormItem>
       </Col>
       <Col span="8">
@@ -43,7 +45,7 @@
         <Button type="primary" icon="ios-search" @click="submit"> 查 询</Button>
       </Col>
       <Col span="12" style="text-align: right">
-        <Button type="warning" icon="ios-cloud-download-outline"> 导 出</Button>
+        <Button type="warning" icon="ios-cloud-download-outline" @click="exportList"> 导 出</Button>
       </Col>
     </Row>
   </Form>
@@ -56,11 +58,11 @@ export default {
     return {
       paramDto: {
         orderNumber: '',
-        refoundStatus: '',
-        applyRefundStartTime: '',
-        applyRefundEndTime: '',
-        bookPerson: '',
-        checkinPerson: '',
+        refundStatusStr: '',
+        refundStartTime: '',
+        refundEndTime: '',
+        customer: '',
+        isOwnFlag: '',
         checkInStartTime: '',
         checkInEndTime: ''
       },
@@ -83,12 +85,25 @@ export default {
           label: '打款异常',
           value: 3
         }
+      ],
+      flagOptions: [
+        {
+          label: '取消订单',
+          value: 1
+        },
+        {
+          label: '订单退租',
+          value: 2
+        }
       ]
     }
   },
   methods: {
     submit () {
       this.$emit('search', this.paramDto)
+    },
+    exportList () {
+      this.$emit('exportList', this.paramDto)
     }
   },
   watch: {
@@ -99,7 +114,15 @@ export default {
     applyRefundTime (val) {
       this.paramDto.applyRefundStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.applyRefundEndTime = val[1] ? getDate(val[1], 'date') : ''
+    },
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.submit()
+      }
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

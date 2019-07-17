@@ -30,31 +30,24 @@ export default {
       this.percent = 0
       this.visible = true
       requestExportFile(dto).then(res => {
-        if (res.code === 200) {
-          this.title = '正在导出文件...'
-          this.interval = setInterval(() => this.getExportProcess(res.body), 300)
-        } else {
-          this.visible = false
-        }
+        this.title = '正在导出文件...'
+        this.interval = setInterval(() => this.getExportProcess(res.body), 300)
       }).catch(() => {
         this.visible = false
       })
     },
     getExportProcess (key) {
       getExportProcess(key).then(res => {
-        if (res.code === 200) {
-          if (res.body.finish) {
-            this.percent = 100
-            setTimeout(() => { this.visible = false }, 800)
-            this.$Message.success('文件已生成，开始下载')
-            clearInterval(this.interval)
-            this.download(res.body.fileUrl)
-          } else {
-            this.percent = res.body.percent
-          }
-        } else {
-          this.visible = false
+        if (res.body.finish) {
+          this.percent = 100
+          setTimeout(() => {
+            this.visible = false
+          }, 800)
+          this.$Message.success('文件已生成，开始下载')
           clearInterval(this.interval)
+          this.download(res.body.fileUrl)
+        } else {
+          this.percent = res.body.percent
         }
       }).catch(() => {
         this.visible = false
@@ -72,6 +65,7 @@ export default {
       setTimeout(() => { document.body.removeChild(link) }, 1000)
     },
     cancelExport () {
+      this.$Message.info('文件导出已取消')
       this.visible = false
       clearInterval(this.interval)
     }

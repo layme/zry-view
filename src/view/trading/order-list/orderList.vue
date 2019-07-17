@@ -114,10 +114,8 @@ export default {
       this.$delete(this.paramDto, 'checkInTime')
       this.$delete(this.paramDto, 'checkOutTime')
       getOrders(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.orderList = res.body.rows
-          this.total = res.body.total
-        }
+        this.orderList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false

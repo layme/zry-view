@@ -2,7 +2,7 @@
   <div>
     <Row>
       <Col :span="18">
-        <Form :model="paramDto" :label-width="80" inline>
+        <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getData">
           <FormItem label="项目">
             <Select v-model="paramDto.projectBid" placeholder="" class="my-input">
               <Option
@@ -102,9 +102,7 @@ export default {
         endCreateTime: getDate(this.paramDto.date[1], 'date')
       }
       getReportDaily(dto).then(res => {
-        if (res.code === 200) {
-          this.listDate = res.body.rows
-        }
+        this.listDate = res.body.rows
         this.loading = false
       }).catch(() => {
         this.loading = false

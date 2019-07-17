@@ -92,9 +92,7 @@ export default {
   methods: {
     getGuestInfo () {
       getGuests(this.guestDto).then(res => {
-        if (res.code === 200) {
-          this.guestInfo = res.body.rows[0]
-        }
+        this.guestInfo = res.body.rows[0]
       })
       this.guestInfo = {}
     },
@@ -116,10 +114,8 @@ export default {
       this.guestBlackDto.guestFid = this.guestInfo.fid
       this.guestBlackDto.currentStatus = this.guestInfo.isBlack
       addORemoveBlack(this.guestBlackDto).then(res => {
-        if (res.code === 200) {
-          this.guestInfo.isBlack = res.body
-          this.$Message.success('操作成功')
-        }
+        this.guestInfo.isBlack = res.body
+        this.$Message.success('操作成功')
       })
     }
   },

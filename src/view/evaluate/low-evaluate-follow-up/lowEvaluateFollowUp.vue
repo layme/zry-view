@@ -1,8 +1,9 @@
 <template>
-  <div id="app" v-cloak>
+  <div class="full-top">
+    <Spin size="large" fix v-if="loading" class="full-spin"></Spin>
     <Divider orientation="left">评价信息</Divider>
     <div style="margin: 0 200px">
-      <info-card :evaluate="evaluate"></info-card>
+      <info-card v-if="Object.keys(evaluate).length" :evaluate="evaluate"></info-card>
     </div>
     <Divider orientation="left">跟进记录</Divider>
     <div v-if="haveData" style="margin: 0 200px">
@@ -51,13 +52,11 @@ export default {
       this.loading = true
       this.evalParamDto.orderNumber = this.$route.query.orderNumber
       getLowEvaluate(this.evalParamDto).then(res => {
-        if (res.code === 200) {
-          this.evaluate = res.body.rows[0]
-          this.listLowEvalFollowUp()
-        } else {
-          this.$Message.warning(res.message)
-          this.loading = false
-        }
+        this.evaluate = res.body.rows[0]
+        this.listLowEvalFollowUp()
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
 
@@ -66,12 +65,10 @@ export default {
       this.evalFollowUpDto.lowEvaluateBid = this.evaluate.bid
       this.evalFollowUpDto.content = ''
       getFollowUp(this.evalFollowUpDto).then(res => {
-        if (res.code === 200) {
-          this.followRecords = res.body
-          this.haveData = this.followRecords.length > 0
-        } else {
-          this.haveData = false
-        }
+        this.followRecords = res.body
+        this.haveData = this.followRecords.length > 0
+      }).catch(() => {
+        this.haveData = false
       })
     },
 
@@ -84,7 +81,7 @@ export default {
     confirmFinish (dto) {
       this.$Modal.confirm({
         title: '通知',
-        content: `<p>确认完结后，将无法再修改,</p><p>继续吗？</p>`,
+        content: `<p>确认完结后，将无法再修改，继续吗？</p>`,
         onOk: () => {
           this.finish(dto)
         },
@@ -104,16 +101,12 @@ export default {
     // 保存低评跟进情况描述
     insertLowEvalFollowUp (dto) {
       saveFollowUp(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('操作成功')
-          // 局部更新低评跟进过程
-          this.listLowEvalFollowUp()
-          // 更新低评处理状态
-          this.evaluate.followUpStatus = dto.followUpStatus
-          this.$refs.followUpForm.reset()
-        } else {
-          this.$Message.warning(res.message)
-        }
+        this.$Message.success('操作成功')
+        // 局部更新低评跟进过程
+        this.listLowEvalFollowUp()
+        // 更新低评处理状态
+        this.evaluate.followUpStatus = dto.followUpStatus
+        this.$refs.followUpForm.reset()
       })
     }
   },
@@ -129,4 +122,13 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .full-top {
+    position: relative;
+    min-height: 500px;
+    height: 100%;
+  }
+
+  .full-spin {
+    height: 100%;
+  }
 </style>

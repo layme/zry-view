@@ -1,12 +1,10 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="60" inline>
+    <Form :model="paramDto" :label-width="60" inline @keydown.enter.native="getList">
       <FormItem label="订单号" prop="orderNumber">
-        <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '200px' }"></Input>
+        <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '300px' }"></Input>
       </FormItem>
-      <FormItem>
-        <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>
-      </FormItem>
+      <Button type="primary" icon="ios-search" @click="getList" style="margin-left: 20px"> 查 询</Button>
     </Form>
     <Table stripe :columns="columns" :data="passwordList" :loading="loading">
       <template slot-scope="{ row }" slot="pswStatus">
@@ -72,10 +70,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getPwdRemakeList(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.passwordList = res.body.rows
-          this.total = res.body.total
-        }
+        this.passwordList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -99,11 +95,16 @@ export default {
         areaBid: row.areaBid
       }
       resetOrderPassword(dto).then(res => {
-        if (res.code === 200) {
-          this.$Message.success('密码重制成功')
-          this.handlePageChange()
-        }
+        this.$Message.success('密码重制成功')
+        this.handlePageChange()
       })
+    }
+  },
+  watch: {
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.getList()
+      }
     }
   },
   created () {

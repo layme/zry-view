@@ -67,20 +67,16 @@ export default {
       if (this.projectBid) {
         // 修改项目，查询项目项启用状态和步骤
         getProjectProgress(this.projectBid).then(res => {
-          if (res.code === 200) {
-            this.name = res.body.name
-            let step = res.body.step
-            this.$store.commit('upStep', step + 1)
-            let status = res.body.status
-            if (status === 1) {
-              // 启用，定位到第一个tab
-              this.$store.commit('upActiveName', '1')
-            } else {
-              // 停用，定位到最后一个tab
-              this.$store.commit('upActiveName', step.toString())
-            }
+          this.name = res.body.name
+          let step = res.body.step
+          this.$store.commit('upStep', step + 1)
+          let status = res.body.status
+          if (status === 1) {
+            // 启用，定位到第一个tab
+            this.$store.commit('upActiveName', '1')
           } else {
-            this.$Message.warning(res.message)
+            // 停用，定位到最后一个tab
+            this.$store.commit('upActiveName', step.toString())
           }
         })
       } else {

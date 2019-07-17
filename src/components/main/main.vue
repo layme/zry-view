@@ -1,13 +1,15 @@
 <template>
   <Layout style="height: 100%" class="main">
-    <Sider hide-trigger collapsible :width="200" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden'}">
-      <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
-        <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
-        <div class="logo-con">
-          <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
-          <img v-show="collapsed" :src="minLogo" key="min-logo" />
-        </div>
-      </side-menu>
+    <Sider hide-trigger collapsible :width="200" :collapsed-width="64" v-model="collapsed" class="left-sider">
+      <vue-scroll>
+        <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
+          <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
+          <div class="logo-con">
+            <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
+            <img v-show="collapsed" :src="minLogo" key="min-logo" />
+          </div>
+        </side-menu>
+      </vue-scroll>
     </Sider>
     <Layout>
       <Header class="header-con">
@@ -25,10 +27,13 @@
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div>
           <Content class="content-wrapper">
-            <keep-alive :include="cacheList">
-              <router-view/>
-            </keep-alive>
-            <ABackTop :height="100" :bottom="80" :right="20" container=".content-wrapper"></ABackTop>
+            <vue-scroll>
+              <div style="margin-right: 15px;">
+                <keep-alive :include="cacheList">
+                  <router-view/>
+                </keep-alive>
+              </div>
+            </vue-scroll>
           </Content>
         </Layout>
       </Content>
@@ -47,7 +52,7 @@ import Language from './components/language'
 import ErrorStore from './components/error-store'
 import CurrentProject from './components/current-project'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, routeEqual } from '@/libs/util'
+import { getNewTagList, routeEqual, getWebSocketUrl } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logoko-min.png'
 import maxLogo from '@/assets/images/logoko-max.png'
@@ -71,7 +76,11 @@ export default {
       minLogo,
       maxLogo,
       isFullscreen: false,
-      projectBid: ''
+      projectBid: '',
+      webSock: null,
+      delay: 30000,
+      interval: null,
+      isTry: false
     }
   },
   computed: {
@@ -110,7 +119,8 @@ export default {
       'addTag',
       'setLocal',
       'setHomeRoute',
-      'closeTag'
+      'closeTag',
+      'setMessageCount'
     ]),
     ...mapActions([
       'getUserInfo',
@@ -151,6 +161,104 @@ export default {
     },
     handleClick (item) {
       this.turnToPage(item)
+    },
+
+    // 初始化webSocket
+    initWebSocket () {
+      // ws地址
+      const server_name = getWebSocketUrl()
+
+      if ('WebSocket' in window) {
+        this.webSock = new WebSocket(`ws://${server_name}/webSocket/remind.soc?Authorization=${this.$store.state.user.token}`)
+      } else if ('MozWebSocket' in window) {
+        this.webSock = new MozWebSocket(`ws://${server_name}/webSocket/remind.soc?Authorization=${this.$store.state.user.token}`)
+      } else {
+        this.webSock = new SockJS(`http://${server_name}/webSocket/sockJs/remind.soc?Authorization=${this.$store.state.user.token}`)
+      }
+
+      this.webSock.onopen = this.webSocketOnOpen
+
+      this.webSock.onerror = this.webSocketOnError
+
+      this.webSock.onmessage = this.webSocketOnMessage
+
+      this.webSock.onclose = this.webSocketClose
+    },
+
+    // 连接已建立
+    webSocketOnOpen (evt) {
+      console.log('连接成功 => ', evt)
+      this.heartLink()
+    },
+
+    // 错误
+    webSocketOnError (e) {
+      console.log('连接错误 => ', e)
+    },
+
+    // 数据接收
+    webSocketOnMessage (evt) {
+      console.log('收到消息 => ', evt)
+      let json = JSON.parse(evt.data)
+      if (json.key === '0x00') {
+        this.setMessageCount(parseInt(json.value))
+      } else if (json.key === '0x01') {
+        this.setMessageCount(this.$store.state.user.unreadCount + 1)
+        this.notify(json)
+      }
+    },
+
+    notify (json) {
+      let title = '提醒'
+      if (json.type === '1') {
+        title = '生日提醒'
+      }
+      this.$Notice.open({
+        title: title,
+        desc: `${json.msg} <a @click="toMessage">查看</a>`,
+        duration: 0
+      })
+    },
+
+    toMessage () {
+      this.$router.push({
+        name: 'messageList'
+      })
+    },
+
+    // 数据发送
+    webSocketSend (agentData) {
+      this.webSock.send(agentData)
+    },
+
+    // 关闭
+    webSocketClose (e) {
+      console.log('断开连接 => 代码: ' + e.code + '， 原因: ' + e.reason + '， 正常关闭: ' + e.wasClean)
+      clearInterval(this.interval)
+      if (e.code !== 1000 && !this.isTry) {
+        // 非正常关闭，重连
+        this.reConnection()
+        this.isTry = true
+      }
+    },
+
+    // 重连，3次，间隔60s
+    reConnection () {
+      let timesRun = 0
+      let interval = setInterval(() => {
+        timesRun += 1
+        if (timesRun === 3 || this.webSock.readyState === WebSocket.OPEN) {
+          clearInterval(interval)
+        }
+        this.initWebSocket()
+      }, 60000)
+    },
+
+    // 心跳检查
+    heartLink () {
+      this.interval = setInterval(() => {
+        this.webSocketSend('HeartBeat')
+      }, this.delay)
     }
   },
   watch: {
@@ -188,11 +296,19 @@ export default {
     this.getUnreadMessageCount()
     // 设置水印
     watermark.set(this.$store.state.user.name + this.$store.state.user.username)
+
+    // 关闭浏览器窗口的时候断开连接
+    window.onbeforeunload = () => {
+      this.webSock.close()
+    }
   },
   created () {
-    // console.log(process.env.NODE_ENV)
-    // console.log(process.env.VUE_APP_CURRENTMODE)
-    // console.log(process.env.VUE_APP_BASEURL)
+    // 页面刚进入时开启长连接
+    this.initWebSocket()
+  },
+  destroyed: function () {
+    // 页面销毁时关闭长连接
+    this.webSock.close()
   }
 }
 </script>

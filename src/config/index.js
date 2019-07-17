@@ -17,12 +17,16 @@ export default {
    * @description 本地开发api请求基础路径
    */
   // devUrl: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
-  // devUrl: 'http://127.0.0.1:8080',
+  // devUrl: 'http://127.0.0.1:8081',
   devUrl: 'http://10.30.161.52:8081',
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */
   homeName: 'workbench',
+  /**
+   * 密码重置跳转链接
+   */
+  resetPassword: 'http://cas.ziroom.com/CAS/api/password/forgetPwd/one',
   /**
    * @description 需要加载的插件
    */

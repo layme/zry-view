@@ -1,14 +1,14 @@
 <template>
   <div class="user-avator-dropdown">
-    <Dropdown @on-click="handleClick">
-      <Badge :dot="!!messageUnreadCount">
-        <span>{{ userName }}</span>
+    <Tooltip content="消息" placement="bottom">
+      <Badge :count="messageUnreadCount" :offset="[5, 10]">
+        <Icon type="md-mail" class="my-mail" :size="18" @click="message" />
       </Badge>
+    </Tooltip>
+    <Dropdown @on-click="handleClick">
+        <span>{{ userName }}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem name="message">
-          消息中心<Badge style="margin-left: 10px" :count="messageUnreadCount"></Badge>
-        </DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -43,14 +43,12 @@ export default {
     },
     message () {
       this.$router.push({
-        name: 'message_page'
+        name: 'messageList'
       })
     },
     handleClick (name) {
       switch (name) {
         case 'logout': this.logout()
-          break
-        case 'message': this.message()
           break
       }
     }

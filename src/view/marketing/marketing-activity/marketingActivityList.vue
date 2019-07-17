@@ -105,10 +105,8 @@ export default {
     handlePageChange () {
       this.loading = true
       getMarketingActivities(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.activityList = res.body.rows
-          this.total = res.body.total
-        }
+        this.activityList = res.body.rows
+        this.total = res.body.total
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -133,12 +131,8 @@ export default {
             isOnline: val
           }
           changeIsOnline(params).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('操作成功')
-              this.handlePageChange()
-            } else {
-              this.$Message.warning(res.message)
-            }
+            this.$Message.success('操作成功')
+            this.handlePageChange()
           })
         },
         onCancel: () => {
@@ -197,12 +191,8 @@ export default {
         content: '<p>确定删除该营销活动吗？</p>',
         onOk: () => {
           delActivity({ bid: row.bid }).then(res => {
-            if (res.code === 200) {
-              this.$Message.success('删除成功')
-              this.handlePageChange()
-            } else {
-              this.$Message.warning(res.message)
-            }
+            this.$Message.success('删除成功')
+            this.handlePageChange()
           })
         },
         onCancel: () => {

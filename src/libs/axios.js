@@ -12,9 +12,7 @@ class HttpRequest {
   getInsideConfig () {
     return {
       baseURL: this.baseUrl,
-      headers: {
-        'Authorization': getToken() || ''
-      }
+      timeout: 10000
     }
   }
   destroy (url, isSuccess) {
@@ -42,15 +40,17 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(resp => {
       this.destroy(url, true)
-      if (resp.data.code !== 200) {
+      if (resp.data.code <= 200) {
+        return resp.data
+      } else {
         if (resp.data.code === 401) {
           setTimeout(() => {
             Modal.warning({
               title: '通知',
               content: '登录已失效，传送至登录页面···',
               onOk: () => {
-                delToken()
                 store.dispatch('handleLogout')
+                delToken()
                 router.push({ name: 'login' })
               }
             })
@@ -59,24 +59,30 @@ class HttpRequest {
           let message = resp.data.message ? resp.data.message : '系统异常'
           Message.warning(message)
         }
+        return Promise.reject(resp.data)
       }
-      return resp.data
     }, error => {
       this.destroy(url, false)
-      this.catchError(error)
+      HttpRequest.catchError(error)
       return Promise.reject(error)
     })
   }
   request (options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
+    if (!options.headers) {
+      options.headers = {}
+      options.headers.Authorization = getToken() || ''
+    } else {
+      options.headers.Authorization = getToken() || ''
+    }
     this.interceptors(instance, options.url)
     if (!store.state.app.baseUrl) {
       store.commit('setBaseUrl', this.baseUrl)
     }
     return instance(options)
   }
-  catchError (error) {
+  static catchError (error) {
     console.info('err ', error)
     if (error.response) {
       const status = error.response.status

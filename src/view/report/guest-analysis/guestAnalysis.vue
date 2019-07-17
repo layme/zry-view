@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="80" inline>
+    <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getReport">
       <FormItem label="项目">
         <Select v-model="paramDto.projectCode" class="my-input" placeholder="" clearable>
           <Option
@@ -82,18 +82,16 @@ export default {
     getReport () {
       this.loading = true
       getReport(this.paramDto).then(res => {
-        if (res.code === 200) {
-          this.checkInCount = res.body.checkInCount
-          this.channelData = res.body.channelData
-          this.channelSubtext = `参评/入住: ${res.body.channelCount}/${res.body.checkInCount}`
-          this.purposeData = res.body.purposeData
-          this.purposeSubtext = `参评/入住: ${res.body.purposeCount}/${res.body.checkInCount}`
-          this.impressData = res.body.areaData
-          this.impressSubtext = `参评/入住: ${res.body.areaCount}/${res.body.checkInCount}`
-          this.ageData = res.body.ageData
-          this.ageSubtext = `参评/入住: ${res.body.ageCount}/${res.body.checkInCount}`
-          this.dataFormat()
-        }
+        this.checkInCount = res.body.checkInCount
+        this.channelData = res.body.channelData
+        this.channelSubtext = `参评/入住: ${res.body.channelCount}/${res.body.checkInCount}`
+        this.purposeData = res.body.purposeData
+        this.purposeSubtext = `参评/入住: ${res.body.purposeCount}/${res.body.checkInCount}`
+        this.impressData = res.body.areaData
+        this.impressSubtext = `参评/入住: ${res.body.areaCount}/${res.body.checkInCount}`
+        this.ageData = res.body.ageData
+        this.ageSubtext = `参评/入住: ${res.body.ageCount}/${res.body.checkInCount}`
+        this.dataFormat()
         this.loading = false
       }).catch(() => {
         this.loading = false
