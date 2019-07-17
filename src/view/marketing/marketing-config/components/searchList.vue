@@ -28,6 +28,9 @@ export default {
     submit () {
       this.$emit('search', this.searchData)
     }
+  },
+  created () {
+    this.submit()
   }
 }
 </script>

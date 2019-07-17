@@ -57,10 +57,15 @@
           </FormItem>
         </Col>
       </Row>
-      <Button type="primary" class="my-btn" v-if="order.orderStatus === 5" @click="prePay">支 付</Button>
-      <Button type="warning" class="my-btn" v-if="order.orderStatus === 5" @click="cancelOrder">取 消</Button>
-      <Button type="warning" class="my-btn" v-if="order.orderStatus === 1" @click="closeOrder">取 消</Button>
-      <Button type="primary" class="my-btn" v-if="order.orderStatus === 8 || order.orderStatus === 9 || order.orderStatus === 10" @click="toRefundDetail(order.orderBid)">取消详情</Button>
+      <div v-action="btnAccess">
+        <Button type="primary" class="my-btn" v-if="order.orderStatus === 5" @click="prePay">支 付</Button>
+        <Button type="warning" class="my-btn" v-if="order.orderStatus === 5" @click="cancelOrder">取 消</Button>
+        <Button type="warning" class="my-btn" v-if="order.orderStatus === 1" @click="closeOrder">取 消</Button>
+        <Button type="primary" class="my-btn"
+                v-if="order.orderStatus === 8 || order.orderStatus === 9 || order.orderStatus === 10"
+                @click="toRefundDetail(order.orderBid)">取消详情
+        </Button>
+      </div>
     </Form>
     <Modal
       v-model="visible"
@@ -143,7 +148,8 @@ export default {
           label: '其他',
           value: 4
         }
-      ]
+      ],
+      btnAccess: '/orderDetail/orderCancelBtn.action'
     }
   },
   methods: {

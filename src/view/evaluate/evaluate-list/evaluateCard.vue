@@ -10,8 +10,10 @@
         <Tag v-else style="margin-left: 30px" color="volcano">未回复</Tag>
       </Col>
       <Col :span="14" :style="{ textAlign: 'right' }">
-        <a class="my-btn" @click="reply">回复</a>
-        <a @click="shield">{{ row.evaluateStatus === 1 ? '屏蔽' : '展示' }}</a>
+        <a class="my-btn" @click="reply" v-action="inBtnAccess" v-if="row.lowEvaluateManagerFeedbackStatus !== 1">回复</a>
+        <a class="my-btn" @click="reply" v-action="upBtnAccess" v-else>编辑</a>
+        <a @click="shield" v-action="shieldBtnAccess" v-if="row.evaluateStatus === 1">屏蔽</a>
+        <a @click="shield" v-action="showUpBtnAccess" v-else>展示</a>
       </Col>
     </Row>
     <Row class="evaluate-list">
@@ -52,6 +54,14 @@ export default {
   props: {
     row: Object,
     index: Number
+  },
+  data () {
+    return {
+      inBtnAccess: '/evaluate/showReplyDialogInsert.action',
+      upBtnAccess: '/evaluate/showReplyDialogUpdate.action',
+      shieldBtnAccess: '/evaluate/confirmShieldValuate.action',
+      showUpBtnAccess: '/evaluate/confirmShowValuate.action'
+    }
   },
   methods: {
     link () {

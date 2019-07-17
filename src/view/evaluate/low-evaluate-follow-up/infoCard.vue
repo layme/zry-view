@@ -32,7 +32,7 @@
       </Tag>
     </Row>
     <Row class="evaluate-list">
-      <span style="color: #909399">发表于&nbsp;&nbsp;{{ evaluate.evaluateTime | dateFilter }}</span>
+      <span style="color: #909399">发表于&nbsp;&nbsp;{{ evaluate.evaluateTime | dateTimeFilter }}</span>
     </Row>
   </div>
 </template>

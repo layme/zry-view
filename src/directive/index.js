@@ -19,6 +19,10 @@ const importDirective = Vue => {
    * }
    */
   Vue.directive('clipboard', directive.clipboard)
+  /**
+   * 按钮权限指令
+   */
+  Vue.directive('action', directive.action)
 }
 
 export default importDirective

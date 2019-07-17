@@ -64,7 +64,7 @@
         </Col>
       </Row>
     </Form>
-    <Button class="special-btn" type="warning" @click="confirmBlack">{{ guestInfo.isBlack | isBlackBtnFilter }}</Button>
+    <Button class="special-btn" type="warning" @click="confirmBlack" v-if="btnAccess">{{ guestInfo.isBlack | isBlackBtnFilter }}</Button>
   </div>
 </template>
 <script>
@@ -86,7 +86,8 @@ export default {
       guestBlackDto: {
         guestFid: '',
         currentStatus: 0
-      }
+      },
+      btnAccess: '/guest/addORemoveBlack.btn'
     }
   },
   methods: {

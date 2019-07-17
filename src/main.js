@@ -13,58 +13,59 @@ import vuescroll from 'vuescroll'
 // import installPlugin from '@/plugin'
 import './index.less'
 import '@/assets/icons/iconfont.css'
-import TreeTable from 'tree-table-vue'
-import VOrgTree from 'v-org-tree'
-import 'v-org-tree/dist/v-org-tree.css'
 import BaiduMap from 'vue-baidu-map'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
-import { isHave } from '@/libs/action'
 import '@/libs/filters.js'
 // 动画效果
 import animated from 'animate.css'
 
-// 实际打包时应该不引入mock
-// if (process.env.NODE_ENV !== 'production') require('@/mock')
-
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 })
-Vue.use(TreeTable)
-Vue.use(VOrgTree)
+
+/**
+ * 百度地图
+ */
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'ukBW7hhft7HzjgTRaoGyMHmzIKTi3bx3'
 })
+
+/**
+ * 图片预览
+ */
 Vue.use(preview)
+
+/**
+ * 动画
+ */
 Vue.use(animated)
 
 /**
  * @description 注册admin内置插件
  */
 // installPlugin(Vue)
+
 /**
  * @description 生产环境关掉提示
  */
 Vue.config.productionTip = false
+
 /**
  * @description 全局注册应用配置
  */
 Vue.prototype.$config = config
+
 /**
  * 注册指令
  */
 importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
-// 按钮权限指令
-Vue.directive('action', {
-  inserted: function (el, binding) {
-    if (!isHave(binding.value)) {
-      el.parentNode.removeChild(el)
-    }
-  }
-})
 
+/**
+ * 全局自定义滚动条
+ */
 Vue.use(vuescroll, {
   ops: {
     bar: {

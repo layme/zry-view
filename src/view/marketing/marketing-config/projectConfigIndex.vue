@@ -3,7 +3,7 @@
     <search-list @search="listProjectConfig"></search-list>
     <img-config :n="imgConfigN" :fid="fid"></img-config>
     <market-label :n="marketLabelN" :fid="fid"></market-label>
-    <service-config :n="serviceCofigN" :fid="projectFid"></service-config>
+    <service-config :n="serviceConfigN" :fid="projectFid"></service-config>
     <share-link :n="shareLinkN" :fid="fid"></share-link>
     <vr-show :n="vrShowN" :fid="fid"></vr-show>
     <house-type-config :n="houseTypeN" :projectFid="projectFid"></house-type-config>
@@ -15,7 +15,7 @@
         <a class="my-btn" @click="marketLabelConfig(row)">配置</a>
       </template>
       <template slot-scope="{ row }" slot="serviceConfig">
-        <a class="my-btn" @click="serviceCofig(row)">配置</a>
+        <a class="my-btn" @click="serviceConfig(row)">配置</a>
       </template>
       <template slot-scope="{ row }" slot="projectVRUrl">
         <a class="my-btn" @click="vrShow(row)">配置</a>
@@ -28,7 +28,7 @@
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="getpageList"/>
+          :page-size="paramDto.limit" @on-change="getPageList"/>
   </div>
 </template>
 <script>
@@ -57,7 +57,7 @@ export default {
       loading: false,
       imgConfigN: 0,
       marketLabelN: 0,
-      serviceCofigN: 0,
+      serviceConfigN: 0,
       shareLinkN: 0,
       vrShowN: 0,
       houseTypeN: 0,
@@ -127,9 +127,9 @@ export default {
     listProjectConfig (dto) {
       Object.assign(this.paramDto, dto)
       this.paramDto.page = 1
-      this.getpageList()
+      this.getPageList()
     },
-    getpageList () {
+    getPageList () {
       this.loading = true
       projectConfigList(this.paramDto).then(res => {
         if (!res.body) {
@@ -150,8 +150,8 @@ export default {
       this.marketLabelN++
       this.fid = row.bid
     },
-    serviceCofig (row) {
-      this.serviceCofigN++
+    serviceConfig (row) {
+      this.serviceConfigN++
       this.projectFid = row.projectBid
     },
     shareLink (row) {
@@ -166,9 +166,6 @@ export default {
       this.houseTypeN++
       this.projectFid = row.projectBid
     }
-  },
-  created () {
-    this.getpageList()
   }
 }
 </script>

@@ -33,6 +33,7 @@
       </Col>
     </Row>
     <order-action-card v-if="Object.keys(orderInfo).length && orderInfo.orderStatus !== 5 && orderInfo.orderStatus !== 7 "
+                       v-action="cardAccess"
                        :order="orderInfo"
                        :has-check-in="hasCheckInStayPerson"
                        :lock-pwd-list="lockPwdList"
@@ -137,7 +138,8 @@ export default {
       mailDto: {
         orderBid: '',
         email: ''
-      }
+      },
+      cardAccess: '/orderDetail/bedInfoModule.action'
     }
   },
   computed: {
