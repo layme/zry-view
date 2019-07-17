@@ -173,7 +173,7 @@ export default [
           title: '分时促销管理',
           access: ['/timePrice/toTimePrice.action']
         },
-        component: () => import('@/view/price-system/partTime-price/index.vue')
+        component: () => import('@/view/price-system/part-time-price/index.vue')
       },
       {
         path: 'priceTypeList',
@@ -191,7 +191,7 @@ export default [
           title: '价格调整记录',
           access: ['/priceChange/tolistPriceChange.action']
         },
-        component: () => import('@/view/price-system/price_adjust_log/index.vue')
+        component: () => import('@/view/price-system/price-adjust-log/index.vue')
       }
     ]
   },
