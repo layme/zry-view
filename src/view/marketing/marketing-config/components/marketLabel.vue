@@ -18,7 +18,7 @@
           <a @click.stop="deleteItem(item, index)">删除</a>
         </Col>
       </Row>
-      <div class="mt20">
+      <div  style="padding-top: 20px">
         <a @click.stop="addItem">+ 添加</a>
       </div>
     </Modal>

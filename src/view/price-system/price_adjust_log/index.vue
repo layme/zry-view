@@ -58,7 +58,8 @@ export default {
             if (params.row['changeDetail'] && params.row['changeDetail'].length > 15) {
               return h('Tooltip', {
                 props: {
-                  placement: 'top'
+                  placement: 'top',
+                  transfer: true
                 }
               }, [
                 h('div', {
@@ -127,5 +128,11 @@ export default {
 </script>
 
 <style scoped>
-
+  .my-table {
+    margin-top: 20px
+  }
+  .my-page {
+    text-align: right;
+    margin-top: 20px
+  }
 </style>

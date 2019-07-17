@@ -41,16 +41,19 @@
 <!--      </Row>-->
 
       <div class="row">
+        <div class="item">房价类型</div>
         <div class="item"  v-for="(item) in data" :key="item.houseTypeFid">{{item.houseName}}</div>
       </div>
       <div class="row">
-        <div class="item input"  v-for="(item) in data">
+        <div class="item input">
+          <span>门市价</span>
+        </div>
+        <div class="item input"  v-for="(item) in data" :key="item.houseTypeFid">
           <InputNumber
             style="display: block;width: 100%"
-            :key="item.houseTypeFid"
+            :key="item.houseTypeFid" :min="0"
                        :precision="0.1" v-model="item.copyTimePrice" :disabled="!isOpenTime"></InputNumber>
         </div>
-
       </div>
 
     </div>
@@ -59,6 +62,7 @@
 </template>
 <script>
 import { listTimePrice, saveTimePrice } from '@/api/price'
+import { getDate } from '@/libs/tools'
 
 export default {
   name: 'partTimePrice',
@@ -94,7 +98,8 @@ export default {
         this.data.forEach(item => {
           item.copyTimePrice = item.timePrice || item.timePrice === 0 ? item.timePrice / 100 : null
           if (item.startTime && item.endTime) {
-            this.timeData = [new Date(item.startTime), new Date(item.endTime)]
+            this.timeData.splice(0, 1, getDate(item.startTime, 'time'))
+            this.timeData.splice(1, 1, getDate(item.endTime, 'time'))
           }
         })
         this.isOpenTime = this.data[0].isOpenTime === 1

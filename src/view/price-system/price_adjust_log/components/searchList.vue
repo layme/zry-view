@@ -1,29 +1,35 @@
 <template>
   <Form :model="searchData" :label-width="70">
-    <Row :gutter="22">
-      <Col span="5">
+    <Row :gutter="20">
+      <Col span="8">
         <FormItem label="创建日期">
           <DatePicker v-model="adjustDate" type="daterange" split-panels placeholder=""
                       class="my-date-picker" @on-change="handleAdjustDate" :clearable="false" :editable="false"></DatePicker>
         </FormItem>
       </Col>
-      <Col span="5">
+      <Col span="8">
         <FormItem label="价格日期">
           <DatePicker v-model="priceDate" type="daterange" split-panels placeholder=""
                       class="my-date-picker" @on-change="handlePriceDate" :clearable="false" :editable="false"></DatePicker>
         </FormItem>
       </Col>
-      <Col span="3">
-        <Select placeholder="价格类型" v-model="searchData.channelCode">
-          <Option value="">请选择</Option>
-          <Option v-for="item in $store.state.price.priceTypeList" :key="item.code" :label="item.name" :value="item.code"></Option>
-        </Select>
+      <Col span="8">
+        <FormItem label="价格类型">
+          <Select placeholder="价格类型" v-model="searchData.channelCode">
+            <Option value="">请选择</Option>
+            <Option v-for="item in $store.state.price.priceTypeList" :key="item.code" :label="item.name" :value="item.code"></Option>
+          </Select>
+        </FormItem>
       </Col>
-      <Col span="3">
-        <Select placeholder="调价原因" v-model="searchData.adjustCode">
-          <Option value="">请选择</Option>
-          <Option v-for="(value, key, index) in $store.state.price.adjustType" :key="index" :label="value" :value="key"></Option>
-        </Select>
+    </Row>
+    <Row :gutter="24">
+      <Col span="8">
+        <FormItem label="调价原因">
+          <Select placeholder="调价原因" v-model="searchData.adjustCode">
+            <Option value="">请选择</Option>
+            <Option v-for="(value, key, index) in $store.state.price.adjustType" :key="index" :label="value" :value="key"></Option>
+          </Select>
+        </FormItem>
       </Col>
     </Row>
     <Row :gutter="20">
@@ -73,6 +79,6 @@ export default {
 </script>
 <style lang="less" scoped>
   .my-date-picker {
-    width: 300px;
+    width: 100%;
   }
 </style>
