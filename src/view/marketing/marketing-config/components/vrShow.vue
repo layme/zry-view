@@ -1,12 +1,15 @@
 <template>
   <div>
-    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false">
+    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false"
+           :width="650"
+    >
       <h3 slot="header" class="modal-header">VR看房</h3>
       <Input v-show="false" v-model="imgUrl" placeholder="" clearable></Input>
       <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
         <template v-if="item.status === 'finished'">
           <img :src="item.response ? item.response.body.attachmentImgUrl : item.url">
-          <div class="demo-upload-list-cover">
+
+          <div   class="demo-upload-list-cover">
             <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
             <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
           </div>
@@ -27,8 +30,8 @@
         :on-error="handleError"
         :max-size="200"
         :on-exceeded-size="handleMaxSize"
-        style="display: inline-block; width: 46px;">
-        <div style="width: 46px; line-height: 46px;">
+        style="display: inline-block; width: 70px;">
+        <div style="width: 70px;  line-height: 70px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
@@ -36,7 +39,7 @@
         <img :src="imgUrl" v-if="visible" style="width: 100%">
       </Modal>
       <div>
-        <Input type="textarea" :rows="4" :maxlength="500" v-model="vrLinkUrl"/>
+        <Input type="textarea" :rows="5" :maxlength="500" v-model="vrLinkUrl"/>
         <div v-if="!vrLinkUrl" style="color: rgb(150,150,150)">温馨提示：请输入少于500个字符！！</div>
       </div>
     </Modal>
@@ -218,6 +221,7 @@ export default {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, .6);
+    line-height: 83px;
   }
 
   .demo-upload-list:hover .demo-upload-list-cover {

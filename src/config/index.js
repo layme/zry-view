@@ -18,7 +18,7 @@ export default {
    */
   // devUrl: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
   // devUrl: 'http://127.0.0.1:8081',
-  devUrl: 'http://10.30.161.52:8081',
+  devUrl: 'http://10.16.37.19:8081',
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */
