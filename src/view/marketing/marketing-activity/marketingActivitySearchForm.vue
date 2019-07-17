@@ -15,7 +15,7 @@
       </Col>
       <Col span="8">
         <FormItem label="活动标题">
-          <Input v-model.trim="paramDto.title" placeholder="" clearable></Input>
+          <Input v-model.trim="paramDto.title" placeholder="" clearable maxlength="30"></Input>
         </FormItem>
       </Col>
       <Col span="8">
