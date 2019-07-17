@@ -99,27 +99,7 @@ export default {
           slot: 'houseType'
         }
       ],
-      data: [{
-        'bid': '8a9093ad6a4aef21016a4d4d07aa000f',
-        'projectFid': '8a9093ad6a4aef21016a4d4d06cb000e',
-        'projectName': '北京建国门和平自如寓',
-        'projectPanoramicUrl': 'www.baidu.com',
-        'projectShareUrl': 'www.baidu.com'
-      },
-      {
-        'bid': '8a9093ad6a0a7d7f016a0a7d7f760001',
-        'projectFid': '8a9093ad6a0a7d7f016a0a7d7f520000',
-        'projectName': '虾米测试下',
-        'projectPanoramicUrl': '',
-        'projectShareUrl': ''
-      },
-      {
-        'bid': '8a908f0767ef44be0168195d2c7100d9',
-        'projectFid': '8a908f0767ef44be0168195d2c3600d8',
-        'projectName': '深圳龙华筑梦自如寓',
-        'projectPanoramicUrl': 'www.baidu.com',
-        'projectShareUrl': 'www.baidu.com'
-      }],
+      data: [],
       total: 0
     }
   },

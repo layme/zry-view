@@ -12,7 +12,7 @@
       <Button icon="ios-search" type="primary" @click="listPriceType" class="my-btn"> 查 询</Button>
       <Button type="primary" @click="addPriceType" class="my-btn">添加价格类型</Button>
     </Form>
-    <Table :columns="columns" :data="priceTypeList" :loading="loading">
+    <Table :row-class-name="rowClassName"  :columns="columns" :data="priceTypeList" :loading="loading">
       <template slot-scope="{ row }" slot="isBindCounterPrice">
         <div>{{ row.isBindCounterPrice | yesOrNoFilter }}</div>
       </template>
@@ -52,9 +52,10 @@
 <script>
 import priceTypeForm from './priceTypeForm'
 import { listPriceType, addOrUpdatePriceType, setIsInvalid, generatePrice } from '@/api/priceType'
+import './table.less'
 
 export default {
-  name: '',
+  name: 'priceTypeList',
   components: {
     priceTypeForm
   },
@@ -136,6 +137,12 @@ export default {
       }).catch(() => {
         this.loading = false
       })
+    },
+    rowClassName (row, index) {
+      if (index === 1) {
+        return 'demo-table-info-row'
+      }
+      return ''
     },
     addPriceType () {
       this.title = '添加房价类型'

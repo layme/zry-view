@@ -14,7 +14,7 @@
     <FormItem label="房价代码" prop="typeCode">
       <Input v-model="paramDto.typeCode" clearable></Input>
     </FormItem>
-    <Row>
+    <Row v-if="paramDto.channelCode !== 'msj'">
       <Col :span="12">
         <FormItem label="绑定门市价" prop="isBindCounterPrice">
           <RadioGroup v-model="paramDto.isBindCounterPrice">
@@ -38,7 +38,7 @@
           </RadioGroup>
         </FormItem>
       </Col>
-      <Col :span="12">
+      <Col :span="12" v-if="paramDto.channelCode !== 'msj'">
         <FormItem label="保留整数" prop="isKeepInt">
           <RadioGroup v-model="paramDto.isKeepInt">
             <Radio v-for="item in yesOrNoOptions" :key="item.value" :label="item.value">{{ item.label }}</Radio>

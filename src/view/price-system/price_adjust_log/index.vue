@@ -9,11 +9,11 @@
         <div>{{ row.endDate | dateFilter }}</div>
       </template>
       <template slot-scope="{ row }" slot="createTime">
-        <div>{{ row.createTime | dateFilter }}</div>
+        <div>{{ row.createTime | dateTimeFilter }}</div>
       </template>
     </Table>
     <Page class="my-page" :total="total" show-total :current.sync="paramDto.page"
-          :page-size="paramDto.limit" @on-change="getpageList"/>
+          :page-size="paramDto.limit" @on-change="getPageList"/>
     <export-file ref="exportFile"></export-file>
   </div>
 </template>
@@ -94,9 +94,9 @@ export default {
     findData (data) {
       Object.assign(this.paramDto, data)
       this.paramDto.page = 1
-      this.getpageList(data)
+      this.getPageList(data)
     },
-    getpageList () {
+    getPageList () {
       this.loading = true
       listPriceChangeLog(this.paramDto).then(res => {
         if (!res.body) {
@@ -109,10 +109,6 @@ export default {
         this.loading = false
       })
     },
-    changePage (n) {
-      this.paramDto.page = n
-      this.getpageList()
-    },
     exportFile (dto) {
       let data = {
         type: 1006,
@@ -122,7 +118,7 @@ export default {
     }
   },
   created () {
-    this.getpageList()
+    this.getPageList()
   }
 }
 </script>
