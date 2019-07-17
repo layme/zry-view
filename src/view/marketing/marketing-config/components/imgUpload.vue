@@ -1,14 +1,18 @@
 <template>
   <div>
-    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false" :class-name="z100000">
+    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false" :class-name="z100000"
+           :width="650"
+    >
       <h3 slot="header" class="modal-header">图片上传</h3>
       <div style="display: flex;flex-wrap: wrap">
         <template v-for="(item, index) in data " v-if="data">
           <div class="fileItem" :key="item.bid">
             <div style="margin-bottom: 10px;">
-              <img class="file-img" :src="item.attachmentImgUrl" alt="">
-              <a href="javascript:;" style="vertical-align: bottom" @click="setFirst(index)" v-if="index != 0">设为首图</a>
-              <a href="javascript:;" style="vertical-align: bottom" @click="deleteItem(item)">删除</a>
+              <img class="file-img" :src="item.attachmentImgUrl" alt=""> <br>
+              <div style="display: flex; justify-content: space-around">
+                <a href="javascript:;"  @click="setFirst(index)" v-if="index != 0">设为首图</a>
+                <a href="javascript:;"  @click="deleteItem(item)">删除</a></div>
+
             </div>
           </div>
         </template>

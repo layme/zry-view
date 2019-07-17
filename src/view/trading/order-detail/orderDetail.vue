@@ -296,14 +296,14 @@ export default {
   .subscript {
     z-index: 2;
     color: #fff;
-    height: 40px;
+    height: 30px;
     width: 200px;
     position: absolute;
-    left: -75px;
-    top: 5px;
+    left: -76px;
+    top: 7px;
     text-align: center;
     font-size: 14px;
-    line-height: 40px;
+    line-height: 30px;
     background-color: #2d8cf0;
     -moz-transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);

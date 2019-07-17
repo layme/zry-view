@@ -1,9 +1,10 @@
 <template>
   <div class="login-body">
-    <div class="login">
+    <div class="login animated bounceInDown">
       <div class="div-left">
         <div class="text-title">ZINN</div>
         <div class="text-content">世界青年欢乐旅行驿站</div>
+        <img src="../../assets/images/people.png" class="my-img"/>
       </div>
       <div class="div-right">
         <div class="login-card">
@@ -48,52 +49,100 @@ export default {
 
 <style lang="less" scoped>
   .login-body {
-    position: absolute;
-    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
     width: 100%;
-    background-color: #f8f8f9;
+    height: 100%;
+    margin: 0 auto;
+    background: url(../../assets/images/cloud.jpg) 0 bottom repeat-x #049ec4;
+    -webkit-animation: animate-cloud 20s linear infinite;
+    animation: animate-cloud 20s linear infinite;
+    @-webkit-keyframes animate-cloud {
+      from {
+        background-position: 600px 100%;
+      }
+      to {
+        background-position: 0 100%;
+      }
+    }
+    @-moz-keyframes animate-cloud {
+      from {
+        background-position: 600px 100%;
+      }
+      to {
+        background-position: 0 100%;
+      }
+    }
+    @-ms-keyframes animate-cloud {
+      from {
+        background-position: 600px 100%;
+      }
+      to {
+        background-position: 0 100%;
+      }
+    }
+    @-o-keyframes animate-cloud {
+      from {
+        background-position: 600px 100%;
+      }
+      to {
+        background-position: 0 100%;
+      }
+    }
   }
+
   .login {
-    position: absolute;
-    top: 20%;
-    right: 25%;
-    bottom: 20%;
-    left: 25%;
-    border-radius: 10px;
+    width: 1000px;
+    height: 500px;
+    margin: 0 auto;
+    border-radius: 4px;
     overflow: hidden;
-    -webkit-box-shadow: #808695 0 0 20px;
-    -moz-box-shadow: #808695 0 0 20px;
-    box-shadow: #808695 0 0 20px;
+    border: #ffffff 1px solid;
   }
+
   .div-left {
     height: 100%;
-    width: ~"calc(100% * 0.6)";
-    background: url('../../assets/images/city.jpg');
-    opacity: 0.9;
+    width: 55%;
     float: left;
     padding: 40px 0 0 30px;
+
     .text-title {
       color: #ffffff;
       font-size: 70px;
       font-style: italic;
     }
+
     .text-content {
       color: #e8eaec;
       font-size: 18px;
+    }
+
+    .my-img {
+      width: 500px;
+      position: absolute;
+      bottom: 0;
+      left: 10px;
     }
   }
 
   .div-right {
     height: 100%;
-    width: ~"calc(100% * 0.4)";
+    width: 45%;
     background-color: #ffffff;
     float: right;
+
     .login-card {
       position: relative;
       top: 60px;
       margin: 0 auto;
       padding: 30px 50px;
       text-align: center;
+
       .title {
         font-size: 36px;
         font-weight: bold;

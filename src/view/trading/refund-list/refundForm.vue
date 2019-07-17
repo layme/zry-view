@@ -1,9 +1,9 @@
 <template>
-  <Form :model="paramDto" :label-width="70">
+  <Form :model="paramDto" :label-width="70" @keydown.enter.native="submit">
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="订单号">
-          <Input v-model.trim="paramDto.orderNumber" placeholder="" clearable></Input>
+          <Input v-model.trim="paramDto.orderNumber" placeholder="自如" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -23,7 +23,7 @@
     <Row :gutter="20">
       <Col span="8">
         <FormItem label="预订人">
-          <Input v-model.trim="paramDto.bookPerson" placeholder="姓名/手机号" clearable></Input>
+          <Input v-model.trim="paramDto.customer" placeholder="姓名/手机号" clearable></Input>
         </FormItem>
       </Col>
       <Col span="8">
@@ -58,10 +58,10 @@ export default {
     return {
       paramDto: {
         orderNumber: '',
-        refoundStatusStr: '',
+        refundStatusStr: '',
         refundStartTime: '',
         refundEndTime: '',
-        bookPerson: '',
+        customer: '',
         isOwnFlag: '',
         checkInStartTime: '',
         checkInEndTime: ''
@@ -115,8 +115,10 @@ export default {
       this.paramDto.applyRefundStartTime = val[0] ? getDate(val[0], 'date') : ''
       this.paramDto.applyRefundEndTime = val[1] ? getDate(val[1], 'date') : ''
     },
-    '$store.state.user.currentProject' () {
-      this.submit()
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.submit()
+      }
     }
   },
   created () {

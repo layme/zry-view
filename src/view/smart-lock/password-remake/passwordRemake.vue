@@ -1,12 +1,10 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="60" inline>
+    <Form :model="paramDto" :label-width="60" inline @keydown.enter.native="getList">
       <FormItem label="订单号" prop="orderNumber">
-        <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '200px' }"></Input>
+        <Input type="text" v-model.trim="paramDto.orderCode" clearable :style="{ width: '300px' }"></Input>
       </FormItem>
-      <FormItem>
-        <Button type="primary" icon="ios-search" @click="getList"> 查 询</Button>
-      </FormItem>
+      <Button type="primary" icon="ios-search" @click="getList" style="margin-left: 20px"> 查 询</Button>
     </Form>
     <Table stripe :columns="columns" :data="passwordList" :loading="loading">
       <template slot-scope="{ row }" slot="pswStatus">
@@ -103,8 +101,10 @@ export default {
     }
   },
   watch: {
-    '$store.state.user.currentProject' () {
-      this.getList()
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.getList()
+      }
     }
   },
   created () {

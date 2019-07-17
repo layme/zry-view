@@ -60,7 +60,7 @@ export default {
         },
         {
           title: '入住人数',
-          key: 'personCount',
+          key: 'bedCount',
           minWidth: 40
         },
         {

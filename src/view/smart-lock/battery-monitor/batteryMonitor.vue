@@ -88,8 +88,10 @@ export default {
     }
   },
   watch: {
-    '$store.state.user.currentProject' () {
-      this.getList()
+    '$store.state.user.currentProject' (val) {
+      if (Object.keys(val).length) {
+        this.getList()
+      }
     }
   },
   created () {

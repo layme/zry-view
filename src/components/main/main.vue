@@ -28,11 +28,11 @@
           </div>
           <Content class="content-wrapper">
             <vue-scroll>
-            <keep-alive :include="cacheList">
               <div style="margin-right: 15px;">
-                <router-view/>
+                <keep-alive :include="cacheList">
+                  <router-view/>
+                </keep-alive>
               </div>
-            </keep-alive>
             </vue-scroll>
           </Content>
         </Layout>

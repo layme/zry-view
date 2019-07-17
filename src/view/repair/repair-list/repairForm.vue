@@ -1,5 +1,5 @@
 <template>
-  <Form :model="paramDto" :label-width="60">
+  <Form :model="paramDto" :label-width="60" @keydown.enter.native="search">
     <Row :gutter="20">
       <Col :span="8">
         <FormItem label="区域">
@@ -147,8 +147,10 @@ export default {
       this.paramDto.visitTimeEnd = val[1] ? getDate(val[1], 'date') : ''
     },
     '$store.state.user.currentProject' (val) {
-      this.paramDto.projectBid = val.bid
-      this.search()
+      if (Object.keys(val).length) {
+        this.paramDto.projectBid = val.bid
+        this.search()
+      }
     }
   },
   created () {

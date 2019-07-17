@@ -34,7 +34,7 @@
             </i-switch>
           </template>
           <template slot-scope="{ row }" slot="feeAmount">
-            <div v-if="refundData.cancelExitWay === 1 && row.isTaken === 0 && row.feeType === 2">
+            <div v-if="refundStatus === 0 && refundData.cancelExitWay === 1 && row.isTaken === 0 && row.feeType === 2">
               <Input v-model.trim="row.feeAmount" placeholder="" class="my-input" clearable></Input>
               <Button type="primary" shape="circle" icon="md-checkmark" size="small" class="my-btn" @click="validFeeAmount(row)"></Button>
             </div>
@@ -173,7 +173,7 @@ export default {
 </script>
 <style lang="less" scoped>
   .my-input {
-    width: ~"calc(100% - 30px)";
+    width: ~"calc(100% - 40px)";
   }
   .my-btn {
     margin-left: 6px;

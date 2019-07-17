@@ -1,16 +1,12 @@
 <template>
   <div>
-    <Form :model="priceDto" :label-width="50" inline>
+    <Form :model="priceDto" :label-width="50" inline @keydown.enter.native="getPriceList">
       <FormItem label="营业日">
         <DatePicker v-model="priceDto.priceDate" type="daterange" split-panels placeholder=""
                     class="my-date-picker" @on-change="handleDateRange" :clearable="false" :editable="false"></DatePicker>
       </FormItem>
-      <FormItem>
-        <Button type="primary" icon="ios-search" @click="getPriceList()"> 查 询</Button>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" @click="openChangePriceDialog">房价调整</Button>
-      </FormItem>
+      <Button type="primary" icon="ios-search" @click="getPriceList" class="my-btn"> 查 询</Button>
+      <Button type="primary" @click="openChangePriceDialog" class="my-btn">房价调整</Button>
       <Row>
         <FormItem label="筛选">
           <CheckboxGroup v-model="checkedPriceType">
@@ -151,5 +147,9 @@ export default {
     -webkit-box-shadow: #dcdee2 0 1px 6px;
     -moz-box-shadow: #dcdee2 0 1px 6px;
     box-shadow: #dcdee2 0 1px 6px;
+  }
+
+  .my-btn {
+    margin-left: 20px;
   }
 </style>

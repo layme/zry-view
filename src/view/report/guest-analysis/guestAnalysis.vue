@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="80" inline>
+    <Form :model="paramDto" :label-width="80" inline @keydown.enter.native="getReport">
       <FormItem label="项目">
         <Select v-model="paramDto.projectCode" class="my-input" placeholder="" clearable>
           <Option

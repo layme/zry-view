@@ -2,7 +2,7 @@ import axios from '@/libs/request'
 
 export const getRefundList = data => {
   return axios.request({
-    url: '/refund/listNewRefund.action',
+    url: '/refund/listRefund.action',
     method: 'post',
     data: data
   })

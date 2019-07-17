@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="paramDto" :label-width="60">
+    <Form :model="paramDto" :label-width="60" @keydown.enter.native="listData">
       <Row :gutter="20">
         <Col :span="8">
           <FormItem label="项目">

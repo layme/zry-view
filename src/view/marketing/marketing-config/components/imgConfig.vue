@@ -1,6 +1,8 @@
 <template>
   <div>
-    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false">
+    <Modal v-model="isShow" @on-ok="ok" :loading="loading" :mask-closable="false"
+           :width="650"
+    >
       <h3 slot="header" class="modal-header">图片配置</h3>
       <Row class="row" >
         <Col span="4"><span style="color: #ed4014;">*</span>排序</Col>
@@ -22,7 +24,7 @@
           <a @click.stop="deleteItem(item, index)">删除</a>
         </Col>
       </Row>
-      <div class="mt20">
+      <div style="padding-top: 20px">
         <a @click.stop="addItem">+ 添加</a>
       </div>
       <img-upload :n="uploadN" :fid="labelFid" :labelOrder="labelOrder" @pic="pic" :pics="pics"></img-upload>
