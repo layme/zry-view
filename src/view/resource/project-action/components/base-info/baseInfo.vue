@@ -469,7 +469,7 @@ export default {
       if (response.code !== 200) {
         this.$Message.error(response.message)
       } else {
-        this.paramDto.headUrl = response.body.attachmentImgUrl
+        this.baseDto.projectReportUrl = response.body.attachmentImgUrl
       }
     },
     handleError (err, file, fileList) {
