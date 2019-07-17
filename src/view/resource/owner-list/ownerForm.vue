@@ -84,7 +84,7 @@
             :on-success="handleOrgSuccess"
             :on-preview="previewFile"
             :on-error="handleError">
-            <a>点击上传</a>
+            <a>点击上传 (PDF/图片)</a>
           </Upload>
         </FormItem>
       </Col>
@@ -100,7 +100,7 @@
             :on-success="handleProSuccess"
             :on-preview="previewFile"
             :on-error="handleError">
-            <a>点击上传</a>
+            <a>点击上传 (PDF/图片)</a>
           </Upload>
         </FormItem>
       </Col>
@@ -116,7 +116,7 @@
             :on-success="handleOtherSuccess"
             :on-preview="previewFile"
             :on-error="handleError">
-            <a>点击上传</a>
+            <a>点击上传 (PDF/图片)</a>
           </Upload>
         </FormItem>
       </Col>

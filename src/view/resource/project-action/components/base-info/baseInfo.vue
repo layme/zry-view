@@ -164,13 +164,13 @@
           <Upload
             v-else
             ref="upload"
-            accept="application/pdf"
+            accept="application/pdf,image/*"
             :headers="{ 'Authorization': $store.state.user.token }"
             :action="uploadFileUrl"
             :show-upload-list="false"
             :on-success="handleSuccess"
             :on-error="handleError">
-            <a>点击上传</a>
+            <a>点击上传 (PDF/图片)</a>
           </Upload>
         </FormItem>
       </Col>
