@@ -151,7 +151,27 @@
     <Row>
       <Col :span="16">
         <FormItem label="空检报告" prop="projectReportUrl">
-          <Input type="textarea" v-model.trim="baseDto.projectReportUrl" :rows="3" :maxlength="400" placeholder=""></Input>
+<!--          <Input type="textarea" v-model.trim="baseDto.projectReportUrl" :rows="3" :maxlength="400" placeholder=""></Input>-->
+          <div v-if="baseDto.projectReportUrl">
+            <a @click="previewFile">点击查看</a>
+            <Poptip
+              confirm
+              title="确定删除空检报告吗？"
+              @on-ok="baseDto.projectReportUrl = ''">
+              <Icon type="ios-trash" :size="16" style="color: #ed4014; margin-left: 20px; cursor: pointer" />
+            </Poptip>
+          </div>
+          <Upload
+            v-else
+            ref="upload"
+            accept="application/pdf"
+            :headers="{ 'Authorization': $store.state.user.token }"
+            :action="uploadFileUrl"
+            :show-upload-list="false"
+            :on-success="handleSuccess"
+            :on-error="handleError">
+            <a>点击上传</a>
+          </Upload>
         </FormItem>
       </Col>
     </Row>
@@ -190,6 +210,7 @@ export default {
       areaOptions: [],
       ownerOptions: [],
       CompanyOptions: [],
+      uploadFileUrl: this.$store.state.app.baseUrl + '/system/upLoadFile.action',
       baseDto: {
         projectName: '',
         cityCode: '',
@@ -443,6 +464,20 @@ export default {
       date.setFullYear(date.getFullYear() + 10)
       date.setDate(date.getDate() - 1)
       this.baseDto.endlineDate = date
+    },
+    handleSuccess (response, file, fileList) {
+      if (response.code !== 200) {
+        this.$Message.error(response.message)
+      } else {
+        this.paramDto.headUrl = response.body.attachmentImgUrl
+      }
+    },
+    handleError (err, file, fileList) {
+      this.$Message.error('文件上传失败')
+      console.info(err)
+    },
+    previewFile () {
+      window.open(this.baseDto.projectReportUrl, '_blank')
     }
   },
   watch: {
