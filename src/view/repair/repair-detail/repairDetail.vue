@@ -6,34 +6,34 @@
       <Form :model="repair" :label-width="90">
         <Row :gutter="20">
           <Col :span="8">
-            <FormItem label="维修单号：">
+            <FormItem label="维修单号:">
               <span>{{ repair.orderCommon.billNum }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="维修单状态：">
+            <FormItem label="维修单状态:">
               <span>{{ repair.orderCommon.orderStateName }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="地址：">
+            <FormItem label="地址:">
               <span>{{ repair.orderCommon.address }}</span>
             </FormItem>
           </Col>
         </Row>
         <Row :gutter="20">
           <Col :span="8">
-            <FormItem label="联系人：">
+            <FormItem label="联系人:">
               <span>{{ repair.orderCommon.contactName }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="联系电话：">
+            <FormItem label="联系电话:">
               <span>{{ repair.orderCommon.contactPhone }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="上门时间：">
+            <FormItem label="上门时间:">
               <span>{{ repair.orderCommon.reserveDate | dateFilter }} {{ repair.orderCommon.reservePeroid }}</span>
             </FormItem>
           </Col>
@@ -45,29 +45,29 @@
       <Form :model="repair" :label-width="90">
         <Row :gutter="20">
           <Col :span="8">
-            <FormItem label="大类：">
+            <FormItem label="大类:">
               <span>{{ repair.orderCommon.categoryFirstName }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="区域：">
+            <FormItem label="区域:">
               <span>{{ repair.orderCommon.spaceName }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="物品：">
+            <FormItem label="物品:">
               <span>{{ repair.orderCommon.serviceName }}</span>
             </FormItem>
           </Col>
         </Row>
         <Row :gutter="20">
           <Col :span="8">
-            <FormItem label="故障描述：">
+            <FormItem label="故障描述:">
               <span>{{ repair.orderCommon.tagsName }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="备注：">
+            <FormItem label="备注:">
               <span>{{ repair.orderCommon.description }}</span>
             </FormItem>
           </Col>
@@ -79,18 +79,19 @@
       <Form :model="repair" :label-width="90">
         <Row :gutter="20">
           <Col :span="8">
-            <FormItem label="师傅姓名：">
-              <span>{{ repair.orderCommon.servicerName }}</span>
+            <FormItem label="师傅姓名:">
+              <span>{{ repair.orderCommon.servicerName | nullFilter }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="师傅手机号：">
-              <span>{{ repair.orderCommon.servicerPhone }}</span>
+            <FormItem label="师傅手机号:">
+              <span>{{ repair.orderCommon.servicerPhone | nullFilter }}</span>
             </FormItem>
           </Col>
           <Col :span="8">
-            <FormItem label="派单时间：">
-              <span>{{ repair.orderCommon.assignOrderTime | dateFilter }}</span>
+            <FormItem label="派单时间:">
+              <span v-if="repair.orderCommon.assignOrderTime">{{ repair.orderCommon.assignOrderTime | dateFilter }}</span>
+              <span v-else>{{ repair.orderCommon.assignOrderTime | nullFilter }}</span>
             </FormItem>
           </Col>
         </Row>
